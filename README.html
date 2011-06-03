@@ -1,0 +1,111 @@
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #clock {
+        position: absolute;
+        top: 300px;
+        left: 250px;
+      }
+      .stopper {
+        color: #777;
+        font-size: 77%;
+      }
+    </style>
+    
+    <!-- guider.js requires jQuery as a prerequisite. Be sure to load guider.js AFTER jQuery. -->
+    <script type="text/javascript" src="jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="guider.js"></script>
+    <link rel="stylesheet" href="guider.css" type="text/css" />
+  </head>
+  <body>
+    <span id="clock" style="border: 2px solid #333; width: 300px; height: 200px; text-align: center;" onclick="guider.next();">
+      <br />
+      <img src="clock.gif" width=150 height=150 />
+    </span>
+
+    <script type="text/javascript">
+    /**
+     * Guiders are created with guider.createGuider({settings}).
+     *
+     * You can show a guider with the .show() method immediately
+     * after creating it, or with guider.show(id) and the guider's id.
+     *
+     * guider.next() will advance to the next guider, and
+     * guider.hideAll() will hide all guiders.
+     *
+     * By default, a button named "Next" will have guider.next as
+     * its onclick handler.  A button named "Close" will have
+     * its onclick handler set to guider.hideAll.  onclick handlers
+     * can be customized too.
+     */
+     
+    guider.createGuider({
+      buttons: [{name: "Next"}],
+      description: "Guiders are a user interface design pattern for introducing features of software. This dialog box, for example, is the first in a series of guiders that together make up a guide.",
+      id: "first",
+      next: "second",
+      overlay: true,
+      title: "Welcome to Guiders.js!"
+    }).show();
+    /* .show() means that this guider will get shown immediately after creation. */
+    
+    guider.createGuider({
+      attachTo: "#clock",
+      buttons: [{name: "Close"},
+                {name: "Next"}],
+      description: "For example, this guider is attached to the 12 o'clock direction relative to the attached element. The Guider.js API uses a clock model to determine where the guider should be placed.<br/><br/>Attaching a guider to an element focuses user on the area of interest.",
+      id: "second",
+      next: "third",
+      position: 12,
+      title: "Guiders are typically attached to an element on the page.",
+    });
+               
+    guider.createGuider({
+      attachTo: "#clock",
+      buttons: [{name: "Close, then click on the clock.", onclick: guider.hideAll}],
+      description: "Custom event handlers can be used to hide and show guiders. This allows you to interactively show the user how to use your software by having them complete steps. To try it, click on the clock.",
+      id: "third",
+      next: "fourth",
+      position: 2,
+      title: "You can advance guiders from custom event handlers.",
+      width: 450
+    });
+
+    guider.createGuider({
+      attachTo: "#clock",
+      buttons: [{name: "Exit Guide", onclick: guider.hideAll},
+                {name: "Continue", onclick: guider.next}],
+      buttonCustomHTML: "<input type=\"checkbox\" id=\"stop_showing\" /><label for=\"stop_showing\" class=\"stopper\">Stop showing these. (Not implemented)</label>",
+      description: "Other aspects of the guider can be customized as well, such as the button names, button onclick handlers, and dialog widths. You'd also want to modify the CSS to your own project's style.",
+      id: "fourth",
+      next: "fifth",
+      position: 7,
+      title: "Guiders can be customized.",
+      width: 600
+    });
+    
+    guider.createGuider({
+      buttons: [{name: "Next"}],
+      description: "Guiders can also be used to introduce of brand new features to existing users. Here is an example of a guider in Gmail. Google's CSS calls this a promo, likely short for promotional box. <br/><br/> <img src=\"promo_gmail.png\" style=\"border: 1px solid #333;\" />",
+      id: "fifth",
+      next: "finally",
+      overlay: true,
+      title: "How else can I use guiders?",
+      width: 550
+    });
+
+    guider.createGuider({
+      buttons: [{name: "Close", classString: "primary-button"}],
+      description: "To get started, have a look at this HTML file, then emulate it for use in your own project.",
+      id: "finally",
+      overlay: true,
+      title: "Great, so how do I get started?",
+    });
+    </script>
+  </body>
+</html>
