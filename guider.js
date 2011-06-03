@@ -7,6 +7,9 @@
  * Released under the Apache License 2.0.
  * www.apache.org/licenses/LICENSE-2.0.html
  *
+ * Questions about Guiders or Optimizely?
+ * Email us at jeff+pickhardt@optimizely.com or hello@optimizely.com.
+ * 
  * Enjoy!
  */
 
