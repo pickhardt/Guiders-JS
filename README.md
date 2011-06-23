@@ -1,18 +1,15 @@
-** LICENSE **
+Guider.js
+=========
 
-Released under the Apache License 2.0.
-http://www.apache.org/licenses/LICENSE-2.0.html
-
-
-** SUMMARY **
-
-Guiders are a user experience design pattern for introducing users to a web application.  Check out README.html for guiders in action!
+Guiders are a user experience design pattern for introducing users to a web application.  Check out `README.html` for guiders in action!
 
 
-** INITIALIZING GUIDERS **
+Setup
+-----
 
-Here is sample code for initializing a couple of guiders.  Guiders are hidden when created, unless .show() is method chained immediately after .createGuider.
+Here is sample code for initializing a couple of guiders.  Guiders are hidden when created, unless `.show()` is method chained immediately after `.createGuider`.
 
+~~~ javascript
 guider.createGuider({
   buttons: [{name: "Next"}],
   description: "Guiders are a user interface design pattern for introducing features of software. This dialog box, for example, is the first in a series of guiders that together make up a guide.",
@@ -22,7 +19,7 @@ guider.createGuider({
   title: "Welcome to Guiders.js!"
 }).show();
 /* .show() means that this guider will get shown immediately after creation. */
-           
+
 guider.createGuider({
   attachTo: "#clock",
   buttons: [{name: "Close, then click on the clock.", onclick: guider.hideAll}],
@@ -33,9 +30,11 @@ guider.createGuider({
   title: "You can also advance guiders from custom event handlers.",
   width: 450
 });
+~~~~
 
 The parameters for creating guiders are:
 
+~~~
 attachTo: (optional) selector of the html element you want to attach the guider to
 buttons: array of button objects
   {
@@ -50,21 +49,32 @@ overlay: (optional) if true, an overlay will pop up between the guider and the r
 position: (optional / required if using attachTo) clock position at which the guider should be attached to the html element
 title: title of the guider
 width: (optional) custom width of the guider (it defaults to 400px)
+~~~
 
 
-** INTEGRATION WITH YOUR WEB APPLICATION **
+Integration
+-----------
 
 Besides creating guiders, here is sample code you can use in your application to work with guiders:
 
+~~~ javascript
 guider.hideAll(); // hides all guiders
 guider.next(); // hides the last shown guider, if shown, and advances to the next guider
 guider.show(id); // shows the guider, given the id used at creation
+~~~
 
-You'll likely want to change the default values, such as the width (set to 400px).  These can be found at the top of guider.js in the _defaultSettings object.  You'll also want to modify the css file to match your application's branding.
+You'll likely want to change the default values, such as the width (set to 400px).  These can be found at the top of `guider.js` in the `_defaultSettings` object.  You'll also want to modify the css file to match your application's branding.
 
 
-** IN CLOSING **
+In Closing
+----------
 
-Guiders are a great way to improve the user experience of your web application.  If you're interested in optimizing user experience through A/B testing, check out Optimizely (optimizely.com).  We're the people who built Guiders in the first place.
+Guiders are a great way to improve the user experience of your web application.  If you're interested in optimizing user experience through A/B testing, check out [Optimizely](optimizely.com).  We're the people who built Guiders in the first place.
 
-If you have questions about Guiders or Optimizely, email us at jeff+pickhardt@optimizely.com or hello@optimizely.com.
+If you have questions about Guiders or Optimizely, email us at `jeff+pickhardt@optimizely.com` or `hello@optimizely.com`.
+
+
+License
+-------
+
+Released under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
