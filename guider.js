@@ -201,7 +201,7 @@ var guider = (function(){
     },
 
     createGuider: function(passedSettings) {
-      if ($.type(passedSettings) !== "object") {
+      if (passedSettings === null || passedSettings === undefined) {
         passedSettings = {};
       }
 
