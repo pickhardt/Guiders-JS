@@ -13,7 +13,7 @@
  * Enjoy!
  */
 
-var guider = (function(){
+var guider = (function($){
   var guider = {
     _defaultSettings: {
       attachTo: null,
@@ -260,4 +260,4 @@ var guider = (function(){
   };
 
   return guider;
-}).call(this);
+}).call(this, jQuery);
