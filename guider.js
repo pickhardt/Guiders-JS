@@ -45,17 +45,17 @@ var guider = (function(){
 
     _addButtons: function(myGuider) {
       // Add buttons
+      var guiderButtonsContainer = myGuider.elem.find(".guider_buttons");
       for (var i = myGuider.buttons.length-1; i >= 0; i--) {
         var thisButton = myGuider.buttons[i];
-        var thisButtonHTML = "<a class='guider_button";
+        var thisButtonElem = $("<a></a>", {
+                                "class" : "guider_button",
+                                "text" : thisButton.name });
         if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
-          thisButtonHTML = thisButtonHTML + " " + thisButton.classString;
+          thisButtonElem.addClass(thisButton.classString);
         }
 
-        thisButtonHTML = thisButtonHTML + "'>" + thisButton.name + "</a>";
-        var thisButtonElem = $(thisButtonHTML);
-        
-        myGuider.elem.find(".guider_buttons").append(thisButtonElem);
+        guiderButtonsContainer.append(thisButtonElem);
 
         if (thisButton.onclick) {
           thisButtonElem.bind("click", thisButton.onclick);
