@@ -1,12 +1,14 @@
 .guider {
   background: #FFF;
+  border: 1px solid #666;
   font-family: arial;
   position: absolute;
   outline: none;
   z-index: 100000005 !important;
-  padding: 0px 12px;
+  padding: 4px 12px;
   width: 500px;
-
+  z-index: 100;
+  
   /* Shadow */
   -moz-box-shadow: 0 0px 8px #111;
   -webkit-box-shadow: 0 0px 8px #111;
@@ -44,9 +46,9 @@
 }
 
 .guider_button {
-  background-color: #4A95E0; /* overruled by background gradient, in browsers where they exist */
   background: -moz-linear-gradient(top, #5CA9FF 0%, #3D79C3 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #5CA9FF), color-stop(100%, #3D79C3));
+  background-color: #4A95E0; /* overruled by background gradient, in browsers where they exist */
   border: solid 1px #4B5D7E;
   color: #FFF;
   cursor: pointer;
@@ -67,15 +69,16 @@
 }
 
 #guider_overlay {
+  background-color: #000;
   width: 100%;
   height: 100%;
   position: fixed;
   top: 0px;
   left: 0px;
-  background-color: #000;
   opacity: 0.5;
   -ms-filter:'alpha(opacity=50)';
   filter: alpha(opacity=50)
+  z-index: 10;
 }
 
 .guider_arrow {
