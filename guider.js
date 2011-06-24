@@ -23,7 +23,9 @@ var guider = (function(){
       overlay: false,
       position: 0, // 1-12 follows an analog clock, 0 means centered
       title: "Sample title goes here",
-      width: 400
+      width: 400,
+      scroll: true,
+      offset: -150
     },
 
     _htmlSkeleton: [
@@ -198,6 +200,7 @@ var guider = (function(){
         var omitHidingOverlay = myGuider.overlay ? true : false;
         guider.hideAll(omitHidingOverlay);
         guider.show(nextGuiderId);
+        if (currentGuider.scroll === true) {currentGuider.goToByScroll(myGuider.id,currentGuider.offset);}
       }
     },
 
@@ -220,6 +223,7 @@ var guider = (function(){
 
       guiderElement.hide();
       guiderElement.appendTo("body");
+      guiderElement.attr("id",myGuider.id);
 
       // Ensure myGuider.attachTo is a jQuery element.
       if (typeof myGuider.attachTo !== "undefined" && myGuider !== null) {
@@ -243,6 +247,10 @@ var guider = (function(){
       }
       return guider;
     },
+    
+    goToByScroll: function(id,offset){
+		$('html,body').animate({scrollTop: $("#"+id).offset().top+num},'slow');
+	}
 
     show: function(id) {
       if (!id && guider._lastCreatedGuiderID) {
