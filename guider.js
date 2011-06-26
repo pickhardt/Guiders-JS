@@ -20,6 +20,7 @@ var guider = (function(){
       buttons: [{name: "Close"}],
       buttonCustomHTML: "",
       description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      isHashable: true,
       overlay: false,
       position: 0, // 1-12 follows an analog clock, 0 means centered
       title: "Sample title goes here",
@@ -187,6 +188,28 @@ var guider = (function(){
       myGuiderArrow.css(position[0], position[1] + "px");
     },
 
+    /**
+     * One way to show a guider to new users is to direct new users to a URL such as
+     * http://www.mysite.com/myapp#guider=welcome
+     *
+     * This can also be used to run guiders on multiple pages, by redirecting from
+     * one page to another, with the guider id in the hash tag.
+     *
+     * Alternatively, if you use a session variable or flash messages after sign up,
+     * you can add selectively add JavaScript to the page: "guider.show('first');"
+     */
+    _showIfHashed: function(myGuider) {
+      var GUIDER_HASH_TAG = "guider=";
+      var hashIndex = window.location.hash.indexOf(GUIDER_HASH_TAG);
+      if (hashIndex !== -1) {
+        var hashGuiderId = window.location.hash.substr(hashIndex + GUIDER_HASH_TAG.length);
+        if (myGuider.id.toLowerCase() === hashGuiderId.toLowerCase()) {
+          // Success!
+          guider.show(myGuider.id);
+        }
+      }
+    },
+    
     next: function() {
       var currentGuider = guider._guiders[guider._currentGuiderID];
       if (typeof currentGuider === "undefined") {
@@ -231,6 +254,16 @@ var guider = (function(){
 
       guider._guiders[myGuider.id] = myGuider;
       guider._lastCreatedGuiderID = myGuider.id;
+      
+      /**
+       * If the URL of the current window is of the form
+       * http://www.myurl.com/mypage.html#guider=id
+       * then show this guider.
+       */
+      if (myGuider.isHashable) {
+        guider._showIfHashed(myGuider);
+      }
+      
       return guider;
     },
 

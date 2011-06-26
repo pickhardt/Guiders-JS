@@ -52,7 +52,19 @@
       overlay: true,
       title: "Welcome to Guiders.js!"
     }).show();
-    /* .show() means that this guider will get shown immediately after creation. */
+    /**
+     * .show() means that this guider will get shown immediately after creation.
+     *
+     * Using .show() is one way of starting your guiders.
+     * 
+     * Another way is by directing the user to a special URL with the guider id in
+     * its hash tag, such as:
+     *
+     * http://www.local.com/README.html#guider=first
+     *
+     * This makes it easy to only show guiders for new users.  It can also be used
+     * to route people among multiple web pages and still keep showing the guiders.
+     */
     
     guider.createGuider({
       attachTo: "#clock",
