@@ -69,7 +69,7 @@ You'll likely want to change the default values, such as the width (set to 400px
 In Closing
 ----------
 
-Guiders are a great way to improve the user experience of your web application.  If you're interested in optimizing user experience through A/B testing, check out [Optimizely](optimizely.com).  We're the people who built Guiders in the first place.
+Guiders are a great way to improve the user experience of your web application.  If you're interested in optimizing user experience through A/B testing, check out [Optimizely](http://www.optimizely.com).  We're the people who built Guiders in the first place.
 
 If you have questions about Guiders or Optimizely, email us at `jeff+pickhardt@optimizely.com` or `hello@optimizely.com`.
 
