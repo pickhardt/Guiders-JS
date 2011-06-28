@@ -28,16 +28,17 @@ var guider = (function(){
     },
 
     _htmlSkeleton: [
-"<div class='guider'>",
-"  <div class='guider_content'>",
-"    <h1 class='guider_title'></h1>",
-"    <p class='guider_description'></p>",
-"    <div class='guider_buttons'>",
-"    </div>",
-"  </div>",
-"  <div class='guider_arrow'>",
-"  </div>",
-"</div>"].join(""),
+      "<div class='guider'>",
+      "  <div class='guider_content'>",
+      "    <h1 class='guider_title'></h1>",
+      "    <p class='guider_description'></p>",
+      "    <div class='guider_buttons'>",
+      "    </div>",
+      "  </div>",
+      "  <div class='guider_arrow'>",
+      "  </div>",
+      "</div>"
+    ].join(""),
 
     _arrowSize: 42, // = arrow's width and height
     _guiders: {},
@@ -111,7 +112,7 @@ var guider = (function(){
         10: [0, -myWidth - bufferOffset],
         11: [-bufferOffset - myHeight, 0],
         12: [-bufferOffset - myHeight, attachToWidth/2 - myWidth/2]
-      }
+      };
 
       offset = offsetMap[myGuider.position];
       top += offset[0];
@@ -126,13 +127,13 @@ var guider = (function(){
 
     _guiderById: function(id) {
       if (typeof guider._guiders[id] === "undefined") {
-        throw "Cannot find guider with id " + id
+        throw "Cannot find guider with id " + id;
       }
       return guider._guiders[id];
     },
     
     _showOverlay: function() {
-      $("#guider_overlay").fadeIn("fast")
+      $("#guider_overlay").fadeIn("fast");
     },
     
     _hideOverlay: function() {
