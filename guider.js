@@ -25,7 +25,8 @@ var guider = (function(){
       title: "Sample title goes here",
       width: 400,
       scroll: true,
-      offset: -150
+      offset: -150,
+      href: null
     },
 
     _htmlSkeleton: [
@@ -195,6 +196,11 @@ var guider = (function(){
         return;
       }
       var nextGuiderId = currentGuider.next || null;
+      
+      if (currentGuider.href !== null) {
+      	document.location.href=currentGuider.href;
+      }
+      
       if (nextGuiderId !== null && nextGuiderId !== "") {
         var myGuider = guider._guiderById(nextGuiderId);
         var omitHidingOverlay = myGuider.overlay ? true : false;
