@@ -47,7 +47,7 @@
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #5CA9FF), color-stop(100%, #3D79C3));
   background-color: #4A95E0; /* overruled by background gradient, in browsers where they exist */
   border: solid 1px #4B5D7E;
-  color: #FFF;
+  color: #FFF !important;
   cursor: pointer;
   display: inline-block;
   float: right;
