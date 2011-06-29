@@ -75,7 +75,7 @@
   opacity: 0.5;
   -ms-filter:'alpha(opacity=50)';
   filter: alpha(opacity=50);
-  z-index: 10;
+  z-index: 100000000;
 }
 
 .guider_arrow {
