@@ -268,6 +268,17 @@ var guider = (function(){
       return guider;
     },
 
+    /* 
+     * Locate a guider with the supplied id. Returns null if no guider exists.
+     */
+    findGuider: function(id) {
+      try {
+        return _guiderById(id);
+      } catch {
+        return null;  // could not find guider.
+      }
+    },
+
     hideAll: function(omitHidingOverlay) {
       $(".guider").fadeOut("fast");
       if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
