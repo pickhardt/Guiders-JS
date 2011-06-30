@@ -21,6 +21,7 @@ var guider = (function($){
       buttonCustomHTML: "",
       description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       isHashable: true,
+      onShow: null,
       overlay: false,
       position: 0, // 1-12 follows an analog clock, 0 means centered
       title: "Sample title goes here",
@@ -288,7 +289,14 @@ var guider = (function($){
       if (myGuider.overlay) {
         guider._showOverlay();
       }
+      
       guider._attach(myGuider);
+      
+      // You can use an onShow function to take some action before the guider is shown.
+      if (myGuider.onShow) {
+        myGuider.onShow(myGuider);
+      }
+      
       myGuider.elem.fadeIn("fast");
 
       var windowHeight = $(window).height();
