@@ -289,6 +289,16 @@ var guider = (function(){
       }
       guider._attach(myGuider);
       myGuider.elem.fadeIn("fast");
+
+      height = $(window).height();
+      scroll = $(window).scrollTop();
+      offset = myGuider.elem.offset();
+      elemHeight = myGuider.elem.height();
+
+      if (offset.top - scroll < 0 || offset.top + elemHeight + 40 > scroll + height) {
+        window.scrollTo(0, Math.max(offset.top + (elemHeight / 2) - (height / 2), 0));
+      }
+
       guider._currentGuiderID = id;
       return guider;
     }
