@@ -231,7 +231,7 @@ var guider = (function($){
       }
 
       // Extend those settings with passedSettings
-      myGuider = $.extend(true, {}, guider._defaultSettings, passedSettings);
+      myGuider = $.extend({}, guider._defaultSettings, passedSettings);
       myGuider.id = myGuider.id || String(Math.floor(Math.random() * 1000));
 
       var guiderElement = $(guider._htmlSkeleton);
