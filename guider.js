@@ -290,13 +290,14 @@ var guider = (function($){
       guider._attach(myGuider);
       myGuider.elem.fadeIn("fast");
 
-      height = $(window).height();
-      scroll = $(window).scrollTop();
-      offset = myGuider.elem.offset();
-      elemHeight = myGuider.elem.height();
+      var windowHeight = $(window).height();
+      var scrollHeight = $(window).scrollTop();
+      var guiderOffset = myGuider.elem.offset();
+      var guiderElemHeight = myGuider.elem.height();
 
-      if (offset.top - scroll < 0 || offset.top + elemHeight + 40 > scroll + height) {
-        window.scrollTo(0, Math.max(offset.top + (elemHeight / 2) - (height / 2), 0));
+      if (guiderOffset.top - scrollHeight < 0 ||
+          guiderOffset.top + guiderElemHeight + 40 > scrollHeight + windowHeight) {
+        window.scrollTo(0, Math.max(guiderOffset.top + (guiderElemHeight / 2) - (windowHeight / 2), 0));
       }
 
       guider._currentGuiderID = id;
