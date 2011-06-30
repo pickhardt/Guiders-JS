@@ -244,6 +244,7 @@ var guider = (function($){
 
       guiderElement.hide();
       guiderElement.appendTo("body");
+      guiderElement.attr("id", myGuider.id);
 
       // Ensure myGuider.attachTo is a jQuery element.
       if (typeof myGuider.attachTo !== "undefined" && myGuider !== null) {
