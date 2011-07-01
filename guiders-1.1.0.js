@@ -1,5 +1,7 @@
 /**
- * guider.js
+ * guiders.js
+ *
+ * version 1.1.0
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -13,8 +15,10 @@
  * Enjoy!
  */
 
-var guider = (function($){
-  var guider = {
+var guiders = (function($){
+  var guiders = {
+    version: "1.1.0",
+    
     _defaultSettings: {
       attachTo: null,
       buttons: [{name: "Close"}],
@@ -63,9 +67,9 @@ var guider = (function($){
         if (thisButton.onclick) {
           thisButtonElem.bind("click", thisButton.onclick);
         } else if (!thisButton.onclick && thisButton.name.toLowerCase() === "close") {
-          thisButtonElem.bind("click", function() { guider.hideAll(); });
+          thisButtonElem.bind("click", function() { guiders.hideAll(); });
         } else if (!thisButton.onclick && thisButton.name.toLowerCase() === "next") {
-          thisButtonElem.bind("click", function() { guider.next(); });
+          thisButtonElem.bind("click", function() { guiders.next(); });
         }
       }
 
@@ -98,7 +102,7 @@ var guider = (function($){
       var top = base.top;
       var left = base.left;
 
-      var bufferOffset = 0.9 * guider._arrowSize;
+      var bufferOffset = 0.9 * guiders._arrowSize;
 
       var offsetMap = { // Follows the form: [height, width]
         1: [-bufferOffset - myHeight, attachToWidth - myWidth],
@@ -127,10 +131,10 @@ var guider = (function($){
     },
 
     _guiderById: function(id) {
-      if (typeof guider._guiders[id] === "undefined") {
+      if (typeof guiders._guiders[id] === "undefined") {
         throw "Cannot find guider with id " + id;
       }
-      return guider._guiders[id];
+      return guiders._guiders[id];
     },
     
     _showOverlay: function() {
@@ -171,7 +175,7 @@ var guider = (function($){
 
       var myHeight = myGuider.elem.innerHeight();
       var myWidth = myGuider.elem.innerWidth();
-      var arrowOffset = guider._arrowSize / 2;
+      var arrowOffset = guiders._arrowSize / 2;
       var positionMap = {
         1: ["right", arrowOffset],
         2: ["top", arrowOffset],
@@ -198,7 +202,7 @@ var guider = (function($){
      * one page to another, with the guider id in the hash tag.
      *
      * Alternatively, if you use a session variable or flash messages after sign up,
-     * you can add selectively add JavaScript to the page: "guider.show('first');"
+     * you can add selectively add JavaScript to the page: "guiders.show('first');"
      */
     _showIfHashed: function(myGuider) {
       var GUIDER_HASH_TAG = "guider=";
@@ -207,22 +211,22 @@ var guider = (function($){
         var hashGuiderId = window.location.hash.substr(hashIndex + GUIDER_HASH_TAG.length);
         if (myGuider.id.toLowerCase() === hashGuiderId.toLowerCase()) {
           // Success!
-          guider.show(myGuider.id);
+          guiders.show(myGuider.id);
         }
       }
     },
     
     next: function() {
-      var currentGuider = guider._guiders[guider._currentGuiderID];
+      var currentGuider = guiders._guiders[guiders._currentGuiderID];
       if (typeof currentGuider === "undefined") {
         return;
       }
       var nextGuiderId = currentGuider.next || null;
       if (nextGuiderId !== null && nextGuiderId !== "") {
-        var myGuider = guider._guiderById(nextGuiderId);
+        var myGuider = guiders._guiderById(nextGuiderId);
         var omitHidingOverlay = myGuider.overlay ? true : false;
-        guider.hideAll(omitHidingOverlay);
-        guider.show(nextGuiderId);
+        guiders.hideAll(omitHidingOverlay);
+        guiders.show(nextGuiderId);
       }
     },
 
@@ -232,16 +236,16 @@ var guider = (function($){
       }
 
       // Extend those settings with passedSettings
-      myGuider = $.extend({}, guider._defaultSettings, passedSettings);
+      myGuider = $.extend({}, guiders._defaultSettings, passedSettings);
       myGuider.id = myGuider.id || String(Math.floor(Math.random() * 1000));
 
-      var guiderElement = $(guider._htmlSkeleton);
+      var guiderElement = $(guiders._htmlSkeleton);
       myGuider.elem = guiderElement;
       myGuider.elem.css("width", myGuider.width + "px");
       guiderElement.find("h1.guider_title").html(myGuider.title);
       guiderElement.find("p.guider_description").html(myGuider.description);
 
-      guider._addButtons(myGuider);
+      guiders._addButtons(myGuider);
 
       guiderElement.hide();
       guiderElement.appendTo("body");
@@ -249,14 +253,14 @@ var guider = (function($){
 
       // Ensure myGuider.attachTo is a jQuery element.
       if (typeof myGuider.attachTo !== "undefined" && myGuider !== null) {
-        guider._attach(myGuider);
-        guider._styleArrow(myGuider);
+        guiders._attach(myGuider);
+        guiders._styleArrow(myGuider);
       }
 
-      guider._initializeOverlay();
+      guiders._initializeOverlay();
 
-      guider._guiders[myGuider.id] = myGuider;
-      guider._lastCreatedGuiderID = myGuider.id;
+      guiders._guiders[myGuider.id] = myGuider;
+      guiders._lastCreatedGuiderID = myGuider.id;
       
       /**
        * If the URL of the current window is of the form
@@ -264,10 +268,10 @@ var guider = (function($){
        * then show this guider.
        */
       if (myGuider.isHashable) {
-        guider._showIfHashed(myGuider);
+        guiders._showIfHashed(myGuider);
       }
       
-      return guider;
+      return guiders;
     },
 
     hideAll: function(omitHidingOverlay) {
@@ -275,22 +279,22 @@ var guider = (function($){
       if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
         // do nothing for now
       } else {
-        guider._hideOverlay();
+        guiders._hideOverlay();
       }
-      return guider;
+      return guiders;
     },
 
     show: function(id) {
-      if (!id && guider._lastCreatedGuiderID) {
-        id = guider._lastCreatedGuiderID;
+      if (!id && guiders._lastCreatedGuiderID) {
+        id = guiders._lastCreatedGuiderID;
       }
       
-      var myGuider = guider._guiderById(id);
+      var myGuider = guiders._guiderById(id);
       if (myGuider.overlay) {
-        guider._showOverlay();
+        guiders._showOverlay();
       }
       
-      guider._attach(myGuider);
+      guiders._attach(myGuider);
       
       // You can use an onShow function to take some action before the guider is shown.
       if (myGuider.onShow) {
@@ -309,10 +313,10 @@ var guider = (function($){
         window.scrollTo(0, Math.max(guiderOffset.top + (guiderElemHeight / 2) - (windowHeight / 2), 0));
       }
 
-      guider._currentGuiderID = id;
-      return guider;
+      guiders._currentGuiderID = id;
+      return guiders;
     }
   };
 
-  return guider;
+  return guiders;
 }).call(this, jQuery);
