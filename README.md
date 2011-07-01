@@ -10,7 +10,7 @@ Setup
 Here is sample code for initializing a couple of guiders.  Guiders are hidden when created, unless `.show()` is method chained immediately after `.createGuider`.
 
 ~~~ javascript
-guider.createGuider({
+guiders.createGuider({
   buttons: [{name: "Next"}],
   description: "Guiders are a user interface design pattern for introducing features of software. This dialog box, for example, is the first in a series of guiders that together make up a guide.",
   id: "first",
@@ -20,7 +20,7 @@ guider.createGuider({
 }).show();
 /* .show() means that this guider will get shown immediately after creation. */
 
-guider.createGuider({
+guiders.createGuider({
   attachTo: "#clock",
   buttons: [{name: "Close, then click on the clock.", onclick: guider.hideAll}],
   description: "Custom event handlers can be used to hide and show guiders. This allows you to interactively show the user how to use your software by having them complete steps. To try it, click on the clock.",
@@ -41,7 +41,7 @@ buttons: array of button objects
     name: "Close",
     classString: "primary-button",
     onclick: callback function for when the button is clicked
-      (if name is "close" or "next", onclick defaults to guider.hideAll and guider.next respectively)
+      (if name is "close" or "next", onclick defaults to guiders.hideAll and guiders.next respectively)
    }
 buttonCustomHTML: (optional) custom HTML that gets appended to the buttons div
 description: text description that shows up inside the guider
@@ -58,12 +58,12 @@ Integration
 Besides creating guiders, here is sample code you can use in your application to work with guiders:
 
 ~~~ javascript
-guider.hideAll(); // hides all guiders
-guider.next(); // hides the last shown guider, if shown, and advances to the next guider
-guider.show(id); // shows the guider, given the id used at creation
+guiders.hideAll(); // hides all guiders
+guiders.next(); // hides the last shown guider, if shown, and advances to the next guider
+guiders.show(id); // shows the guider, given the id used at creation
 ~~~
 
-You'll likely want to change the default values, such as the width (set to 400px).  These can be found at the top of `guider.js` in the `_defaultSettings` object.  You'll also want to modify the css file to match your application's branding.
+You'll likely want to change the default values, such as the width (set to 400px).  These can be found at the top of `guiders.js` in the `_defaultSettings` object.  You'll also want to modify the css file to match your application's branding.
 
 
 In Closing
