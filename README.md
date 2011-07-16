@@ -1,7 +1,16 @@
 Guider.js
 =========
 
-Guiders are a user experience design pattern for introducing users to a web application.  Check out `README.html` for guiders in action!
+Guiders are a user experience design pattern for introducing users to a web application.  
+
+Live Examples
+-----
+
+Here are a couple examples hosted online.  You can also check out `README.html` for guiders in action!
+
+[http://jeffpickhardt.com/guiders/](http://jeffpickhardt.com/guiders/)
+
+[https://optimizely.appspot.com/edit#url=www.google.com](https://optimizely.appspot.com/edit#url=www.google.com)
 
 
 Setup
