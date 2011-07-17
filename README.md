@@ -1,4 +1,4 @@
-Guider.js (version 1.1.0)
+Guiders.js (version 1.1.0)
 =========================
 
 Guiders are a user experience design pattern for introducing users to a web application.  
@@ -31,7 +31,7 @@ guiders.createGuider({
 
 guiders.createGuider({
   attachTo: "#clock",
-  buttons: [{name: "Close, then click on the clock.", onclick: guider.hideAll}],
+  buttons: [{name: "Close, then click on the clock.", onclick: guiders.hideAll}],
   description: "Custom event handlers can be used to hide and show guiders. This allows you to interactively show the user how to use your software by having them complete steps. To try it, click on the clock.",
   id: "third",
   next: "fourth",
