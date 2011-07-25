@@ -28,6 +28,10 @@ var guiders = (function($){
       onShow: null,
       overlay: false,
       position: 0, // 1-12 follows an analog clock, 0 means centered
+      offset: {
+          top: 0,
+          left: 0
+      },
       title: "Sample title goes here",
       width: 400
     },
@@ -120,8 +124,8 @@ var guiders = (function($){
       };
 
       offset = offsetMap[myGuider.position];
-      top += offset[0];
-      left += offset[1];
+      top   += offset[0] + myGuider.offset.top;
+      left  += offset[1] + myGuider.offset.left;
 
       myGuider.elem.css({
         "position":"absolute",
