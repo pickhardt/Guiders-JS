@@ -33,20 +33,34 @@
 }
 
 .guider_content h1 {
-  color: #1054AA;
+  color: #006000;
+  float: left;
   font-size: 21px;
 }
 
+.guider_close {
+  float: right;
+  padding: 10px 0 0;
+}
+
+.x_button {
+  background-image: url('x_close_button.jpg');
+  cursor: pointer;
+  height: 13px;
+  width: 13px;
+}
+
 .guider_content p {
+  clear: both;
   color: #333;
   font-size: 13px;
 }
 
 .guider_button {
-  background: -moz-linear-gradient(top, #5CA9FF 0%, #3D79C3 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #5CA9FF), color-stop(100%, #3D79C3));
-  background-color: #4A95E0; /* overruled by background gradient, in browsers where they exist */
-  border: solid 1px #4B5D7E;
+  background: -moz-linear-gradient(top, #00B900 0%, #009B00 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #00B900), color-stop(100%, #009B00));
+  background-color: #00B900; /* overruled by background gradient, in browsers where they exist */
+  border: solid 1px #004600;
   color: #FFF;
   cursor: pointer;
   display: inline-block;

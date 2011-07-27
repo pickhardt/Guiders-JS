@@ -29,13 +29,15 @@ var guiders = (function($){
       overlay: false,
       position: 0, // 1-12 follows an analog clock, 0 means centered
       title: "Sample title goes here",
-      width: 400
+      width: 400,
+      xButton: false
     },
 
     _htmlSkeleton: [
       "<div class='guider'>",
       "  <div class='guider_content'>",
       "    <h1 class='guider_title'></h1>",
+      "    <div class='guider_close'></div>",
       "    <p class='guider_description'></p>",
       "    <div class='guider_buttons'>",
       "    </div>",
@@ -77,6 +79,15 @@ var guiders = (function($){
         var myCustomHTML = $(myGuider.buttonCustomHTML);
         myGuider.elem.find(".guider_buttons").append(myCustomHTML);
       }
+    },
+
+    _addXButton: function(myGuider) {
+        var xButtonContainer = myGuider.elem.find(".guider_close");
+        var xButton = $("<div></div>", {
+                        "class" : "x_button",
+                        "role" : "button" });
+        xButtonContainer.append(xButton);
+        xButton.click(function() { guiders.hideAll(); });
     },
 
     _attach: function(myGuider) {
@@ -246,6 +257,10 @@ var guiders = (function($){
       guiderElement.find("p.guider_description").html(myGuider.description);
 
       guiders._addButtons(myGuider);
+
+      if (myGuider.xButton) {
+          guiders._addXButton(myGuider);
+      }
 
       guiderElement.hide();
       guiderElement.appendTo("body");
