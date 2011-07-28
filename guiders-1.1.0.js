@@ -2,7 +2,7 @@
  * guiders.js
  *
  * version 1.1.0
- *
+ * 
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
  *
@@ -28,6 +28,10 @@ var guiders = (function($){
       onShow: null,
       overlay: false,
       position: 0, // 1-12 follows an analog clock, 0 means centered
+      offset: {
+          top: null,
+          left: null
+      },
       title: "Sample title goes here",
       width: 400,
       xButton: false
@@ -131,8 +135,16 @@ var guiders = (function($){
       };
 
       offset = offsetMap[myGuider.position];
-      top += offset[0];
-      left += offset[1];
+      top   += offset[0];
+      left  += offset[1];
+
+      if (myGuider.offset.top != null) {
+          top += myGuider.offset.top;
+      }
+      
+      if (myGuider.offset.left != null) {
+          left += myGuider.offset.left;
+      }
 
       myGuider.elem.css({
         "position":"absolute",
@@ -335,3 +347,4 @@ var guiders = (function($){
 
   return guiders;
 }).call(this, jQuery);
+
