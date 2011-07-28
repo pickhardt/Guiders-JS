@@ -34,10 +34,24 @@
 
 .guider_content h1 {
   color: #1054AA;
+  float: left;
   font-size: 21px;
 }
 
+.guider_close {
+  float: right;
+  padding: 10px 0 0;
+}
+
+.x_button {
+  background-image: url('x_close_button.jpg');
+  cursor: pointer;
+  height: 13px;
+  width: 13px;
+}
+
 .guider_content p {
+  clear: both;
   color: #333;
   font-size: 13px;
 }
