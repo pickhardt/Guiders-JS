@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.1.0
+ * version 1.1.1
  * 
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -17,7 +17,7 @@
 
 var guiders = (function($){
   var guiders = {
-    version: "1.1.0",
+    version: "1.1.1",
     
     _defaultSettings: {
       attachTo: null,
@@ -34,7 +34,7 @@ var guiders = (function($){
       },
       title: "Sample title goes here",
       width: 400,
-      xButton: false
+      xButton: false // this places a closer "x" button in the top right of the guider
     },
 
     _htmlSkeleton: [
@@ -138,16 +138,16 @@ var guiders = (function($){
       top   += offset[0];
       left  += offset[1];
 
-      if (myGuider.offset.top != null) {
-          top += myGuider.offset.top;
+      if (myGuider.offset.top !== null) {
+        top += myGuider.offset.top;
       }
       
-      if (myGuider.offset.left != null) {
-          left += myGuider.offset.left;
+      if (myGuider.offset.left !== null) {
+        left += myGuider.offset.left;
       }
 
       myGuider.elem.css({
-        "position":"absolute",
+        "position": "absolute",
         "top": top,
         "left": left
       });
