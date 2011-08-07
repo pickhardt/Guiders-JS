@@ -58,6 +58,7 @@ overlay: (optional) if true, an overlay will pop up between the guider and the r
 position: (optional / required if using attachTo) clock position at which the guider should be attached to the html element
 title: title of the guider
 width: (optional) custom width of the guider (it defaults to 400px)
+offset: fine tune the position of the guider, e.g. { left:0, top: -10 }
 ~~~
 
 
