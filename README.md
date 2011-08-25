@@ -55,6 +55,7 @@ buttons: array of button objects
 buttonCustomHTML: (optional) custom HTML that gets appended to the buttons div
 description: text description that shows up inside the guider
 overlay: (optional) if true, an overlay will pop up between the guider and the rest of the page
+highlight: (optional) selector of the html element you want to highlight (will cause element to be above the overlay)
 position: (optional / required if using attachTo) clock position at which the guider should be attached to the html element
 title: title of the guider
 width: (optional) custom width of the guider (it defaults to 400px)

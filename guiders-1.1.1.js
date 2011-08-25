@@ -2,7 +2,7 @@
  * guiders.js
  *
  * version 1.1.1
- * 
+ *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
  *
@@ -11,14 +11,14 @@
  *
  * Questions about Guiders or Optimizely?
  * Email us at jeff+pickhardt@optimizely.com or hello@optimizely.com.
- * 
+ *
  * Enjoy!
  */
 
 var guiders = (function($){
   var guiders = {
     version: "1.1.1",
-    
+
     _defaultSettings: {
       attachTo: null,
       buttons: [{name: "Close"}],
@@ -110,10 +110,6 @@ var guiders = (function($){
       }
 
       myGuider.attachTo = $(myGuider.attachTo);
-      if (!myGuider.attachTo.length) {
-          return false;
-      }
-
       var base = myGuider.attachTo.offset();
       var attachToHeight = myGuider.attachTo.innerHeight();
       var attachToWidth = myGuider.attachTo.innerWidth();
@@ -145,7 +141,7 @@ var guiders = (function($){
       if (myGuider.offset.top !== null) {
         top += myGuider.offset.top;
       }
-      
+
       if (myGuider.offset.left !== null) {
         left += myGuider.offset.left;
       }
@@ -163,21 +159,29 @@ var guiders = (function($){
       }
       return guiders._guiders[id];
     },
-    
+
     _showOverlay: function() {
       $("#guider_overlay").fadeIn("fast");
     },
-    
+
+    _highlightElement: function(ele) {
+      $(ele).css({'z-index': 11});
+    },
+
+    _dehighlightElement: function(ele) {
+      $(ele).css({'z-index': 1});
+    },
+
     _hideOverlay: function() {
       $("#guider_overlay").fadeOut("fast");
     },
-    
+
     _initializeOverlay: function() {
       if ($("#guider_overlay").length === 0) {
         $("<div id=\"guider_overlay\"></div>").hide().appendTo("body");
       }
     },
-    
+
     _styleArrow: function(myGuider) {
       var position = myGuider.position || 0;
       if (!position) {
@@ -242,7 +246,7 @@ var guiders = (function($){
         }
       }
     },
-    
+
     next: function() {
       var currentGuider = guiders._guiders[guiders._currentGuiderID];
       if (typeof currentGuider === "undefined") {
@@ -253,6 +257,9 @@ var guiders = (function($){
         var myGuider = guiders._guiderById(nextGuiderId);
         var omitHidingOverlay = myGuider.overlay ? true : false;
         guiders.hideAll(omitHidingOverlay);
+        if (currentGuider.highlight) {
+            guiders._dehighlightElement(currentGuider.highlight);
+        }
         guiders.show(nextGuiderId);
       }
     },
@@ -292,7 +299,7 @@ var guiders = (function($){
 
       guiders._guiders[myGuider.id] = myGuider;
       guiders._lastCreatedGuiderID = myGuider.id;
-      
+
       /**
        * If the URL of the current window is of the form
        * http://www.myurl.com/mypage.html#guider=id
@@ -301,7 +308,7 @@ var guiders = (function($){
       if (myGuider.isHashable) {
         guiders._showIfHashed(myGuider);
       }
-      
+
       return guiders;
     },
 
@@ -319,19 +326,23 @@ var guiders = (function($){
       if (!id && guiders._lastCreatedGuiderID) {
         id = guiders._lastCreatedGuiderID;
       }
-      
+
       var myGuider = guiders._guiderById(id);
       if (myGuider.overlay) {
         guiders._showOverlay();
+        // if guider is attached to an element, make sure it's visible
+        if (myGuider.highlight) {
+          guiders._highlightElement(myGuider.highlight);
+        }
       }
-      
+
       guiders._attach(myGuider);
-      
+
       // You can use an onShow function to take some action before the guider is shown.
       if (myGuider.onShow) {
         myGuider.onShow(myGuider);
       }
-      
+
       myGuider.elem.fadeIn("fast");
 
       var windowHeight = $(window).height();
