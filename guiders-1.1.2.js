@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.1.1
+ * version 1.1.2
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -17,7 +17,7 @@
 
 var guiders = (function($){
   var guiders = {
-    version: "1.1.1",
+    version: "1.1.2",
 
     _defaultSettings: {
       attachTo: null,
@@ -55,6 +55,7 @@ var guiders = (function($){
     _guiders: {},
     _currentGuiderID: null,
     _lastCreatedGuiderID: null,
+    _zIndexForHilight: 101,
 
     _addButtons: function(myGuider) {
       // Add buttons
@@ -164,12 +165,12 @@ var guiders = (function($){
       $("#guider_overlay").fadeIn("fast");
     },
 
-    _highlightElement: function(ele) {
-      $(ele).css({'z-index': 11});
+    _highlightElement: function(selector) {
+      $(selector).css({'z-index': guiders._zIndexForHilight});
     },
 
-    _dehighlightElement: function(ele) {
-      $(ele).css({'z-index': 1});
+    _dehighlightElement: function(selector) {
+      $(selector).css({'z-index': 1});
     },
 
     _hideOverlay: function() {
