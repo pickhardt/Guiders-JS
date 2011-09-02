@@ -25,13 +25,13 @@ var guiders = (function($){
       buttonCustomHTML: "",
       description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       isHashable: true,
-      onShow: null,
-      overlay: false,
-      position: 0, // 1-12 follows an analog clock, 0 means centered
       offset: {
           top: null,
           left: null
       },
+      onShow: null,
+      overlay: false,
+      position: 0, // 1-12 follows an analog clock, 0 means centered
       title: "Sample title goes here",
       width: 400,
       xButton: false // this places a closer "x" button in the top right of the guider
