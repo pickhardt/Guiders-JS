@@ -257,7 +257,7 @@ var guiders = (function($){
       if (nextGuiderId !== null && nextGuiderId !== "") {
         var myGuider = guiders._guiderById(nextGuiderId);
         // Ensure myGuider.attachTo is present on the page. Else, skip to next guider.
-        if (typeof myGuider.attachTo !== "undefined" && $(myGuider.attachTo).size() === 0) {
+        if (typeof myGuider.attachTo !== "undefined" && !$(myGuider.attachTo).is(':visible')) {
           guiders._currentGuiderID = myGuider.id;
           guiders.next();
           return;
