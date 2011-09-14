@@ -57,13 +57,15 @@ var guiders = (function($){
     _lastCreatedGuiderID: null,
     _zIndexForHilight: 101,
 
-    if (myGuider.buttons == null || myGuider.buttons.length == 0) {
-      guiderButtonsContainer.remove();
-    }
-
     _addButtons: function(myGuider) {
       // Add buttons
       var guiderButtonsContainer = myGuider.elem.find(".guider_buttons");
+
+      if (myGuider.buttons == null || myGuider.buttons.length == 0) {
+        guiderButtonsContainer.remove();
+        return;
+      }
+
       for (var i = myGuider.buttons.length-1; i >= 0; i--) {
         var thisButton = myGuider.buttons[i];
         var thisButtonElem = $("<a></a>", {
