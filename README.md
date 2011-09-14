@@ -61,6 +61,7 @@ position: (optional / required if using attachTo) clock position at which the gu
 title: title of the guider
 width: (optional) custom width of the guider (it defaults to 400px)
 xButton: (optional) if true, a X will appear in the top right corner of the guider, as another way to close the guider
+classString: (optional) allows for styling different guiders differently based upon their classes
 ~~~
 
 
