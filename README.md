@@ -77,6 +77,8 @@ guiders.show(id); // shows the guider, given the id used at creation
 
 You'll likely want to change the default values, such as the width (set to 400px).  These can be found at the top of `guiders.js` in the `_defaultSettings` object.  You'll also want to modify the css file to match your application's branding.
 
+Lastly, if the URL of the current window is of the form `http://www.myurl.com/mypage.html#guider=foo`, then the guider with id equal to `foo` will be shown automatically.
+
 
 In Closing
 ----------
