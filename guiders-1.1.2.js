@@ -34,7 +34,8 @@ var guiders = (function($){
       position: 0, // 1-12 follows an analog clock, 0 means centered
       title: "Sample title goes here",
       width: 400,
-      xButton: false // this places a closer "x" button in the top right of the guider
+      xButton: false, // this places a closer "x" button in the top right of the guider
+      classString: ""
     },
 
     _htmlSkeleton: [
@@ -282,6 +283,7 @@ var guiders = (function($){
 
       var guiderElement = $(guiders._htmlSkeleton);
       myGuider.elem = guiderElement;
+      myGuider.elem.addClass(myGuider.classString);
       myGuider.elem.css("width", myGuider.width + "px");
 
       var guiderTitleContainer = guiderElement.find("h1.guider_title");
