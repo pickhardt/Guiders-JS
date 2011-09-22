@@ -61,6 +61,7 @@ position: (optional / required if using attachTo) clock position at which the gu
 title: title of the guider
 width: (optional) custom width of the guider (it defaults to 400px)
 xButton: (optional) if true, a X will appear in the top right corner of the guider, as another way to close the guider
+classString: (optional) allows for styling different guiders differently based upon their classes
 ~~~
 
 
@@ -76,6 +77,8 @@ guiders.show(id); // shows the guider, given the id used at creation
 ~~~
 
 You'll likely want to change the default values, such as the width (set to 400px).  These can be found at the top of `guiders.js` in the `_defaultSettings` object.  You'll also want to modify the css file to match your application's branding.
+
+Lastly, if the URL of the current window is of the form `http://www.myurl.com/mypage.html#guider=foo`, then the guider with id equal to `foo` will be shown automatically.
 
 
 In Closing
