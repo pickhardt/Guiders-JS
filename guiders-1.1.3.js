@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.1.2
+ * version 1.1.3
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -17,12 +17,13 @@
 
 var guiders = (function($){
   var guiders = {
-    version: "1.1.2",
+    version: "1.1.3",
 
     _defaultSettings: {
       attachTo: null,
       buttons: [{name: "Close"}],
       buttonCustomHTML: "",
+      classString: null,
       description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       isHashable: true,
       offset: {
@@ -34,8 +35,7 @@ var guiders = (function($){
       position: 0, // 1-12 follows an analog clock, 0 means centered
       title: "Sample title goes here",
       width: 400,
-      xButton: false, // this places a closer "x" button in the top right of the guider
-      classString: ""
+      xButton: false // this places a closer "x" button in the top right of the guider
     },
 
     _htmlSkeleton: [
@@ -62,7 +62,7 @@ var guiders = (function($){
       // Add buttons
       var guiderButtonsContainer = myGuider.elem.find(".guider_buttons");
 
-      if (myGuider.buttons == null || myGuider.buttons.length == 0) {
+      if (myGuider.buttons === null || myGuider.buttons.length === 0) {
         guiderButtonsContainer.remove();
         return;
       }
@@ -263,12 +263,6 @@ var guiders = (function($){
       var nextGuiderId = currentGuider.next || null;
       if (nextGuiderId !== null && nextGuiderId !== "") {
         var myGuider = guiders._guiderById(nextGuiderId);
-        // Ensure myGuider.attachTo is present on the page. Else, skip to next guider.
-        if (typeof myGuider.attachTo !== "undefined" && !$(myGuider.attachTo).is(':visible')) {
-          guiders._currentGuiderID = myGuider.id;
-          guiders.next();
-          return;
-        }        
         var omitHidingOverlay = myGuider.overlay ? true : false;
         guiders.hideAll(omitHidingOverlay);
         if (currentGuider.highlight) {
@@ -289,17 +283,15 @@ var guiders = (function($){
 
       var guiderElement = $(guiders._htmlSkeleton);
       myGuider.elem = guiderElement;
-      myGuider.elem.addClass(myGuider.classString);
+      if (typeof myGuider.classString !== "undefined" && myGuider.classString !== null) {
+        myGuider.elem.addClass(myGuider.classString);
+      }
       myGuider.elem.css("width", myGuider.width + "px");
 
-      var guiderTitleContainer = guiderElement.find("h1.guider_title");
-      if (myGuider.title == null || myGuider.title.length == 0) {
-        guiderTitleContainer.remove();
-      } else {
-        guiderTitleContainer.html(myGuider.title);
-      }
+      var guiderTitleContainer = guiderElement.find(".guider_title");
+      guiderTitleContainer.html(myGuider.title);
 
-      guiderElement.find("p.guider_description").html(myGuider.description);
+      guiderElement.find(".guider_description").html(myGuider.description);
 
       guiders._addButtons(myGuider);
 
