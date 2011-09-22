@@ -60,6 +60,12 @@ var guiders = (function($){
     _addButtons: function(myGuider) {
       // Add buttons
       var guiderButtonsContainer = myGuider.elem.find(".guider_buttons");
+
+      if (myGuider.buttons == null || myGuider.buttons.length == 0) {
+        guiderButtonsContainer.remove();
+        return;
+      }
+
       for (var i = myGuider.buttons.length-1; i >= 0; i--) {
         var thisButton = myGuider.buttons[i];
         var thisButtonElem = $("<a></a>", {
@@ -277,7 +283,14 @@ var guiders = (function($){
       var guiderElement = $(guiders._htmlSkeleton);
       myGuider.elem = guiderElement;
       myGuider.elem.css("width", myGuider.width + "px");
-      guiderElement.find("h1.guider_title").html(myGuider.title);
+
+      var guiderTitleContainer = guiderElement.find("h1.guider_title");
+      if (myGuider.title == null || myGuider.title.length == 0) {
+        guiderTitleContainer.remove();
+      } else {
+        guiderTitleContainer.html(myGuider.title);
+      }
+
       guiderElement.find("p.guider_description").html(myGuider.description);
 
       guiders._addButtons(myGuider);
