@@ -103,14 +103,14 @@ var guiders = (function($){
     },
 
     _attach: function(myGuider) {
-      if (typeof myGuider.attachTo === "undefined" || myGuider === null) {
+      if (myGuider === null) {
         return;
       }
 
       var myHeight = myGuider.elem.innerHeight();
       var myWidth = myGuider.elem.innerWidth();
 
-      if (myGuider.position === 0) {
+      if (myGuider.position === 0 || myGuider.attachTo === null) {
         myGuider.elem.css("position", "absolute");
         myGuider.elem.css("top", ($(window).height() - myHeight) / 3 + $(window).scrollTop() + "px");
         myGuider.elem.css("left", ($(window).width() - myWidth) / 2 + $(window).scrollLeft() + "px");
