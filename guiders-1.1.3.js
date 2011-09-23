@@ -91,6 +91,10 @@ var guiders = (function($){
         var myCustomHTML = $(myGuider.buttonCustomHTML);
         myGuider.elem.find(".guider_buttons").append(myCustomHTML);
       }
+
+			if (myGuider.buttons.length == 0) {
+				guiderButtonsContainer.remove();
+			}
     },
 
     _addXButton: function(myGuider) {
