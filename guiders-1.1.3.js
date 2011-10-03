@@ -57,6 +57,8 @@ var guiders = (function($){
     _currentGuiderID: null,
     _lastCreatedGuiderID: null,
     _zIndexForHilight: 101,
+    _nextButton: 'next',
+    _closeButton: 'close', 
 
     _addButtons: function(myGuider) {
       // Add buttons
@@ -80,9 +82,9 @@ var guiders = (function($){
 
         if (thisButton.onclick) {
           thisButtonElem.bind("click", thisButton.onclick);
-        } else if (!thisButton.onclick && thisButton.name.toLowerCase() === "close") {
+        } else if (!thisButton.onclick && thisButton.name.toLowerCase() === guiders._closeButton) {
           thisButtonElem.bind("click", function() { guiders.hideAll(); });
-        } else if (!thisButton.onclick && thisButton.name.toLowerCase() === "next") {
+        } else if (!thisButton.onclick && thisButton.name.toLowerCase() === guiders._nextButton) { 
           thisButtonElem.bind("click", function() { guiders.next(); });
         }
       }
@@ -380,4 +382,3 @@ var guiders = (function($){
 
   return guiders;
 }).call(this, jQuery);
-
