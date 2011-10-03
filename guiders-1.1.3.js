@@ -82,9 +82,9 @@ var guiders = (function($){
 
         if (thisButton.onclick) {
           thisButtonElem.bind("click", thisButton.onclick);
-        } else if (!thisButton.onclick && thisButton.name.toLowerCase() === guiders._closeButton) {
+        } else if (!thisButton.onclick && thisButton.name.toLowerCase() === guiders._closeButton.toLowerCase()) {
           thisButtonElem.bind("click", function() { guiders.hideAll(); });
-        } else if (!thisButton.onclick && thisButton.name.toLowerCase() === guiders._nextButton) { 
+        } else if (!thisButton.onclick && thisButton.name.toLowerCase() === guiders._nextButton.toLowerCase()) { 
           thisButtonElem.bind("click", function() { guiders.next(); });
         }
       }
