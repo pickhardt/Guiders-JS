@@ -173,7 +173,14 @@ var guiders = (function($){
     },
 
     _showOverlay: function() {
-      $("#guider_overlay").fadeIn("fast");
+      $("#guider_overlay").fadeIn("fast", function(){
+        if (this.style.removeAttribute) {
+          this.style.removeAttribute("filter");
+        }
+      });
+      // This callback is needed to fix an IE opacity bug.
+      // See also:
+      // http://www.kevinleary.net/jquery-fadein-fadeout-problems-in-internet-explorer/
     },
 
     _highlightElement: function(selector) {
