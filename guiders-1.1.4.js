@@ -53,9 +53,11 @@ var guiders = (function($){
     ].join(""),
 
     _arrowSize: 42, // = arrow's width and height
-    _guiders: {},
+    _closeButtonTitle: "Close",
     _currentGuiderID: null,
+    _guiders: {},
     _lastCreatedGuiderID: null,
+    _nextButtonTitle: "Next",
     _zIndexForHilight: 101,
 
     _addButtons: function(myGuider) {
@@ -80,9 +82,11 @@ var guiders = (function($){
 
         if (thisButton.onclick) {
           thisButtonElem.bind("click", thisButton.onclick);
-        } else if (!thisButton.onclick && thisButton.name.toLowerCase() === "close") {
+        } else if (!thisButton.onclick &&
+                   thisButton.name.toLowerCase() === guiders._closeButtonTitle.toLowerCase()) { 
           thisButtonElem.bind("click", function() { guiders.hideAll(); });
-        } else if (!thisButton.onclick && thisButton.name.toLowerCase() === "next") {
+        } else if (!thisButton.onclick &&
+                   thisButton.name.toLowerCase() === guiders._nextButtonTitle.toLowerCase()) { 
           thisButtonElem.bind("click", function() { guiders.next(); });
         }
       }
