@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.1.3
+ * version 1.1.4
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
