@@ -13,12 +13,76 @@
  * Email us at jeff+pickhardt@optimizely.com or hello@optimizely.com.
  *
  * Enjoy!
+ *
+ * Changes:
+ * 
+ * - cookie: guiders property allows you to name a cookie that gets updated every time show() is called. Requires jQuery Cookies plugin (https://github.com/carhartl/jquery-cookie)
+ * - failStep: guiders property allows you to name a step to show() if the show() case fails (attachTo element is missing). For obvious reasons, this should not have an attachTo
+ * - resume(): start up tour from current place in cookie (if set). This is useful when your tour leaves the page you are on. Unlike show, it will skip steps that need to be skipped.
+ * - endTour(): Like hideAll() but it remembers to remove the cookie position.
+ * - initGuider(): Allows for initializing Guiders without actually creating them (useful when guider is not in the DOM yet. Avoids error: base is null [Break On This Error] var top = base.top;
+ * - autoAdvance: property allows binding to an element (and event) to auto-advance the guider. This is a combination of onShow() binding plus removing of bind when next is done.
+ * - shouldSkip: property defines a function handler forces a skip of this step if function returns true.
+ * - overlay "error": If not set to true, this defines the class of the overlay. (This is useful for coloring the background of the overlay red on error.
+ * @todo: add pulsing jquery.pulse https://github.com/jamespadolsey/jQuery-Plugins/tree/master/pulse/
+ *
+ * @author tychay@php.net Patches for WordPress.com Guided Tour
+ * @todo Merge in this https://github.com/jeff-optimizely/Guiders-JS/pull/33 and modify so it so it checks either visibility or DOM
  */
 
 var guiders = (function($) {
   var guiders = {};
   
   guiders.version = "1.2.0";
+
+  // Begin additional functionality
+  guiders.cookie = ""; //set this if you want to write the step to a cookie each show()
+  guiders.failStep = "";
+  /**
+   * Various common utility handlers you can bind as advance handlers to your
+   * guider configurations
+   */
+  guiders.handlers = {
+    /**
+     * Auto-advance if the element is missing
+     */
+    advance_if_not_exists: function() {
+      return guiders._defaultSettings._bindAdvanceHandler;
+    },
+    /**
+     * Advance if test_function() returns true
+     */
+    advance_if_test: function(test_function) {
+        return function(this_obj) {
+        var bind_obj = $(this_obj.autoAdvance[0]);
+        this_obj.advanceHandler = function() {
+          if (!test_function()) { return; } //don't advance if test_function is false
+          bind_obj.unbind(this_obj.autoAdvance[1], this_obj.advanceHandler); //unbind event before next
+          guiders.next();
+        };
+      }
+    },
+    /**
+     * Advance if the form element has content
+     */
+    advance_if_form_content: function(this_obj) {
+      var bind_obj = $(this_obj.autoAdvance[0]);
+      this_obj.advanceHandler = function() {
+        if ($(this_obj.autoAdvance[0]).val() == '') { return; } //don't advance if you haven't added content
+        bind_obj.unbind(this_obj.autoAdvance[1], this_obj.advanceHandler); //unbind event before next
+        guiders.next();
+      };
+    },
+    /**
+     * Skip if form element has content
+     *
+     * this context will be inside the actual guider step, not here
+     */
+    skip_if_form_content: function() { //skip if form element has content
+      return ($(this.autoAdvance[0]).val() !== '')
+    }
+    };
+  // end additional functionality
 
   guiders._defaultSettings = {
     attachTo: null,
@@ -38,7 +102,27 @@ var guiders = (function($) {
     title: "Sample title goes here",
     width: 400,
     xButton: false // this places a closer "x" button in the top right of the guider
+    autoAdvance: null, //replace with array of selector,event to bind to cause auto-advance
+    advanceHandler: null, //action to do on advance. Set by bindAdvanceHandler closure done on show()
+    bindAdvanceHandler: function(this_obj) {
+      if (!this_obj.autoAdvance) { return; }
+      this_obj.advanceHandler = function() {
+        $(this_obj.autoAdvance[0]).unbind(this_obj.autoAdvance[1], this_obj.advanceHandler); //unbind event before next
+        switch (this_obj.autoAdvance[1]) {
+            case 'hover': //delay hover so the guider has time to get into position (in the case of flyout menus, etc)
+          guiders.hideAll(); //hide immediately
+          setTimeout(function() { guiders.next(); }, 1000); //1 second delay
+          break;
+          case 'blur':
+          // fall through...
+          default:
+          guiders.next();
+        }
+      },
+    },
+  shouldSkip: null, //function handler that allows you to skip this function if returns true.
   };
+
 
   guiders._htmlSkeleton = [
     "<div class='guider'>",
@@ -57,7 +141,8 @@ var guiders = (function($) {
   guiders._arrowSize = 42; // = arrow's width and height
   guiders._closeButtonTitle = "Close";
   guiders._currentGuiderID = null;
-  guiders._guiders = {};
+  guiders._guiderInits = {}; //stores uncreated guiders indexed by id
+  guiders._guiders = {}; //stores created guiders indexed by id
   guiders._lastCreatedGuiderID = null;
   guiders._nextButtonTitle = "Next";
   guiders._zIndexForHighlight = 101;
@@ -65,12 +150,12 @@ var guiders = (function($) {
   guiders._addButtons = function(myGuider) {
     // Add buttons
     var guiderButtonsContainer = myGuider.elem.find(".guider_buttons");
-  
+
     if (myGuider.buttons === null || myGuider.buttons.length === 0) {
       guiderButtonsContainer.remove();
       return;
     }
-  
+
     for (var i = myGuider.buttons.length-1; i >= 0; i--) {
       var thisButton = myGuider.buttons[i];
       var thisButtonElem = $("<a></a>", {
@@ -79,9 +164,9 @@ var guiders = (function($) {
       if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
         thisButtonElem.addClass(thisButton.classString);
       }
-  
+
       guiderButtonsContainer.append(thisButtonElem);
-  
+
       if (thisButton.onclick) {
         thisButtonElem.bind("click", thisButton.onclick);
       } else if (!thisButton.onclick &&
@@ -92,15 +177,15 @@ var guiders = (function($) {
         thisButtonElem.bind("click", function() { guiders.next(); });
       }
     }
-  
+
     if (myGuider.buttonCustomHTML !== "") {
       var myCustomHTML = $(myGuider.buttonCustomHTML);
       myGuider.elem.find(".guider_buttons").append(myCustomHTML);
     }
-  
-		if (myGuider.buttons.length == 0) {
-			guiderButtonsContainer.remove();
-		}
+
+    if (myGuider.buttons.length == 0) {
+      guiderButtonsContainer.remove();
+    }
   };
 
   guiders._addXButton = function(myGuider) {
@@ -116,27 +201,27 @@ var guiders = (function($) {
     if (myGuider === null) {
       return;
     }
-    
+
     var myHeight = myGuider.elem.innerHeight();
     var myWidth = myGuider.elem.innerWidth();
-    
+
     if (myGuider.position === 0 || myGuider.attachTo === null) {
       myGuider.elem.css("position", "absolute");
       myGuider.elem.css("top", ($(window).height() - myHeight) / 3 + $(window).scrollTop() + "px");
       myGuider.elem.css("left", ($(window).width() - myWidth) / 2 + $(window).scrollLeft() + "px");
       return;
     }
-    
+
     myGuider.attachTo = $(myGuider.attachTo);
     var base = myGuider.attachTo.offset();
     var attachToHeight = myGuider.attachTo.innerHeight();
     var attachToWidth = myGuider.attachTo.innerWidth();
-    
+
     var top = base.top;
     var left = base.left;
-    
+
     var bufferOffset = 0.9 * guiders._arrowSize;
-    
+
     var offsetMap = { // Follows the form: [height, width]
       1: [-bufferOffset - myHeight, attachToWidth - myWidth],
       2: [0, bufferOffset + attachToWidth],
@@ -151,19 +236,19 @@ var guiders = (function($) {
       11: [-bufferOffset - myHeight, 0],
       12: [-bufferOffset - myHeight, attachToWidth/2 - myWidth/2]
     };
-    
+
     offset = offsetMap[myGuider.position];
     top   += offset[0];
     left  += offset[1];
-    
+
     if (myGuider.offset.top !== null) {
       top += myGuider.offset.top;
     }
-    
+
     if (myGuider.offset.left !== null) {
       left += myGuider.offset.left;
     }
-    
+
     myGuider.elem.css({
       "position": "absolute",
       "top": top,
@@ -171,17 +256,36 @@ var guiders = (function($) {
     });
   };
 
+  /**
+   * Returns the guider by ID.
+   *
+   * Add check to create and grab guider from inits if it exists there.
+   */
   guiders._guiderById = function(id) {
     if (typeof guiders._guiders[id] === "undefined") {
-      throw "Cannot find guider with id " + id;
+      if (typeof guiders._guiderInits[id] == "undefined") {
+          throw "Cannot find guider with id " + id;
+      }
+      var myGuider = guiders._guiderInits[id];
+      // this can happen when resume() hits a snag somewhere
+      if (myGuider.attachTo && guiders.failStep && ($(myGuider.attachTo).length == 0)) { 
+        throw "Guider attachment not found with id " + myGuider.attachTo;
+      }
+      guiders.createGuider(myGuider);
+      delete guiders._guiderInits[id]; //prevents recursion
+      // fall through ...
     }
     return guiders._guiders[id];
   };
 
-  guiders._showOverlay = function() {
+  guiders._showOverlay = function(overlayClass) {
     $("#guider_overlay").fadeIn("fast", function(){
       if (this.style.removeAttribute) {
         this.style.removeAttribute("filter");
+      }
+    }).each( function() {
+      if (overlayClass) {
+        $(this).addClass(overlayClass);
       }
     });
     // This callback is needed to fix an IE opacity bug.
@@ -198,7 +302,7 @@ var guiders = (function($) {
   };
 
   guiders._hideOverlay = function() {
-    $("#guider_overlay").fadeOut("fast");
+    $("#guider_overlay").fadeOut("fast").removeClass();
   };
 
   guiders._initializeOverlay = function() {
@@ -228,7 +332,7 @@ var guiders = (function($) {
       12: "guider_arrow_down"
     };
     myGuiderArrow.addClass(newClass[position]);
-  
+
     var myHeight = myGuider.elem.innerHeight();
     var myWidth = myGuider.elem.innerWidth();
     var arrowOffset = guiders._arrowSize / 2;
@@ -248,6 +352,8 @@ var guiders = (function($) {
     };
     var position = positionMap[myGuider.position];
     myGuiderArrow.css(position[0], position[1] + "px");
+    // TODO: experiment with pulsing
+    //myGuiderArrow.css(position[0], position[1] + "px").stop().pulse({backgroundPosition:["7px 0","0 0"],right:["-35px","-42px"]}, {times: 10, duration: 'slow'});
   };
 
   /**
@@ -273,13 +379,28 @@ var guiders = (function($) {
   };
 
   guiders.next = function() {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (typeof currentGuider === "undefined") {
+    //var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    try {
+      var currentGuider = guiders._guiderById(guiders._currentGuiderID); //has check to make sure guider is initialized
+    } catch (err) {
+      //console.log(err);
       return;
+    }
+    //remove current auto-advance handler bound before advancing
+    if (currentGuider.autoAdvance) {
+      $(currentGuider.autoAdvance[0]).unbind(currentGuider.autoAdvance[1], currentGuider.advanceHandler);
     }
     var nextGuiderId = currentGuider.next || null;
     if (nextGuiderId !== null && nextGuiderId !== "") {
       var myGuider = guiders._guiderById(nextGuiderId);
+      // If skip function is bound, check to see if we should advance the guider
+      if (myGuider.shouldSkip) {
+        if ( myGuider.shouldSkip() ) {
+          guiders._currentGuiderID = myGuider.id;
+          guiders.next();
+          return;
+        }
+      }
       var omitHidingOverlay = myGuider.overlay ? true : false;
       guiders.hideAll(omitHidingOverlay);
       if (currentGuider.highlight) {
@@ -289,48 +410,69 @@ var guiders = (function($) {
     }
   };
 
+  /**
+   * This stores the guider but does no work on it.
+   *
+   * The main problem with createGuider() is that it needs _attach() to work. If
+   * you try to _attachTo something that doesn't exist yet, the guider will
+   * suffer a fatal javscript error and never initialize.
+   *
+   * A secondary problem is createGuider() code is expensive on the CPU/time.
+   * This prevents more than one guider from being created at a time (it defers
+   * creation to a user-is-idle time.
+   */
+  guiders.initGuider = function(passedSettings) {
+    if (passedSettings === null || passedSettings === undefined) {
+      return;
+    }
+    if (!passedSettings.id) {
+      return;
+    }
+    this._guiderInits[passedSettings.id] = passedSettings;
+  };
+
   guiders.createGuider = function(passedSettings) {
     if (passedSettings === null || passedSettings === undefined) {
       passedSettings = {};
     }
-    
+
     // Extend those settings with passedSettings
     myGuider = $.extend({}, guiders._defaultSettings, passedSettings);
     myGuider.id = myGuider.id || String(Math.floor(Math.random() * 1000));
-    
+
     var guiderElement = $(guiders._htmlSkeleton);
     myGuider.elem = guiderElement;
     if (typeof myGuider.classString !== "undefined" && myGuider.classString !== null) {
       myGuider.elem.addClass(myGuider.classString);
     }
     myGuider.elem.css("width", myGuider.width + "px");
-    
+
     var guiderTitleContainer = guiderElement.find(".guider_title");
     guiderTitleContainer.html(myGuider.title);
-    
+
     guiderElement.find(".guider_description").html(myGuider.description);
-    
+
     guiders._addButtons(myGuider);
-    
+
     if (myGuider.xButton) {
         guiders._addXButton(myGuider);
     }
-    
+
     guiderElement.hide();
     guiderElement.appendTo("body");
     guiderElement.attr("id", myGuider.id);
-    
+
     // Ensure myGuider.attachTo is a jQuery element.
     if (typeof myGuider.attachTo !== "undefined" && myGuider !== null) {
       guiders._attach(myGuider);
       guiders._styleArrow(myGuider);
     }
-    
+
     guiders._initializeOverlay();
-    
+
     guiders._guiders[myGuider.id] = myGuider;
     guiders._lastCreatedGuiderID = myGuider.id;
-    
+
     /**
      * If the URL of the current window is of the form
      * http://www.myurl.com/mypage.html#guider=id
@@ -339,7 +481,7 @@ var guiders = (function($) {
     if (myGuider.isHashable) {
       guiders._showIfHashed(myGuider);
     }
-    
+
     return guiders;
   };
 
@@ -353,42 +495,114 @@ var guiders = (function($) {
     return guiders;
   };
 
+  /**
+   * Like hideAll() but remembers to delete the cookie if set
+   */
+  guiders.endTour = function(omitHidingOverlay) {
+    if (guiders.cookie) {
+      $.cookie(guiders.cookie, null);
+    }
+    guiders.hideAll(omitHidingOverlay);
+  };
+
+  /**
+   * Like show() but it will use a cookie if id is not specified and skips
+   * steps if necessary
+   */
+  guiders.resume = function(id) {
+    // if cookie specified and no id passed in, resume from cookie
+    if (!id && guiders.cookie) {
+      id = $.cookie(guiders.cookie);
+    }
+    //if no id or cookie, don't resume (they can call show themselves)
+    if ( !id ) {
+      return false;
+    }
+    try {
+      var myGuider = guiders._guiderById(id);
+    } catch (err) {
+      if ( guiders.failStep ) {
+        guiders.show(guiders.failStep);
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    //skip if should skip
+    if (myGuider.shouldSkip) {
+      if ( myGuider.shouldSkip() ) {
+        guiders._currentGuiderID = myGuider.id;
+        guiders.next();
+        return true;
+      }
+    }
+    guiders.show();
+    return true;
+  };
+
   guiders.show = function(id) {
     if (!id && guiders._lastCreatedGuiderID) {
       id = guiders._lastCreatedGuiderID;
     }
-  
-    var myGuider = guiders._guiderById(id);
+
+    try {
+      var myGuider = guiders._guiderById(id);
+    } catch (err) {
+      //console.log(err);
+      return;
+    }
     if (myGuider.overlay) {
-      guiders._showOverlay();
+      guiders._showOverlay(myGuider.overlay);
       // if guider is attached to an element, make sure it's visible
       if (myGuider.highlight) {
         guiders._highlightElement(myGuider.highlight);
       }
     }
-  
+
     guiders._attach(myGuider);
-  
+
+    //If necessary, save the guider id to a cookie
+    if (guiders.cookie) {
+      $.cookie(guiders.cookie, id);
+    }
+    //handle binding of auto-advance action
+    if (myGuider.autoAdvance) {
+      myGuider.bindAdvanceHandler(myGuider);
+      $(myGuider.autoAdvance[0]).bind(myGuider.autoAdvance[1], myGuider.advanceHandler);
+    }
     // You can use an onShow function to take some action before the guider is shown.
     if (myGuider.onShow) {
       myGuider.onShow(myGuider);
     }
-  
+
     myGuider.elem.fadeIn("fast");
-  
+
     var windowHeight = $(window).height();
     var scrollHeight = $(window).scrollTop();
     var guiderOffset = myGuider.elem.offset();
     var guiderElemHeight = myGuider.elem.height();
-  
+
     if (guiderOffset.top - scrollHeight < 0 ||
         guiderOffset.top + guiderElemHeight + 40 > scrollHeight + windowHeight) {
       window.scrollTo(0, Math.max(guiderOffset.top + (guiderElemHeight / 2) - (windowHeight / 2), 0));
     }
-  
+
     guiders._currentGuiderID = id;
+    // Create (preload) next guider if it hasn't been created
+    var nextGuiderId = guiders.next || null;
+    if (nextGuiderId !== null && nextGuiderId !== "") {
+      if (var nextGuiderData = guiders._guiderInits[nextGuiderId]) {
+        //don't attach if it doesn't exist in DOM
+        var testInDom = $(nextGuiderData.attachTo);
+        if ( testInDom.length > 0 ) {
+          guiders.createGuider(guiders.nextGuiderData);
+          delete nextGuiderData;
+        }
+      }
+    }
     return guiders;
   };
-  
+
   return guiders;
 }).call(this, jQuery);
