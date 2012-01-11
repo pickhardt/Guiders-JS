@@ -28,6 +28,7 @@
  *
  * @author tychay@php.net Patches for WordPress.com Guided Tour
  * @todo Merge in this https://github.com/jeff-optimizely/Guiders-JS/pull/33 and modify so it so it checks either visibility or DOM
+ * @see https://github.com/tychay/Guiders-JS
  */
 
 var guiders = (function($) {
@@ -101,7 +102,7 @@ var guiders = (function($) {
     position: 0, // 1-12 follows an analog clock, 0 means centered
     title: "Sample title goes here",
     width: 400,
-    xButton: false // this places a closer "x" button in the top right of the guider
+    xButton: false, // this places a closer "x" button in the top right of the guider
     autoAdvance: null, //replace with array of selector,event to bind to cause auto-advance
     advanceHandler: null, //action to do on advance. Set by bindAdvanceHandler closure done on show()
     bindAdvanceHandler: function(this_obj) {
@@ -118,7 +119,7 @@ var guiders = (function($) {
           default:
           guiders.next();
         }
-      },
+      };
     },
   shouldSkip: null, //function handler that allows you to skip this function if returns true.
   };
@@ -158,8 +159,10 @@ var guiders = (function($) {
 
     for (var i = myGuider.buttons.length-1; i >= 0; i--) {
       var thisButton = myGuider.buttons[i];
+      // Error in botton class name and href
       var thisButtonElem = $("<a></a>", {
-                              "class" : "guider_button",
+                              "href" : "#",
+                              "class" : "button-secondary",
                               "text" : thisButton.name });
       if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
         thisButtonElem.addClass(thisButton.classString);
@@ -591,8 +594,9 @@ var guiders = (function($) {
     guiders._currentGuiderID = id;
     // Create (preload) next guider if it hasn't been created
     var nextGuiderId = guiders.next || null;
+	var nextGuiderData;
     if (nextGuiderId !== null && nextGuiderId !== "") {
-      if (var nextGuiderData = guiders._guiderInits[nextGuiderId]) {
+      if (nextGuiderData = guiders._guiderInits[nextGuiderId]) {
         //don't attach if it doesn't exist in DOM
         var testInDom = $(nextGuiderData.attachTo);
         if ( testInDom.length > 0 ) {
