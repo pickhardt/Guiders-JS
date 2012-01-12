@@ -1,4 +1,4 @@
-Guiders.js (version 1.2.0) + WP-Guiders (version 1.2.1)
+Guiders.js (version 1.2.0) + WP-Guiders (not committed)
 ======================================================
 
 Guiders are a user experience design pattern for introducing users to a web application.  WP-Guiders is a WordPress plugin for integrating Guiders.js into the WordPress admin a la [WP-Pointers](http://wpeden.com/how-to-use-wp-pointer-tooltip-in-wordpress-3-3/) in WordPress 3.3 and later.
