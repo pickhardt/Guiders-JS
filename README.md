@@ -68,7 +68,7 @@ The parameters for creating guiders are:
 - `highlight`: (optional) selector of the html element you want to highlight (will cause element to be above the overlay)
 - `isHashable`: (optional) allows the use of hash in the query string to show the guider automatically (see below).
 - `offset`: fine tune the position of the guider, e.g. `{ left:0, top: -10 }`
-- `onShow`: (optional) function that will be executed just before the guider is shown by `show()`
+- `onShow`: (optional) function that will be executed just before the guider is shown by `show()`. This function has a parameter which is the guider being shown. Note that if this function returns a guider, then it is assumed that you have shown() that and don't want to show the guider being onShow. For instance, you can have onShow test for something and return a `show()` of a different step. Then it shunts the current.
 - `overlay`: (optional) if true, an overlay will pop up between the guider and the rest of the page. Note that you can give it a string value, which will inject that as a class name into the overlay. This is useful in conjunction with a css rule for coloring the background of an overlay red on `'error'` for error events and the like.
 - `position`: (optional / required if using attachTo) clock position at which the guider should be attached to the html element
 - `shouldSkip`: (optional) a function handler that forces a skip of this step if the function returns true.
