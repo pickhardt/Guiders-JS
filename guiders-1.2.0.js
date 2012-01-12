@@ -24,10 +24,10 @@
  * - autoAdvance: property allows binding to an element (and event) to auto-advance the guider. This is a combination of onShow() binding plus removing of bind when next is done.
  * - shouldSkip: property defines a function handler forces a skip of this step if function returns true.
  * - overlay "error": If not set to true, this defines the class of the overlay. (This is useful for coloring the background of the overlay red on error.
- * @todo: add pulsing jquery.pulse https://github.com/jamespadolsey/jQuery-Plugins/tree/master/pulse/
  *
  * @author tychay@php.net Patches for WordPress.com Guided Tour
  * @todo Merge in this https://github.com/jeff-optimizely/Guiders-JS/pull/33 and modify so it so it checks either visibility or DOM
+ * @todo: add pulsing jquery.pulse https://github.com/jamespadolsey/jQuery-Plugins/tree/master/pulse/
  * @see https://github.com/tychay/Guiders-JS
  */
 
@@ -35,6 +35,45 @@ var guiders = (function($) {
   var guiders = {};
   
   guiders.version = "1.2.0";
+
+  guiders._defaultSettings = {
+    attachTo: null,
+    autoAdvance: null, //replace with array of selector, event to bind to cause auto-advance
+    bindAdvanceHandler: function(this_obj) { //see guiders.handlers below for other common options
+      if (!this_obj.autoAdvance) { return; }
+      this_obj._advanceHandler = function() {
+        $(this_obj.autoAdvance[0]).unbind(this_obj.autoAdvance[1], this_obj._advanceHandler); //unbind event before next
+        switch (this_obj.autoAdvance[1]) {
+          case 'hover': //delay hover so the guider has time to get into position (in the case of flyout menus, etc)
+            guiders.hideAll(); //hide immediately
+            setTimeout(function() { guiders.next(); }, 1000); //1 second delay
+            break;
+          case 'blur':
+            // fall through...
+          default:
+            guiders.next();
+        }
+      };
+    },
+    buttons: [{name: "Close"}],
+    buttonCustomHTML: "",
+    classString: null,
+    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    highlight: null,
+    isHashable: true,
+    offset: {
+        top: null,
+        left: null
+    },
+    onShow: null,
+    overlay: false,
+    position: 0, // 1-12 follows an analog clock, 0 means centered
+    shouldSkip: null, //function handler that allows you to skip this function if returns true.
+    title: "Sample title goes here",
+    width: 400,
+    xButton: false, // this places a closer "x" button in the top right of the guider
+    _advanceHandler: null //action to do on advance. Set by bindAdvanceHandler closure done on show()
+  };
 
   // Begin additional functionality
   guiders.cookie = ""; //set this if you want to write the step to a cookie each show()
@@ -56,9 +95,9 @@ var guiders = (function($) {
     advance_if_test: function(test_function) {
         return function(this_obj) {
         var bind_obj = $(this_obj.autoAdvance[0]);
-        this_obj.advanceHandler = function() {
+        this_obj._advanceHandler = function() {
           if (!test_function()) { return; } //don't advance if test_function is false
-          bind_obj.unbind(this_obj.autoAdvance[1], this_obj.advanceHandler); //unbind event before next
+          bind_obj.unbind(this_obj.autoAdvance[1], this_obj._advanceHandler); //unbind event before next
           guiders.next();
         };
       }
@@ -68,9 +107,9 @@ var guiders = (function($) {
      */
     advance_if_form_content: function(this_obj) {
       var bind_obj = $(this_obj.autoAdvance[0]);
-      this_obj.advanceHandler = function() {
+      this_obj._advanceHandler = function() {
         if ($(this_obj.autoAdvance[0]).val() == '') { return; } //don't advance if you haven't added content
-        bind_obj.unbind(this_obj.autoAdvance[1], this_obj.advanceHandler); //unbind event before next
+        bind_obj.unbind(this_obj.autoAdvance[1], this_obj._advanceHandler); //unbind event before next
         guiders.next();
       };
     },
@@ -84,46 +123,6 @@ var guiders = (function($) {
     }
     };
   // end additional functionality
-
-  guiders._defaultSettings = {
-    attachTo: null,
-    buttons: [{name: "Close"}],
-    buttonCustomHTML: "",
-    classString: null,
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    highlight: null,
-    isHashable: true,
-    offset: {
-        top: null,
-        left: null
-    },
-    onShow: null,
-    overlay: false,
-    position: 0, // 1-12 follows an analog clock, 0 means centered
-    title: "Sample title goes here",
-    width: 400,
-    xButton: false, // this places a closer "x" button in the top right of the guider
-    autoAdvance: null, //replace with array of selector,event to bind to cause auto-advance
-    advanceHandler: null, //action to do on advance. Set by bindAdvanceHandler closure done on show()
-    bindAdvanceHandler: function(this_obj) {
-      if (!this_obj.autoAdvance) { return; }
-      this_obj.advanceHandler = function() {
-        $(this_obj.autoAdvance[0]).unbind(this_obj.autoAdvance[1], this_obj.advanceHandler); //unbind event before next
-        switch (this_obj.autoAdvance[1]) {
-            case 'hover': //delay hover so the guider has time to get into position (in the case of flyout menus, etc)
-          guiders.hideAll(); //hide immediately
-          setTimeout(function() { guiders.next(); }, 1000); //1 second delay
-          break;
-          case 'blur':
-          // fall through...
-          default:
-          guiders.next();
-        }
-      };
-    },
-  shouldSkip: null, //function handler that allows you to skip this function if returns true.
-  };
-
 
   guiders._htmlSkeleton = [
     "<div class='guider'>",
@@ -391,7 +390,7 @@ var guiders = (function($) {
     }
     //remove current auto-advance handler bound before advancing
     if (currentGuider.autoAdvance) {
-      $(currentGuider.autoAdvance[0]).unbind(currentGuider.autoAdvance[1], currentGuider.advanceHandler);
+      $(currentGuider.autoAdvance[0]).unbind(currentGuider.autoAdvance[1], currentGuider._advanceHandler);
     }
     var nextGuiderId = currentGuider.next || null;
     if (nextGuiderId !== null && nextGuiderId !== "") {
@@ -572,7 +571,7 @@ var guiders = (function($) {
     //handle binding of auto-advance action
     if (myGuider.autoAdvance) {
       myGuider.bindAdvanceHandler(myGuider);
-      $(myGuider.autoAdvance[0]).bind(myGuider.autoAdvance[1], myGuider.advanceHandler);
+      $(myGuider.autoAdvance[0]).bind(myGuider.autoAdvance[1], myGuider._advanceHandler);
     }
     // You can use an onShow function to take some action before the guider is shown.
     if (myGuider.onShow) {
@@ -594,7 +593,7 @@ var guiders = (function($) {
     guiders._currentGuiderID = id;
     // Create (preload) next guider if it hasn't been created
     var nextGuiderId = guiders.next || null;
-	var nextGuiderData;
+    var nextGuiderData;
     if (nextGuiderId !== null && nextGuiderId !== "") {
       if (nextGuiderData = guiders._guiderInits[nextGuiderId]) {
         //don't attach if it doesn't exist in DOM

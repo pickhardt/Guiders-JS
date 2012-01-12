@@ -48,6 +48,7 @@ The parameters for creating guiders are:
 
 - `attachTo`: (optional) selector of the html element you want to attach the guider to
 - `autoAdvance` (optional): Array consisting of an element and event, that causes an auto-advance the guider when that event's element is triggered. This is a combination of `onShow()` binding of a `next()` plus a automatic removal of the bind when a `next()` happens.
+- `bindAdvanceHandler` (optional): When using `autoAdvance` above,  it will (by default) normally advance if the event occurs. But sometimes you want to change it so that it might advance only if the form has content, etc. If that is the case, set this to a closure so that this actually runs the auto-advance (or not). Note that commonly used handlers are stored in `guiders.handlers` array. If you want to create your own, realize the closure is bound to `_advanceHandler` for unbinding. 
 - `buttons`: array of button objects
 
 ~~~
@@ -62,16 +63,19 @@ The parameters for creating guiders are:
 ~~~
 
 - `buttonCustomHTML`: (optional) custom HTML that gets appended to the buttons div
+- `classString`: (optional) allows for styling different guiders differently based upon their classes
 - `description`: text description that shows up inside the guider
 - `highlight`: (optional) selector of the html element you want to highlight (will cause element to be above the overlay)
+- `isHashable`: (optional) allows the use of hash in the query string to show the guider automatically (see below).
 - `offset`: fine tune the position of the guider, e.g. `{ left:0, top: -10 }`
+- `onShow`: (optional) function that will be executed just before the guider is shown by `show()`
 - `overlay`: (optional) if true, an overlay will pop up between the guider and the rest of the page. Note that you can give it a string value, which will inject that as a class name into the overlay. This is useful in conjunction with a css rule for coloring the background of an overlay red on `'error'` for error events and the like.
 - `position`: (optional / required if using attachTo) clock position at which the guider should be attached to the html element
 - `shouldSkip`: (optional) a function handler that forces a skip of this step if the function returns true.
 - `title`: title of the guider
 - `width`: (optional) custom width of the guider (it defaults to `400px`)
 - `xButton`: (optional) if true, a X will appear in the top right corner of the guider, as another way to close the guider
-- `classString`: (optional) allows for styling different guiders differently based upon their classes
+
 
 
 Integration
