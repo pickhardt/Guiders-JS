@@ -83,8 +83,8 @@ Besides creating guiders, here is sample code you can use in your application to
 
 	guiders.hideAll(); // hides all guiders
 	guiders.endTour(); // like hideAll() but it remembers to remove the cookie also
-	guiders.next(); // hides the last shown guider, if shown, and 	advances to the next guider
-	guiders.show(id); // shows the guider, given the id used at 	creation
+	guiders.next(); // hides the last shown guider, if shown, and advances to the next guider
+	guiders.show(id); // shows the guider, given the id used at creation
 	guiders.resume(); //Start up the tour from the current place in the cookie (if set). This is useful when your tour leaves the page yoga re on. Unlike show() it will skip steps that need to be skipped.
 
 ~~~
@@ -99,12 +99,9 @@ There is the possibility you might want to change the default parameters or beha
 
 Here are some default values you can override:
 
-
 - `_defaultSettings`: This is the default values of all guiders created using `guiders.creatGuider()` For instance, you change the `width` to something other than `400px` to match your application's branding. Please check the `_defaultSettings` object at the top of the `guiders.js`.
-- `cookie`: setting this allows you to name a cookie that gets updated every time `show()` is called. Note that doing this requires the [jQuery Cookies plugin][jquerycookie].
+- `cookie`: setting this allows you to name a cookie that gets updated every time `show()` is called. Note that doing this requires the [jQuery Cookies plugin](https://github.com/carhartl/jquery-cookie).
 - `failStep`: guiders property allows you to name a step to `show()` if the `show()` case fails (for instance, if the attchTo element is missing). For obvious reasons, this (error) step should not have an `attachTo`.
-
-[jquerycookie]:https://github.com/carhartl/jquery-cookie [?ill:extra]
 
 In Closing
 ----------
