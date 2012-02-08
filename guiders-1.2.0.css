@@ -130,3 +130,8 @@
   background-position: 0px -84px;
   left: -42px;
 }
+
+.guider_highlight {
+    position: relative;
+    z-index: 101;
+}
