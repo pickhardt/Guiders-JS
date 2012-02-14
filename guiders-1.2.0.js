@@ -61,7 +61,6 @@ var guiders = (function($) {
   guiders._guiders = {};
   guiders._lastCreatedGuiderID = null;
   guiders._nextButtonTitle = "Next";
-  guiders._zIndexForHighlight = 101;
 
   guiders._addButtons = function(myGuider) {
     // Add buttons
@@ -191,11 +190,11 @@ var guiders = (function($) {
   };
 
   guiders._highlightElement = function(selector) {
-    $(selector).css({'z-index': guiders._zIndexForHighlight});
+    $(selector).addClass('guider_highlight');
   };
 
   guiders._dehighlightElement = function(selector) {
-    $(selector).css({'z-index': 1});
+    $(selector).removeClass('guider_highlight');
   };
 
   guiders._hideOverlay = function() {
@@ -355,6 +354,10 @@ var guiders = (function($) {
       }
     });
     $(".guider").fadeOut("fast");
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    if (currentGuider.highlight) {
+    	guiders._dehighlightElement(currentGuider.highlight);
+    }
     if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
       // do nothing for now
     } else {
