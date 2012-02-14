@@ -33,6 +33,7 @@ var guiders = (function($) {
         left: null
     },
     onShow: null,
+    onHide: null,
     overlay: false,
     position: 0, // 1-12 follows an analog clock, 0 means centered
     title: "Sample title goes here",
@@ -98,9 +99,9 @@ var guiders = (function($) {
       myGuider.elem.find(".guider_buttons").append(myCustomHTML);
     }
   
-		if (myGuider.buttons.length == 0) {
-			guiderButtonsContainer.remove();
-		}
+    if (myGuider.buttons.length == 0) {
+      guiderButtonsContainer.remove();
+    }
   };
 
   guiders._addXButton = function(myGuider) {
@@ -281,7 +282,7 @@ var guiders = (function($) {
     if (nextGuiderId !== null && nextGuiderId !== "") {
       var myGuider = guiders._guiderById(nextGuiderId);
       var omitHidingOverlay = myGuider.overlay ? true : false;
-      guiders.hideAll(omitHidingOverlay);
+      guiders.hideAll(omitHidingOverlay, true);
       if (currentGuider.highlight) {
           guiders._dehighlightElement(currentGuider.highlight);
       }
@@ -341,9 +342,18 @@ var guiders = (function($) {
     }
     
     return guiders;
-  };
+  }; 
 
-  guiders.hideAll = function(omitHidingOverlay) {
+  guiders.hideAll = function(omitHidingOverlay, next) {
+    if(typeof next === 'undefined') {
+      next = false;
+    }
+    $(".guider:visible").each(function(index, elem){
+      var myGuider = guiders._guiderById($(elem).attr('id'));
+      if (myGuider.onHide) {
+        myGuider.onHide(myGuider, next);
+      }
+    });
     $(".guider").fadeOut("fast");
     if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
       // do nothing for now
@@ -367,12 +377,12 @@ var guiders = (function($) {
       }
     }
   
-    guiders._attach(myGuider);
-  
     // You can use an onShow function to take some action before the guider is shown.
     if (myGuider.onShow) {
       myGuider.onShow(myGuider);
     }
+
+    guiders._attach(myGuider);
   
     myGuider.elem.fadeIn("fast");
   
