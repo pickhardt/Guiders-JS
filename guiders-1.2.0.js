@@ -191,6 +191,9 @@ var guiders = (function($) {
   };
 
   guiders._highlightElement = function(selector) {
+    if ($(selector).css('position') == 'static') {
+        $(selector).css('position', 'relative');
+    }
     $(selector).css({'z-index': guiders._zIndexForHighlight});
   };
 
