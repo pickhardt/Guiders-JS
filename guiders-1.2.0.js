@@ -128,10 +128,10 @@ var guiders = (function($) {
       return;
     }
     
-    myGuider.attachTo = $(myGuider.attachTo);
-    var base = myGuider.attachTo.offset();
-    var attachToHeight = myGuider.attachTo.innerHeight();
-    var attachToWidth = myGuider.attachTo.innerWidth();
+    var attachTo = $(myGuider.attachTo);
+    var base = attachTo.offset();
+    var attachToHeight = attachTo.innerHeight();
+    var attachToWidth = attachTo.innerWidth();
     
     var top = base.top;
     var left = base.left;
