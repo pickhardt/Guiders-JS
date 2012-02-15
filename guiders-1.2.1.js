@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.2.0
+ * version 1.2.1
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -18,7 +18,7 @@
 var guiders = (function($) {
   var guiders = {};
   
-  guiders.version = "1.2.0";
+  guiders.version = "1.2.1";
 
   guiders._defaultSettings = {
     attachTo: null,
@@ -344,9 +344,8 @@ var guiders = (function($) {
   }; 
 
   guiders.hideAll = function(omitHidingOverlay, next) {
-    if(typeof next === 'undefined') {
-      next = false;
-    }
+    next = next || false;
+
     $(".guider:visible").each(function(index, elem){
       var myGuider = guiders._guiderById($(elem).attr('id'));
       if (myGuider.onHide) {
