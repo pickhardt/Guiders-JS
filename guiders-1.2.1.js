@@ -282,7 +282,7 @@ var guiders = (function($) {
       var myGuider = guiders._guiderById(nextGuiderId);
       var omitHidingOverlay = myGuider.overlay ? true : false;
       guiders.hideAll(omitHidingOverlay, true);
-      if (currentGuider.highlight) {
+      if (currentGuider && currentGuider.highlight) {
           guiders._dehighlightElement(currentGuider.highlight);
       }
       guiders.show(nextGuiderId);
