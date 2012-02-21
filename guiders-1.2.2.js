@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.2.1
+ * version 1.2.2
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -18,7 +18,7 @@
 var guiders = (function($) {
   var guiders = {};
   
-  guiders.version = "1.2.1";
+  guiders.version = "1.2.2";
 
   guiders._defaultSettings = {
     attachTo: null,

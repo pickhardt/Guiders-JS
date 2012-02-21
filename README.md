@@ -1,4 +1,4 @@
-Guiders.js (version 1.2.1)
+Guiders.js (version 1.2.2)
 ==========================
 
 Guiders are a user experience design pattern for introducing users to a web application.  
@@ -53,15 +53,17 @@ buttons: array of button objects
       (if name is "close" or "next", onclick defaults to guiders.hideAll and guiders.next respectively)
    }
 buttonCustomHTML: (optional) custom HTML that gets appended to the buttons div
+classString: (optional) custom class name that the guider should additionally have
 description: text description that shows up inside the guider
 highlight: (optional) selector of the html element you want to highlight (will cause element to be above the overlay)
 offset: fine tune the position of the guider, e.g. { left:0, top: -10 }
+onShow: (optional) additional function to call before the guider is shown
+onHide: (optional) additional function to call when the guider is hidden
 overlay: (optional) if true, an overlay will pop up between the guider and the rest of the page
 position: (optional / required if using attachTo) clock position at which the guider should be attached to the html element
 title: title of the guider
 width: (optional) custom width of the guider (it defaults to 400px)
 xButton: (optional) if true, a X will appear in the top right corner of the guider, as another way to close the guider
-classString: (optional) allows for styling different guiders differently based upon their classes
 ~~~
 
 
