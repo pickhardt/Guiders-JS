@@ -128,6 +128,9 @@ var guiders = (function($) {
     }
     
     var attachTo = $(myGuider.attachTo);
+    if(attachTo.length == 0) {
+      return;
+    }
     var base = attachTo.offset();
     var attachToHeight = attachTo.innerHeight();
     var attachToWidth = attachTo.innerWidth();
