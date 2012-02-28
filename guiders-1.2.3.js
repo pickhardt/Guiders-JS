@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.2.2
+ * version 1.2.3
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -18,7 +18,7 @@
 var guiders = (function($) {
   var guiders = {};
   
-  guiders.version = "1.2.2";
+  guiders.version = "1.2.3";
 
   guiders._defaultSettings = {
     attachTo: null,
@@ -98,7 +98,7 @@ var guiders = (function($) {
       myGuider.elem.find(".guider_buttons").append(myCustomHTML);
     }
   
-    if (myGuider.buttons.length == 0) {
+    if (myGuider.buttons.length === 0) {
       guiderButtonsContainer.remove();
     }
   };
@@ -128,7 +128,7 @@ var guiders = (function($) {
     }
     
     var attachTo = $(myGuider.attachTo);
-    if(attachTo.length == 0) {
+    if (attachTo.length === 0) {
       return;
     }
     var base = attachTo.offset();
