@@ -75,7 +75,7 @@ var guiders = (function($) {
       var thisButton = myGuider.buttons[i];
       var thisButtonElem = $("<a></a>", {
                               "class" : "guider_button",
-                              "text" : thisButton.name });
+                              "html" : thisButton.name });
       if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
         thisButtonElem.addClass(thisButton.classString);
       }
