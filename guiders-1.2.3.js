@@ -406,6 +406,8 @@ var guiders = (function($) {
     }
   
     guiders._currentGuiderID = id;
+    $(myGuider.elem).trigger('guiders.show');
+
     return guiders;
   };
   
