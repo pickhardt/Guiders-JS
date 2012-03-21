@@ -357,7 +357,7 @@ var guiders = (function($) {
     });
     $(".guider").fadeOut("fast");
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (currentGuider.highlight) {
+    if (currentGuider && currentGuider.highlight) {
     	guiders._dehighlightElement(currentGuider.highlight);
     }
     if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
