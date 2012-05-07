@@ -35,6 +35,7 @@ var guiders = (function($) {
     onShow: null,
     onHide: null,
     overlay: false,
+    fixed: false,
     position: 0, // 1-12 follows an analog clock, 0 means centered
     title: "Sample title goes here",
     width: 400,
@@ -43,15 +44,15 @@ var guiders = (function($) {
 
   guiders._htmlSkeleton = [
     "<div class='guider'>",
-    "  <div class='guider_content'>",
-    "    <h1 class='guider_title'></h1>",
-    "    <div class='guider_close'></div>",
-    "    <p class='guider_description'></p>",
-    "    <div class='guider_buttons'>",
-    "    </div>",
-    "  </div>",
-    "  <div class='guider_arrow'>",
-    "  </div>",
+    " <div class='guider_content'>",
+    " <h1 class='guider_title'></h1>",
+    " <div class='guider_close'></div>",
+    " <p class='guider_description'></p>",
+    " <div class='guider_buttons'>",
+    " </div>",
+    " </div>",
+    " <div class='guider_arrow'>",
+    " </div>",
     "</div>"
   ].join("");
 
@@ -61,6 +62,7 @@ var guiders = (function($) {
   guiders._guiders = {};
   guiders._lastCreatedGuiderID = null;
   guiders._nextButtonTitle = "Next";
+  guiders._previousButtonTitle = "Previous";
 
   guiders._addButtons = function(myGuider) {
     // Add buttons
@@ -85,11 +87,17 @@ var guiders = (function($) {
       if (thisButton.onclick) {
         thisButtonElem.bind("click", thisButton.onclick);
       } else if (!thisButton.onclick &&
-                 thisButton.name.toLowerCase() === guiders._closeButtonTitle.toLowerCase()) { 
+                 thisButton.name.toLowerCase() === guiders._closeButtonTitle.toLowerCase()) {
         thisButtonElem.bind("click", function() { guiders.hideAll(); });
       } else if (!thisButton.onclick &&
-                 thisButton.name.toLowerCase() === guiders._nextButtonTitle.toLowerCase()) { 
+                 thisButton.name.toLowerCase() === guiders._nextButtonTitle.toLowerCase()) {
         thisButtonElem.bind("click", function() { guiders.next(); });
+      } else if (!thisButton.onclick &&
+                 thisButton.name.toLowerCase() === guiders._previousButtonTitle.toLowerCase()) {
+        thisButtonElem.bind("click", function() { console.log("this before calling :");
+         guiders.previous();
+        console.log("this is after calling ;) ");
+          });
       }
     }
   
@@ -121,7 +129,7 @@ var guiders = (function($) {
     var myWidth = myGuider.elem.innerWidth();
     
     if (myGuider.position === 0 || myGuider.attachTo === null) {
-      myGuider.elem.css("position", "absolute");
+      myGuider.elem.css("position", myGuider.fixed ? "fixed" : "absolute");
       myGuider.elem.css("top", ($(window).height() - myHeight) / 3 + $(window).scrollTop() + "px");
       myGuider.elem.css("left", ($(window).width() - myWidth) / 2 + $(window).scrollLeft() + "px");
       return;
@@ -134,9 +142,24 @@ var guiders = (function($) {
     var base = attachTo.offset();
     var attachToHeight = attachTo.innerHeight();
     var attachToWidth = attachTo.innerWidth();
-    
-    var top = base.top;
-    var left = base.left;
+
+    var par_top=0;
+    var par_left=0;
+  
+    //This is to get the top value of a element.
+    if(attachTo.css('top') === "auto"){
+      par_top = 0;
+    }else{
+      par_top = parseInt(attachTo.css('top'),10);
+    }
+    if(attachTo.css('left') === "auto"){
+      par_left = 0;
+    }else{
+      par_left = parseInt(attachTo.css('left'),10);
+    }
+
+    var top =  myGuider.fixed ? par_top : base.top;
+    var left = myGuider.fixed ? par_left : base.left;
     
     var bufferOffset = 0.9 * guiders._arrowSize;
     
@@ -168,7 +191,7 @@ var guiders = (function($) {
     }
     
     myGuider.elem.css({
-      "position": "absolute",
+      "position": myGuider.fixed ? "fixed" : "absolute",
       "top": top,
       "left": left
     });
@@ -289,6 +312,25 @@ var guiders = (function($) {
           guiders._dehighlightElement(currentGuider.highlight);
       }
       guiders.show(nextGuiderId);
+    }
+  };
+
+  guiders.previous = function() {
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    console.log(currentGuider);
+    if (typeof currentGuider === "undefined") {
+      return;
+    }
+    var previousGuiderId = currentGuider.previous || null;
+    console.log(previousGuiderId);
+    if (previousGuiderId !== null && previousGuiderId !== "") {
+      var myGuider = guiders._guiderById(previousGuiderId);
+      var omitHidingOverlay = myGuider.overlay ? true : false;
+      guiders.hideAll(omitHidingOverlay, true);
+      if (currentGuider && currentGuider.highlight) {
+          guiders._dehighlightElement(currentGuider.highlight);
+      }
+      guiders.show(previousGuiderId);
     }
   };
 
