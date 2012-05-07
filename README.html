@@ -23,11 +23,17 @@
     <script type="text/javascript" src="guiders-1.2.3.js"></script>
     <link rel="stylesheet" href="guiders-1.2.3.css" type="text/css" />
   </head>
-  <body>
+  <body style="min-height:1300px;">
     <span id="clock" style="border: 2px solid #333; width: 300px; height: 200px; text-align: center;" onclick="guiders.next();">
       <br />
       <img src="clock.gif" width=150 height=150 />
     </span>
+
+    <img src="clock.gif" id="clock1" width=150 height=150 />
+    <img src="clock.gif" id="clock2" style="position:fixed;top:120px;left:599px;" width=150 height=150 />
+    <img src="clock.gif" id="clock3" width=150 height=150 />
+    <img src="clock.gif" id="clock4" width=150 height=150 />
+    <img src="clock.gif" id="clock5" width=150 height=150 />
 
     <script type="text/javascript">
     /**
@@ -44,7 +50,40 @@
      * its onclick handler set to guiders.hideAll.  onclick handlers
      * can be customized too.
      */
-     
+    guiders.createGuider({
+      attachTo: '#clock1',
+      buttons: [{name: "Next"}],
+      description: "This is the first guider which will point the first clock.",
+      id: "one",
+      next: "two",
+      previous: "no",
+      title: "Welcome to guider js",
+      position: 2
+    }).show(); 
+    
+    guiders.createGuider({
+      attachTo: '#clock2',
+      buttons: [{name:"previous"},{name: "Next"}],
+      description: "This is the first guider which will point the second clock, which is fixed you can scroll and see that guider content ",
+      id: "two",
+      next: "three",
+      previous: "one",
+      fixed:true,
+      title: "This is the second guider",
+      position: 5
+    });
+
+     guiders.createGuider({
+      attachTo: '#clock3',
+      buttons: [{name:"previous"},{name: "Next"}],
+      description: "This is the first guider which will point the second clock, which is fixed you can scroll and see that guider content ",
+      id: "three",
+      next: "first",
+      previous: "two",
+      title: "This is the third guider",
+      position: 6
+    })
+
     guiders.createGuider({
       buttons: [{name: "Next"}],
       description: "Guiders are a user interface design pattern for introducing features of software. This dialog box, for example, is the first in a series of guiders that together make up a guide.",
@@ -52,7 +91,9 @@
       next: "second",
       overlay: true,
       title: "Welcome to Guiders.js!"
-    }).show();
+    });
+
+
     /**
      * .show() means that this guider will get shown immediately after creation.
      *

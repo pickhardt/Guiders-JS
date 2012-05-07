@@ -31,10 +31,13 @@ guiders.createGuider({
 
 guiders.createGuider({
   attachTo: "#clock",
-  buttons: [{name: "Close, then click on the clock.", onclick: guiders.hideAll}],
+  buttons: [{name: "Previous", name: "Close"}],
   description: "Custom event handlers can be used to hide and show guiders. This allows you to interactively show the user how to use your software by having them complete steps. To try it, click on the clock.",
+  previous: "second"
   id: "third",
   next: "fourth",
+  previous: "second" 
+  fixed: true,
   position: 2,
   title: "You can also advance guiders from custom event handlers.",
   width: 450
@@ -62,6 +65,9 @@ onHide: (optional) additional function to call when the guider is hidden
 overlay: (optional) if true, an overlay will pop up between the guider and the rest of the page
 position: (optional / required if using attachTo) clock position at which the guider should be attached to the html element
 title: title of the guider
+id: to identify the guider
+next: Next guider that is going to fire
+fixed: true if the attached element is fixed or static
 width: (optional) custom width of the guider (it defaults to 400px)
 xButton: (optional) if true, a X will appear in the top right corner of the guider, as another way to close the guider
 ~~~
@@ -76,6 +82,7 @@ Besides creating guiders, here is sample code you can use in your application to
 guiders.hideAll(); // hides all guiders
 guiders.next(); // hides the last shown guider, if shown, and advances to the next guider
 guiders.show(id); // shows the guider, given the id used at creation
+guiders.previous(); //hides the present guider, show the previous guider
 ~~~
 
 You'll likely want to change the default values, such as the width (set to 400px).  These can be found at the top of `guiders.js` in the `_defaultSettings` object.  You'll also want to modify the css file to match your application's branding.
