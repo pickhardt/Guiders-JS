@@ -157,7 +157,7 @@ var guiders = (function($) {
             12: [-bufferOffset - myHeight, attachToWidth / 2 - myWidth / 2]
         };
 
-        offset = offsetMap[myGuider.position];
+        var offset = offsetMap[myGuider.position];
         top += offset[0];
         left += offset[1];
 
@@ -192,6 +192,8 @@ var guiders = (function($) {
         // This callback is needed to fix an IE opacity bug.
         // See also:
         // http://www.kevinleary.net/jquery-fadein-fadeout-problems-in-internet-explorer/
+
+        $("#guider_transparent_overlay").show();
     };
 
     guiders._highlightElement = function(selector) {
@@ -204,11 +206,16 @@ var guiders = (function($) {
 
     guiders._hideOverlay = function() {
         $("#guider_overlay").fadeOut("fast");
+        $("#guider_transparent_overlay").hide();
     };
 
     guiders._initializeOverlay = function() {
         if ($("#guider_overlay").length === 0) {
             $("<div id=\"guider_overlay\"></div>").hide().appendTo("body");
+        }
+
+        if ($("#guider_transparent_overlay").length === 0) {
+            $("<div id=\"guider_transparent_overlay\"></div>").hide().appendTo("body");
         }
     };
 
@@ -251,7 +258,8 @@ var guiders = (function($) {
             11: ["left", arrowOffset],
             12: ["left", myWidth / 2 - arrowOffset]
         };
-        var position = positionMap[myGuider.position];
+
+        position = positionMap[myGuider.position];
         myGuiderArrow.css(position[0], position[1] + "px");
     };
 
@@ -282,7 +290,9 @@ var guiders = (function($) {
         if (typeof currentGuider === "undefined") {
             return;
         }
+
         var nextGuiderId = currentGuider.next || null;
+
         if (nextGuiderId !== null && nextGuiderId !== "") {
             var myGuider = guiders._guiderById(nextGuiderId);
             var omitHidingOverlay = myGuider.overlay ? true : false;
@@ -300,7 +310,7 @@ var guiders = (function($) {
         }
 
         // Extend those settings with passedSettings
-        myGuider = $.extend({}, guiders._defaultSettings, passedSettings);
+        var myGuider = $.extend({}, guiders._defaultSettings, passedSettings);
         myGuider.id = myGuider.id || String(Math.floor(Math.random() * 1000));
 
         var guiderElement = $(guiders._htmlSkeleton);
@@ -357,16 +367,18 @@ var guiders = (function($) {
                 myGuider.onHide(myGuider, next);
             }
         });
+
         $(".guider").fadeOut("fast");
+
         var currentGuider = guiders._guiders[guiders._currentGuiderID];
         if (currentGuider.highlight) {
             guiders._dehighlightElement(currentGuider.highlight);
         }
-        if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
-            // do nothing for now
-        } else {
+
+        if (!(typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true)) {
             guiders._hideOverlay();
         }
+
         return guiders;
     };
 
@@ -377,7 +389,9 @@ var guiders = (function($) {
 
         var myGuider = guiders._guiderById(id);
         if (myGuider.overlay) {
+
             guiders._showOverlay();
+
             // if guider is attached to an element, make sure it's visible
             if (myGuider.highlight) {
                 guiders._highlightElement(myGuider.highlight);

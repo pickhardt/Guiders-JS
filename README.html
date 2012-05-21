@@ -69,12 +69,14 @@
     
     guiders.createGuider({
       attachTo: "#clock",
+      highlight: "#clock",
       buttons: [{name: "Close"},
                 {name: "Next"}],
       description: "For example, this guider is attached to the 12 o'clock direction relative to the attached element. The Guiders.js API uses a clock model to determine where the guider should be placed.<br/><br/>Attaching a guider to an element focuses user on the area of interest.",
       id: "second",
       next: "third",
       position: 12,
+      overlay: true,
       title: "Guiders are typically attached to an element on the page."
     });
                
