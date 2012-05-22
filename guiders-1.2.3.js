@@ -421,5 +421,14 @@ var guiders = (function($) {
         return guiders;
     };
 
+    guiders.destroy = function(){
+        guiders.hideAll();
+        guiders._guiders = {};
+
+        $(".guider").remove();
+        $("#guider_transparent_overlay").remove();
+        $("#guider_overlay").remove();
+    };
+
     return guiders;
 }).call(this, jQuery);

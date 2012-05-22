@@ -82,7 +82,10 @@
                
     guiders.createGuider({
       attachTo: "#clock",
-      buttons: [{name: "Close, then click on the clock.", onclick: guiders.hideAll}],
+      buttons: [
+          {name: "Close, then click on the clock.", onclick: guiders.hideAll},
+          {name: "Destroy all guiders.", onclick: guiders.destroy}
+      ],
       description: "Custom event handlers can be used to hide and show guiders. This allows you to interactively show the user how to use your software by having them complete steps. To try it, click on the clock.",
       id: "third",
       next: "fourth",
