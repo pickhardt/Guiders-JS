@@ -359,6 +359,9 @@ var guiders = (function($) {
     };
 
     guiders.hideAll = function(omitHidingOverlay, next) {
+        // stop here if we haven't "use" guiders.
+        if(!guiders._currentGuiderID) return;
+
         next = next || false;
 
         $(".guider:visible").each(function(index, elem) {
