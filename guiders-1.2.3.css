@@ -7,13 +7,13 @@
   padding: 4px 12px;
   width: 500px;
   z-index: 100000005 !important;
-  
+
   /* Shadow */
   -moz-box-shadow: 0 0px 8px #111;
   -webkit-box-shadow: 0 0px 8px #111;
   box-shadow: 0 0px 8px #111;
   /* End shadow */
-  
+
   /* Rounded corners */
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -91,6 +91,16 @@
   z-index: 10;
 }
 
+#guider_transparent_overlay {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 12;
+}
+
 .guider_arrow {
   width: 42px;
   height: 42px;
@@ -98,10 +108,10 @@
   display: none;
   background-repeat: no-repeat;
   z-index: 100000006 !important;
-  
+
   /**
    * For optimization, the arrows image is inlined in the css below.
-   * 
+   *
    * To use your own arrows image, replace this background-image with your own arrows.
    * It should have four arrows, top, right, left, and down.
    */
@@ -124,6 +134,7 @@
   background-position: 0px -126px;
   top: -42px;
 }
+
 .guider_arrow_left {
   display: block;
   background-position: 0px -84px;
@@ -131,6 +142,5 @@
 }
 
 .guider_highlight {
-  position: relative;
-  z-index: 101;
+  z-index: 11;
 }
