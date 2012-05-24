@@ -120,17 +120,15 @@ var guiders = (function($) {
     var myHeight = myGuider.elem.innerHeight();
     var myWidth = myGuider.elem.innerWidth();
     
-    if (myGuider.position === 0 || myGuider.attachTo === null) {
+    var attachTo = $(myGuider.attachTo);
+
+    if (myGuider.position === 0 || attachTo.length === 0) {
       myGuider.elem.css("position", "absolute");
       myGuider.elem.css("top", ($(window).height() - myHeight) / 3 + $(window).scrollTop() + "px");
       myGuider.elem.css("left", ($(window).width() - myWidth) / 2 + $(window).scrollLeft() + "px");
       return;
     }
-    
-    var attachTo = $(myGuider.attachTo);
-    if (attachTo.length === 0) {
-      return;
-    }
+
     var base = attachTo.offset();
     var attachToHeight = attachTo.innerHeight();
     var attachToWidth = attachTo.innerWidth();
@@ -167,7 +165,7 @@ var guiders = (function($) {
       left += myGuider.offset.left;
     }
     
-    myGuider.elem.css({
+    return myGuider.elem.css({
       "position": "absolute",
       "top": top,
       "left": left
@@ -325,8 +323,7 @@ var guiders = (function($) {
     
     // Ensure myGuider.attachTo is a jQuery element.
     if (typeof myGuider.attachTo !== "undefined" && myGuider !== null) {
-      guiders._attach(myGuider);
-      guiders._styleArrow(myGuider);
+      guiders._attach(myGuider) && guiders._styleArrow(myGuider);
     }
     
     guiders._initializeOverlay();
