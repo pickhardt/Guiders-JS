@@ -137,7 +137,9 @@ var guiders = (function($) {
     var attachToHeight = attachTo.innerHeight();
     var attachToWidth = attachTo.innerWidth();
     
-    var top = base.top;
+    /* Corrects positioning if body has a top margin set on it.*/
+    var top_margin_of_body = $("body").outerHeight(true) - $("body").outerHeight(false);
+    var top = base.top - top_margin_of_body;
     var left = base.left;
     
     var bufferOffset = 0.9 * guiders._arrowSize;
