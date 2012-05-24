@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.2.3
+ * version 1.2.4
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -9,8 +9,11 @@
  * Released under the Apache License 2.0.
  * www.apache.org/licenses/LICENSE-2.0.html
  *
- * Questions about Guiders or Optimizely?
- * Email us at jeff+pickhardt@optimizely.com or hello@optimizely.com.
+ * Questions about Guiders?
+ * You may email me (Jeff Pickhardt) at jeff+pickhardt@optimizely.com
+ *
+ * Questions about Optimizely should be sent to:
+ * sales@optimizely.com or support@optimizely.com
  *
  * Enjoy!
  */
@@ -58,13 +61,27 @@ var guiders = (function($) {
   ].join("");
 
   guiders._arrowSize = 42; // = arrow's width and height
+  guiders._buttonElement = "<a/>";
+  guiders._buttonAttributes = {"href": "#"};
   guiders._closeButtonTitle = "Close";
   guiders._currentGuiderID = null;
   guiders._guiders = {};
   guiders._lastCreatedGuiderID = null;
   guiders._nextButtonTitle = "Next";
-  guiders._buttonElement = "<a/>";
-  guiders._buttonAttributes = {"href": "#"};
+  guiders._offsetNameMapping = {
+    "topLeft": 11,
+    "top": 12,
+    "topRight": 1,
+    "rightTop": 2,
+    "right": 3,
+    "rightBottom": 4,
+    "bottomRight": 5,
+    "bottom": 6,
+    "bottomLeft": 7,
+    "leftBottom": 8,
+    "left": 9,
+    "leftTop": 10
+  };
 
   guiders._addButtons = function(myGuider) {
     // Add buttons
@@ -123,6 +140,11 @@ var guiders = (function($) {
       return;
     }
     
+    if (guiders._offsetNameMapping[myGuider.position]) {
+      // As an alternative to the clock model, you can also use keywords to position the guider.
+      myGuider.position = guiders._offsetNameMapping[myGuider.position];
+    }
+    
     var myHeight = myGuider.elem.innerHeight();
     var myWidth = myGuider.elem.innerWidth();
     
@@ -139,7 +161,7 @@ var guiders = (function($) {
     var attachToHeight = attachTo.innerHeight();
     var attachToWidth = attachTo.innerWidth();
     
-    /* Corrects positioning if body has a top margin set on it.*/
+    // Corrects positioning if body has a top margin set on it.
     var top_margin_of_body = $("body").outerHeight(true) - $("body").outerHeight(false);
     var top = base.top - top_margin_of_body;
     var left = base.left;
@@ -161,7 +183,7 @@ var guiders = (function($) {
       12: [-bufferOffset - myHeight, attachToWidth/2 - myWidth/2]
     };
     
-    offset = offsetMap[myGuider.position];
+    var offset = offsetMap[myGuider.position];
     top   += offset[0];
     left  += offset[1];
     
