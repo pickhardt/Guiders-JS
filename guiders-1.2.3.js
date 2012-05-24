@@ -21,8 +21,8 @@ var guiders = (function($) {
   guiders.version = "1.2.3";
 
   guiders._defaultSettings = {
-    attachTo: null, /* Selector of the element to attach to. */
-    autoFocus: true, /* Determines whether or not the browser scrolls to the element. */
+    attachTo: null, // Selector of the element to attach to.
+    autoFocus: true, // Determines whether or not the browser scrolls to the element.
     buttons: [{name: "Close"}],
     buttonCustomHTML: "",
     classString: null,
@@ -38,6 +38,7 @@ var guiders = (function($) {
     overlay: false,
     position: 0, // 1-12 follows an analog clock, 0 means centered
     title: "Sample title goes here",
+    useFixedPosition: false, // Determines whether to use "fixed" instead of "absolute"
     width: 400,
     xButton: false // this places a closer "x" button in the top right of the guider
   };
@@ -173,7 +174,7 @@ var guiders = (function($) {
     }
     
     return myGuider.elem.css({
-      "position": "absolute",
+      "position": myGuider.useFixedPosition ? "fixed" : "absolute",
       "top": top,
       "left": left
     });
