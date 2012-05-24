@@ -89,7 +89,7 @@ var guiders = (function($) {
         thisButtonElem.bind("click", function() { guiders.hideAll(); });
       } else if (!thisButton.onclick &&
                  thisButton.name.toLowerCase() === guiders._nextButtonTitle.toLowerCase()) { 
-        thisButtonElem.bind("click", function() { guiders.next(); });
+        thisButtonElem.bind("click", function() { !myGuider.elem.data('locked') && guiders.next(); });
       }
     }
   
@@ -278,6 +278,8 @@ var guiders = (function($) {
     if (typeof currentGuider === "undefined") {
       return;
     }
+    currentGuider.elem.data('locked', true);
+
     var nextGuiderId = currentGuider.next || null;
     if (nextGuiderId !== null && nextGuiderId !== "") {
       var myGuider = guiders._guiderById(nextGuiderId);
@@ -386,7 +388,7 @@ var guiders = (function($) {
 
     guiders._attach(myGuider);
   
-    myGuider.elem.fadeIn("fast");
+    myGuider.elem.fadeIn("fast").data('locked', false);
   
     var windowHeight = $(window).height();
     var scrollHeight = $(window).scrollTop();
