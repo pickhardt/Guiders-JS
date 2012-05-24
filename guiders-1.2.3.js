@@ -61,6 +61,8 @@ var guiders = (function($) {
   guiders._guiders = {};
   guiders._lastCreatedGuiderID = null;
   guiders._nextButtonTitle = "Next";
+  guiders._buttonElement = "<a/>";
+  guiders._buttonAttributes = {"href": "#"};
 
   guiders._addButtons = function(myGuider) {
     // Add buttons
@@ -73,9 +75,11 @@ var guiders = (function($) {
   
     for (var i = myGuider.buttons.length-1; i >= 0; i--) {
       var thisButton = myGuider.buttons[i];
-      var thisButtonElem = $("<a></a>", {
-                              "class" : "guider_button",
-                              "html" : thisButton.name });
+      var thisButtonElem = $(guiders._buttonElement, $.extend({
+                                                         "class" : "guider_button",
+                                                          "html" : thisButton.name },
+                                                        guiders._buttonAttributes, thisButton.html || {}));
+
       if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
         thisButtonElem.addClass(thisButton.classString);
       }
@@ -401,6 +405,8 @@ var guiders = (function($) {
     }
   
     guiders._currentGuiderID = id;
+    $(myGuider.elem).trigger('guiders.show');
+
     return guiders;
   };
   
