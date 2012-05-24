@@ -21,7 +21,8 @@ var guiders = (function($) {
   guiders.version = "1.2.3";
 
   guiders._defaultSettings = {
-    attachTo: null,
+    attachTo: null, /* Selector of the element to attach to. */
+    autoFocus: true, /* Determines whether or not the browser scrolls to the element. */
     buttons: [{name: "Close"}],
     buttonCustomHTML: "",
     classString: null,
@@ -401,8 +402,9 @@ var guiders = (function($) {
     var guiderOffset = myGuider.elem.offset();
     var guiderElemHeight = myGuider.elem.height();
   
-    if (guiderOffset.top - scrollHeight < 0 ||
-        guiderOffset.top + guiderElemHeight + 40 > scrollHeight + windowHeight) {
+    if (myGuider.autoFocus && (guiderOffset.top - scrollHeight < 0 ||
+        guiderOffset.top + guiderElemHeight + 40 > scrollHeight + windowHeight)) {
+      // Scroll to the guider's position.
       window.scrollTo(0, Math.max(guiderOffset.top + (guiderElemHeight / 2) - (windowHeight / 2), 0));
     }
   
