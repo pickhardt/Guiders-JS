@@ -303,6 +303,11 @@ var guiders = (function($) {
     }
   };
 
+  guiders.reposition = function() {
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    guiders._attach(currentGuider);
+  };
+  
   guiders.next = function() {
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
     if (typeof currentGuider === "undefined") {
@@ -436,6 +441,16 @@ var guiders = (function($) {
 
     return guiders;
   };
+  
+  // Change the bubble position after browser gets resized
+	var resize_time;
+
+	$( window ).resize( function() {
+		if( typeof( resize_time ) != 'undefined' ) {
+			clearTimeout( resize_time ); // Prevents seizures
+		}
+		resize_time = setTimeout( guiders.reposition(), 50 );
+	} );
   
   return guiders;
 }).call(this, jQuery);
