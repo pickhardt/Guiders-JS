@@ -1,4 +1,4 @@
-Guiders.js (version 1.2.4)
+Guiders.js (version 1.2.5)
 ==========================
 
 Guiders are a user experience design pattern for introducing users to a web application.  
@@ -45,7 +45,7 @@ The parameters for creating guiders are:
 
 ~~~
 attachTo: (optional) selector of the html element you want to attach the guider to
-autoFocus: (optional) if you do not wish the browser to scroll to the position of the guider, set this to false
+autoFocus: (optional) if you want the browser to scroll to the position of the guider, set this to true
 buttons: array of button objects
   {
     name: "Close",

@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.2.4
+ * version 1.2.5
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -25,7 +25,7 @@ var guiders = (function($) {
 
   guiders._defaultSettings = {
     attachTo: null, // Selector of the element to attach to.
-    autoFocus: true, // Determines whether or not the browser scrolls to the element.
+    autoFocus: false, // Determines whether or not the browser scrolls to the element.
     buttons: [{name: "Close"}],
     buttonCustomHTML: "",
     classString: null,
@@ -82,6 +82,7 @@ var guiders = (function($) {
     "left": 9,
     "leftTop": 10
   };
+  guiders._windowHeight = 0;
 
   guiders._addButtons = function(myGuider) {
     // Add buttons
@@ -415,26 +416,44 @@ var guiders = (function($) {
     if (myGuider.onShow) {
       myGuider.onShow(myGuider);
     }
-
     guiders._attach(myGuider);
-  
     myGuider.elem.fadeIn("fast").data('locked', false);
-  
-    var windowHeight = $(window).height();
+      
+    guiders._currentGuiderID = id;
+    
+    var windowHeight = guiders._windowHeight = $(window).height();
     var scrollHeight = $(window).scrollTop();
     var guiderOffset = myGuider.elem.offset();
     var guiderElemHeight = myGuider.elem.height();
-  
-    if (myGuider.autoFocus && (guiderOffset.top - scrollHeight < 0 ||
-        guiderOffset.top + guiderElemHeight + 40 > scrollHeight + windowHeight)) {
-      // Scroll to the guider's position.
-      window.scrollTo(0, Math.max(guiderOffset.top + (guiderElemHeight / 2) - (windowHeight / 2), 0));
+    
+    var isGuiderBelow = (scrollHeight + windowHeight < guiderOffset.top + guiderElemHeight); /* we will need to scroll down */
+    var isGuiderAbove = (guiderOffset.top < scrollHeight); /* we will need to scroll up */
+    
+    if (myGuider.autoFocus && (isGuiderBelow || isGuiderAbove)) {
+      // Sometimes the browser won't scroll if the person just clicked,
+      // so let's do this in a setTimeout.
+      setTimeout(guiders.scrollToCurrent, 10);
     }
-  
-    guiders._currentGuiderID = id;
-    $(myGuider.elem).trigger('guiders.show');
+    
+    $(myGuider.elem).trigger("guiders.show");
 
     return guiders;
+  };
+  
+  guiders.scrollToCurrent = function() {
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    if (typeof currentGuider === "undefined") {
+      return;
+    }
+    
+    var windowHeight = guiders._windowHeight;
+    var scrollHeight = $(window).scrollTop();
+    var guiderOffset = currentGuider.elem.offset();
+    var guiderElemHeight = currentGuider.elem.height();
+    
+    // Scroll to the guider's position.
+    var scrollToHeight = Math.round(Math.max(guiderOffset.top + (guiderElemHeight / 2) - (windowHeight / 2), 0));
+    window.scrollTo(0, scrollToHeight);
   };
   
   return guiders;
