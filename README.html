@@ -6,6 +6,10 @@
         padding: 0;
       }
 
+      .guider_description a, .guider_description a:visited {
+        color: #1054AA;
+      }
+
       #clock {
         border: 2px solid #333;
         height: 200px;
@@ -23,8 +27,8 @@
     
     <!-- guiders.js requires jQuery as a prerequisite. Be sure to load guiders.js AFTER jQuery. -->
     <script type="text/javascript" src="jquery-1.5.1.min.js"></script>
-    <script type="text/javascript" src="guiders-1.2.5.js"></script>
-    <link rel="stylesheet" href="guiders-1.2.5.css" type="text/css" />
+    <script type="text/javascript" src="guiders-1.2.6.js"></script>
+    <link rel="stylesheet" href="guiders-1.2.6.css" type="text/css" />
   </head>
   <body>
     <br />
@@ -117,7 +121,7 @@
       attachTo: "#clock",
       buttons: [{name: "Exit Guide", onclick: guiders.hideAll},
                 {name: "Continue", onclick: guiders.next}],
-      buttonCustomHTML: "<input type=\"checkbox\" id=\"stop_showing\" /><label for=\"stop_showing\" class=\"stopper\">Stop showing these. (Not implemented)</label>",
+      buttonCustomHTML: "<input type=\"checkbox\" id=\"stop_showing\" /><label for=\"stop_showing\" class=\"stopper\">Optional checkbox. (You can add one.)</label>",
       description: "Other aspects of the guider can be customized as well, such as the button names, button onclick handlers, and dialog widths. You'd also want to modify the CSS to your own project's style.",
       id: "fourth",
       next: "fifth",

@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.2.5
+ * version 1.2.6
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -21,7 +21,7 @@
 var guiders = (function($) {
   var guiders = {};
   
-  guiders.version = "1.2.3";
+  guiders.version = "1.2.6";
 
   guiders._defaultSettings = {
     attachTo: null, // Selector of the element to attach to.
@@ -39,11 +39,10 @@ var guiders = (function($) {
     onShow: null,
     onHide: null,
     overlay: false,
-    position: 0, // 1-12 follows an analog clock, 0 means centered
+    position: 0, // 1-12 follows an analog clock, 0 means centered.
     title: "Sample title goes here",
-    useFixedPosition: false, // Determines whether to use "fixed" instead of "absolute"
     width: 400,
-    xButton: false // this places a closer "x" button in the top right of the guider
+    xButton: false // This places a closer "x" button in the top right of the guider.
   };
 
   guiders._htmlSkeleton = [
@@ -60,9 +59,9 @@ var guiders = (function($) {
     "</div>"
   ].join("");
 
-  guiders._arrowSize = 42; // = arrow's width and height
-  guiders._buttonElement = "<a/>";
-  guiders._buttonAttributes = {"href": "#"};
+  guiders._arrowSize = 42; // This is the arrow's width and height.
+  guiders._buttonElement = "<a></a>";
+  guiders._buttonAttributes = {"href": "javascript:void(0);"};
   guiders._closeButtonTitle = "Close";
   guiders._currentGuiderID = null;
   guiders._guiders = {};
@@ -85,7 +84,6 @@ var guiders = (function($) {
   guiders._windowHeight = 0;
 
   guiders._addButtons = function(myGuider) {
-    // Add buttons
     var guiderButtonsContainer = myGuider.elem.find(".guider_buttons");
   
     if (myGuider.buttons === null || myGuider.buttons.length === 0) {
@@ -93,7 +91,7 @@ var guiders = (function($) {
       return;
     }
   
-    for (var i = myGuider.buttons.length-1; i >= 0; i--) {
+    for (var i = myGuider.buttons.length - 1; i >= 0; i--) {
       var thisButton = myGuider.buttons[i];
       var thisButtonElem = $(guiders._buttonElement, $.extend({
                                                          "class" : "guider_button",
@@ -140,36 +138,42 @@ var guiders = (function($) {
     if (myGuider === null) {
       return;
     }
+        
+    var attachTo = $(myGuider.attachTo);
+
+    var myHeight = myGuider.elem.innerHeight();
+    var myWidth = myGuider.elem.innerWidth();
+
+    if (myGuider.position === 0 || attachTo.length === 0) {
+      // The guider is positioned in the center of the screen.
+      myGuider.elem.css("position", "fixed");
+      myGuider.elem.css("top", ($(window).height() - myHeight) / 3 + "px");
+      myGuider.elem.css("left", ($(window).width() - myWidth) / 2 + "px");
+      return;
+    }
     
+    // Otherwise, the guider is positioned relative to the attachTo element.
+    var base = attachTo.offset();
+    var top = base.top;
+    var left = base.left;
+    
+    // topMarginOfBody corrects positioning if body has a top margin set on it.
+    var topMarginOfBody = $("body").outerHeight(true) - $("body").outerHeight(false);
+    base -= topMarginOfBody;
+
+    // Now, take into account how the guider should be positioned relative to the attachTo element.
+    // e.g. top left, bottom center, etc.
     if (guiders._offsetNameMapping[myGuider.position]) {
       // As an alternative to the clock model, you can also use keywords to position the guider.
       myGuider.position = guiders._offsetNameMapping[myGuider.position];
     }
     
-    var myHeight = myGuider.elem.innerHeight();
-    var myWidth = myGuider.elem.innerWidth();
-    
-    var attachTo = $(myGuider.attachTo);
-
-    if (myGuider.position === 0 || attachTo.length === 0) {
-      myGuider.elem.css("position", "absolute");
-      myGuider.elem.css("top", ($(window).height() - myHeight) / 3 + $(window).scrollTop() + "px");
-      myGuider.elem.css("left", ($(window).width() - myWidth) / 2 + $(window).scrollLeft() + "px");
-      return;
-    }
-
-    var base = attachTo.offset();
     var attachToHeight = attachTo.innerHeight();
-    var attachToWidth = attachTo.innerWidth();
-    
-    // Corrects positioning if body has a top margin set on it.
-    var top_margin_of_body = $("body").outerHeight(true) - $("body").outerHeight(false);
-    var top = base.top - top_margin_of_body;
-    var left = base.left;
-    
+    var attachToWidth = attachTo.innerWidth();  
     var bufferOffset = 0.9 * guiders._arrowSize;
     
-    var offsetMap = { // Follows the form: [height, width]
+    // offsetMap follows the form: [height, width]
+    var offsetMap = {
       1: [-bufferOffset - myHeight, attachToWidth - myWidth],
       2: [0, bufferOffset + attachToWidth],
       3: [attachToHeight/2 - myHeight/2, bufferOffset + attachToWidth],
@@ -183,21 +187,30 @@ var guiders = (function($) {
       11: [-bufferOffset - myHeight, 0],
       12: [-bufferOffset - myHeight, attachToWidth/2 - myWidth/2]
     };
-    
     var offset = offsetMap[myGuider.position];
     top   += offset[0];
     left  += offset[1];
     
+    var positionType = "absolute";
+    // If the element you are attaching to is position: fixed, then we will make the guider
+    // position: fixed as well.
+    if (attachTo.css("position") == "fixed") {
+      positionType = "fixed";
+      top -= $(window).scrollTop();
+      left -= $(window).scrollLeft();
+    }
+    
+    // If you specify an additional offset parameter when you create the guider, it gets added here.
     if (myGuider.offset.top !== null) {
       top += myGuider.offset.top;
     }
-    
     if (myGuider.offset.left !== null) {
       left += myGuider.offset.left;
     }
     
+    // Finally, set the style of the guider and return it!
     return myGuider.elem.css({
-      "position": myGuider.useFixedPosition ? "fixed" : "absolute",
+      "position": positionType,
       "top": top,
       "left": left
     });
@@ -304,6 +317,11 @@ var guiders = (function($) {
     }
   };
 
+  guiders.reposition = function() {
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    guiders._attach(currentGuider);
+  };
+  
   guiders.next = function() {
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
     if (typeof currentGuider === "undefined") {
@@ -417,7 +435,7 @@ var guiders = (function($) {
       myGuider.onShow(myGuider);
     }
     guiders._attach(myGuider);
-    myGuider.elem.fadeIn("fast").data('locked', false);
+    myGuider.elem.fadeIn("fast").data("locked", false);
       
     guiders._currentGuiderID = id;
     
@@ -455,6 +473,18 @@ var guiders = (function($) {
     var scrollToHeight = Math.round(Math.max(guiderOffset.top + (guiderElemHeight / 2) - (windowHeight / 2), 0));
     window.scrollTo(0, scrollToHeight);
   };
+  
+  // Change the bubble position after browser gets resized
+  var _resizing = undefined;
+  $(window).resize(function() {
+    if (typeof(_resizing) !== "undefined") {
+      clearTimeout(_resizing); // Prevents seizures
+    }
+    _resizing = setTimeout(function() {
+      _resizing = undefined;
+      guiders.reposition();
+    }, 20);
+  });
   
   return guiders;
 }).call(this, jQuery);
