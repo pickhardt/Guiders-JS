@@ -1,4 +1,4 @@
-Guiders.js (version 1.2.4)
+Guiders.js (version 1.2.6)
 ==========================
 
 Guiders are a user experience design pattern for introducing users to a web application.  
@@ -45,7 +45,7 @@ The parameters for creating guiders are:
 
 ~~~
 attachTo: (optional) selector of the html element you want to attach the guider to
-autoFocus: (optional) if you do not wish the browser to scroll to the position of the guider, set this to false
+autoFocus: (optional) if you want the browser to scroll to the position of the guider, set this to true
 buttons: array of button objects
   {
     name: "Close",
@@ -63,7 +63,6 @@ onHide: (optional) additional function to call when the guider is hidden
 overlay: (optional) if true, an overlay will pop up between the guider and the rest of the page
 position: (optional / required if using attachTo) clock position at which the guider should be attached to the html element. Can also use a description keyword (such as "topLeft" for 11 or "bottom" for 6)
 title: title of the guider
-useFixedPosition: (optional) if your guider isn't attached to anything, toggle this to use position fixed instead of absolute
 width: (optional) custom width of the guider (it defaults to 400px)
 xButton: (optional) if true, a X will appear in the top right corner of the guider, as another way to close the guider
 ~~~
