@@ -42,7 +42,8 @@ var guiders = (function($) {
     position: 0, // 1-12 follows an analog clock, 0 means centered.
     title: "Sample title goes here",
     width: 400,
-    xButton: false // This places a closer "x" button in the top right of the guider.
+	xButton: false, // This places a closer "x" button in the top right of the guider.
+    appendGuiderTo: 'body'
   };
 
   guiders._htmlSkeleton = [
@@ -369,7 +370,7 @@ var guiders = (function($) {
     }
     
     guiderElement.hide();
-    guiderElement.appendTo("body");
+    guiderElement.appendTo(myGuider.appendGuiderTo);
     guiderElement.attr("id", myGuider.id);
     
     // Ensure myGuider.attachTo is a jQuery element.
