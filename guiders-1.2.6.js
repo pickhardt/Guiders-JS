@@ -483,7 +483,9 @@ var guiders = (function($) {
     }
     _resizing = setTimeout(function() {
       _resizing = undefined;
-      guiders.reposition();
+      if (typeof (myGuider) !== "undefined") {
+	     guiders.reposition();
+	  }
     }, 20);
   });
   
