@@ -159,7 +159,7 @@ var guiders = (function($) {
     
     // topMarginOfBody corrects positioning if body has a top margin set on it.
     var topMarginOfBody = $("body").outerHeight(true) - $("body").outerHeight(false);
-    base -= topMarginOfBody;
+    top -= topMarginOfBody;
 
     // Now, take into account how the guider should be positioned relative to the attachTo element.
     // e.g. top left, bottom center, etc.
