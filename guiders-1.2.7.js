@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.2.6
+ * version 1.2.7
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -21,7 +21,7 @@
 var guiders = (function($) {
   var guiders = {};
   
-  guiders.version = "1.2.6";
+  guiders.version = "1.2.7";
 
   guiders._defaultSettings = {
     attachTo: null, // Selector of the element to attach to.
@@ -482,7 +482,9 @@ var guiders = (function($) {
     }
     _resizing = setTimeout(function() {
       _resizing = undefined;
-      guiders.reposition();
+      if (typeof (guiders) !== "undefined") {
+        guiders.reposition();
+      }
     }, 20);
   });
   
