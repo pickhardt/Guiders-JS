@@ -1,0 +1,147 @@
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+		font-family: "Tahoma", "Verdana", "Arial";
+		font-size: smaller;
+      }
+
+      .guider_description a, .guider_description a:visited {
+        color: #1054AA;
+      }
+
+      #clock {
+        border: 2px solid #333;
+        height: 200px;
+        margin-left: 100px;
+        position: relative;
+        text-align: center;
+        width: 300px;
+      }
+      
+      .stopper {
+        color: #777;
+        font-size: 77%;
+      }
+	  #details {
+		margin: 10%;
+		width: 255px;
+	  }
+	  .footnote {
+		margin-top: 30px;
+		padding-top: 10px;
+		border-top: solid 1px silver;
+		font-size: smaller !important;
+		font-style: italic;
+	  }
+    </style>
+    
+    <!-- guiders.js requires jQuery as a prerequisite. Be sure to load guiders.js AFTER jQuery. -->
+    <script type="text/javascript" src="jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="guiders-1.2.7.js"></script>
+    <script type="text/javascript" src="jquery.guiders.ext.js"></script>
+    <link rel="stylesheet" href="guiders-1.2.7.css" type="text/css" />
+  </head>
+  <body>
+    
+	<h1>Guiders.Ext Demo</h1>
+	<p>
+		The <strong>Guiders.Ext.js</strong> file providers a simple interface for creating a wizard type tour.
+		Changes include:
+		<ul>
+			<li>The "id"/"next" are automatically set-up appropriately.</li>
+			<li>Ihe extensions use conventions, as in:
+				<ul>
+					<li>The "Next"/"Back" buttons always have events attached, you just provide the hooks if you need them.</li>
+					<li>When using "Next"/"Back" events the guiders.next() / .prev() call is made for you appropriately.</li>
+					<li>The "xButton" and "closeOnEscape" properties are disabled on Start/Finish points, but enabled in between.</li>
+				</ul>
+			</li>
+		</ul>
+	</p>
+	<fieldset id="details">
+		<legend>Your account</legend>
+		<label for="email">e-email</label>
+		<input type="textbox" id="email" />
+		<br/>
+		<label for="fullName">fullName</label>
+		<input type="textbox" id="fullName" />
+		<br/>
+		<label for="media">Mailing list</label>
+		<input type="checkbox" id="media" checked="checked" />
+	</fieldset>
+
+    <script type="text/javascript">
+	function _onClose(closedBy) {
+		var msg = (closedBy ? "Closed by X or ESCape" : "Closed by 'Close' button");
+		
+		alert(msg);	
+	}
+    /**
+     * Guiders can be created using the jquery.guiders.ext.js file.
+     *
+     * This method is more geared towards simple tours and handles
+	 * the relationships between bubbles.
+     *
+     * 1) Always start with "guidersExt.defineStart" (defineStart 
+	 * 2) Add subsequent steps with "guidersExt.addStep"
+	 * 3) Complete your tour with "guidersExt.defineFinish"
+     *
+     */
+	 var email = $("#email");
+     guidersExt.defineStart("Your account",
+		"<p>Your account page show your details as held by us.</p>" +
+		"<p class='footnote'>Note: Through <strong>defineStart & defineFinish</strong> the <strong>X & ESCape</strong> are disabled.</p>",
+		{
+			onNext: function() {
+				email.val("someone@github.com");				
+			}
+		}
+	);
+
+	guidersExt.addStep("Email",
+		"<p>We won't use your e-mail address ... </p>",
+		{
+			position: 6,
+			attachTo: email,
+			highlight: email,
+			onClose: _onClose
+		}
+	);
+
+	var fullName = $("#fullName");
+	guidersExt.addStep("Name",
+		"<p>We use this to contact you in a friendly manner ...</p>" +
+		"<p class='footnote'>Note you can now close the bubble with the X or by the ESCape button.</p>",
+		{
+			attachTo: fullName,
+			highlight: fullName,
+			onClose: _onClose
+		}
+	);
+	
+	var chk = $("#media");
+	guidersExt.addStep("Preferences",
+		"<p>Untick this if you don't want us to contact you ....</p>",
+		{
+			position: 6,
+			attachTo: chk,
+			highlight: chk,
+			onShow: function() {
+				chk.attr("checked", "");
+			},
+			onClose: _onClose
+		}
+	);
+	 
+	 guidersExt.defineFinish("Finished",
+		"<p>This concludes this example of using the Guiders extensions.</p>",
+		{
+			onClose: _onClose
+		}
+	);
+    </script>
+  </body>
+</html>
