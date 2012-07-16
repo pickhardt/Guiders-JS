@@ -42,7 +42,8 @@ var guiders = (function($) {
     position: 0, // 1-12 follows an analog clock, 0 means centered.
     title: "Sample title goes here",
     width: 400,
-    xButton: false // This places a closer "x" button in the top right of the guider.
+    xButton: false, // This places a closer "x" button in the top right of the guider.
+	closeOnEscape: false
   };
 
   guiders._htmlSkeleton = [
@@ -134,6 +135,23 @@ var guiders = (function($) {
       xButton.click(function() { guiders.hideAll(); });
   };
 
+  guiders._wireEscape = function (myGuider) {
+    $(document).keydown(function(event) {
+      if (event.keyCode != 27/*IE*/ &&
+          event.which != 27/*everything else*/) 
+        return true;
+      guiders.hideAll();
+      if (myGuider.onClose) {
+        myGuider.onClose(myGuider, true /*close by X/Escape*/);
+      }
+      return false;
+    });			
+  };
+
+  guiders._unWireEscape = function (myGuider) {
+    $(document).unbind("keydown");
+  };
+	
   guiders._attach = function(myGuider) {
     if (typeof myGuider !== 'object') {
       return;
@@ -413,6 +431,7 @@ var guiders = (function($) {
     } else {
       guiders._hideOverlay();
     }
+    guiders._unWireEscape(currentGuider);	
     return guiders;
   };
 
@@ -428,6 +447,12 @@ var guiders = (function($) {
       if (myGuider.highlight) {
         guiders._highlightElement(myGuider.highlight);
       }
+    }
+  
+    if (myGuider.closeOnEscape) {
+      guiders._wireEscape(myGuider);
+    } else {
+      guiders._unWireEscape(myGuider);
     }
   
     // You can use an onShow function to take some action before the guider is shown.
