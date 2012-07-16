@@ -38,6 +38,7 @@ var guiders = (function($) {
     },
     onShow: null,
     onHide: null,
+    onClose: null,	
     overlay: false,
     position: 0, // 1-12 follows an analog clock, 0 means centered.
     title: "Sample title goes here",
@@ -147,12 +148,17 @@ var guiders = (function($) {
   };
 
   guiders._addXButton = function(myGuider) {
-      var xButtonContainer = myGuider.elem.find(".guider_close");
-      var xButton = $("<div></div>", {
-                      "class" : "x_button",
-                      "role" : "button" });
-      xButtonContainer.append(xButton);
-      xButton.click(function() { guiders.hideAll(); });
+    var xButtonContainer = myGuider.elem.find(".guider_close");
+    var xButton = $("<div></div>", {
+                    "class" : "x_button",
+                    "role" : "button" });
+    xButtonContainer.append(xButton);
+    xButton.click(function () { 
+      guiders.hideAll(); 
+      if (myGuider.onClose) {
+        myGuider.onClose(myGuider, true /*close by X/Escape*/);
+      }
+    });
   };
 
   guiders._wireEscape = function (myGuider) {
