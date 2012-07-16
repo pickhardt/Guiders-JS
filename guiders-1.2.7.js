@@ -68,6 +68,7 @@ var guiders = (function($) {
   guiders._guiders = {};
   guiders._lastCreatedGuiderID = null;
   guiders._nextButtonTitle = "Next";
+  guiders._prevButtonTitle = "Back";  
   guiders._offsetNameMapping = {
     "topLeft": 11,
     "top": 12,
@@ -105,15 +106,34 @@ var guiders = (function($) {
   
       guiderButtonsContainer.append(thisButtonElem);
   
+      var thisButtonName = thisButton.name.toLowerCase();
       if (thisButton.onclick) {
         thisButtonElem.bind("click", thisButton.onclick);
-      } else if (!thisButton.onclick &&
-                 thisButton.name.toLowerCase() === guiders._closeButtonTitle.toLowerCase()) { 
-        thisButtonElem.bind("click", function() { guiders.hideAll(); });
-      } else if (!thisButton.onclick &&
-                 thisButton.name.toLowerCase() === guiders._nextButtonTitle.toLowerCase()) { 
-        thisButtonElem.bind("click", function() { !myGuider.elem.data('locked') && guiders.next(); });
+      } else {
+
+        switch (thisButtonName) {
+          case guiders._closeButtonTitle.toLowerCase():
+            thisButtonElem.bind("click", function () {
+              guiders.hideAll();
+              if (myGuider.onClose) {
+                myGuider.onClose(myGuider, false/*close by button*/);
+              }
+            });
+          break;
+          case guiders._nextButtonTitle.toLowerCase():
+            thisButtonElem.bind("click", function () {
+              !myGuider.elem.data('locked') && guiders.next();
+            });
+          break;
+          case guiders._prevButtonTitle.toLowerCase():
+            thisButtonElem.bind("click", function () {
+              !myGuider.elem.data('locked') && guiders.prev();
+            });
+          break;
+        }
+
       }
+
     }
   
     if (myGuider.buttonCustomHTML !== "") {
@@ -359,6 +379,31 @@ var guiders = (function($) {
     }
   };
 
+  guiders.prev = function () {
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    if (typeof currentGuider === "undefined")
+      // not what we think it is
+      return;
+    if (currentGuider.prev === null)
+      // no previous to look at
+      return;
+
+	var prevGuider = guiders._guiders[currentGuider.prev];
+    prevGuider.elem.data('locked', true);
+
+    // Note we use prevGuider.id as "prevGuider" is _already_ looking at the previous guider
+    var prevGuiderId = prevGuider.id || null;
+    if (prevGuiderId !== null && prevGuiderId !== "") {
+      var myGuider = guiders._guiderById(prevGuiderId);
+      var omitHidingOverlay = myGuider.overlay ? true : false;
+      guiders.hideAll(omitHidingOverlay, true);
+      if (prevGuider && prevGuider.highlight) {
+        guiders._dehighlightElement(prevGuider.highlight);
+      }
+      guiders.show(prevGuiderId);
+    }
+  };
+	
   guiders.createGuider = function(passedSettings) {
     if (passedSettings === null || passedSettings === undefined) {
       passedSettings = {};
@@ -398,6 +443,8 @@ var guiders = (function($) {
     guiders._initializeOverlay();
     
     guiders._guiders[myGuider.id] = myGuider;
+    if (guiders._lastCreatedGuiderID != null)
+      myGuider.prev = guiders._lastCreatedGuiderID;
     guiders._lastCreatedGuiderID = myGuider.id;
     
     /**
