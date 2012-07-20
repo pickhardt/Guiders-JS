@@ -1,4 +1,4 @@
-Guiders.js (version 1.2.7)
+Guiders.js (version 1.2.8)
 ==========================
 
 Guiders are a user experience design pattern for introducing users to a web application.  
@@ -51,15 +51,18 @@ buttons: array of button objects
     name: "Close",
     classString: "primary-button",
     onclick: callback function for when the button is clicked
-      (if name is "close" or "next", onclick defaults to guiders.hideAll and guiders.next respectively)
+      (if name is "close", "next", or "prev", onclick defaults to guiders.hideAll, guiders.next, or guiders.prev respectively)
    }
 buttonCustomHTML: (optional) custom HTML that gets appended to the buttons div
 classString: (optional) custom class name that the guider should additionally have
+closeOnEscape: (optional) if true, the escape key will close the currently open guider
 description: text description that shows up inside the guider
 highlight: (optional) selector of the html element you want to highlight (will cause element to be above the overlay)
+isHashable: (defaults to true) the guider will be shown auto-shown when a page is loaded with a url hash parameter #guider=guider_name
 offset: fine tune the position of the guider, e.g. { left:0, top: -10 }
-onShow: (optional) additional function to call before the guider is shown
+onClose: (optional) additional function to call if a guider is closed by the x button, close button, or escape key
 onHide: (optional) additional function to call when the guider is hidden
+onShow: (optional) additional function to call before the guider is shown
 overlay: (optional) if true, an overlay will pop up between the guider and the rest of the page
 position: (optional / required if using attachTo) clock position at which the guider should be attached to the html element. Can also use a description keyword (such as "topLeft" for 11 or "bottom" for 6)
 title: title of the guider
@@ -77,11 +80,12 @@ Besides creating guiders, here is sample code you can use in your application to
 guiders.hideAll(); // hides all guiders
 guiders.next(); // hides the last shown guider, if shown, and advances to the next guider
 guiders.show(id); // shows the guider, given the id used at creation
+guiders.prev(); // shows the previous guider
 ~~~
 
 You'll likely want to change the default values, such as the width (set to 400px).  These can be found at the top of `guiders.js` in the `_defaultSettings` object.  You'll also want to modify the css file to match your application's branding.
 
-Lastly, if the URL of the current window is of the form `http://www.myurl.com/mypage.html#guider=foo`, then the guider with id equal to `foo` will be shown automatically.
+Creating a multi-page tour?  If the URL of the current window is of the form `http://www.myurl.com/mypage.html#guider=foo`, then the guider with id equal to `foo` will be shown automatically.  To use this, you can set the onHide of the last guider to an anonymous function: function() { window.location.href=`http://www.myurl.com/mypage.html#guider=foo`; }
 
 
 In Closing

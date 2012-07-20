@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.2.7
+ * version 1.2.8
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -21,7 +21,7 @@
 var guiders = (function($) {
   var guiders = {};
   
-  guiders.version = "1.2.7";
+  guiders.version = "1.2.8";
 
   guiders._defaultSettings = {
     attachTo: null, // Selector of the element to attach to.
@@ -29,6 +29,7 @@ var guiders = (function($) {
     buttons: [{name: "Close"}],
     buttonCustomHTML: "",
     classString: null,
+    closeOnEscape: false,
     description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     highlight: null,
     isHashable: true,
@@ -36,8 +37,9 @@ var guiders = (function($) {
         top: null,
         left: null
     },
-    onShow: null,
+    onClose: null, 
     onHide: null,
+    onShow: null,
     overlay: false,
     position: 0, // 1-12 follows an analog clock, 0 means centered.
     title: "Sample title goes here",
@@ -60,6 +62,7 @@ var guiders = (function($) {
   ].join("");
 
   guiders._arrowSize = 42; // This is the arrow's width and height.
+  guiders._backButtonTitle = "Back";
   guiders._buttonElement = "<a></a>";
   guiders._buttonAttributes = {"href": "javascript:void(0);"};
   guiders._closeButtonTitle = "Close";
@@ -93,25 +96,40 @@ var guiders = (function($) {
   
     for (var i = myGuider.buttons.length - 1; i >= 0; i--) {
       var thisButton = myGuider.buttons[i];
-      var thisButtonElem = $(guiders._buttonElement, $.extend({
-                                                         "class" : "guider_button",
-                                                          "html" : thisButton.name },
-                                                        guiders._buttonAttributes, thisButton.html || {}));
+      var thisButtonElem = $(guiders._buttonElement,
+        $.extend({"class" : "guider_button", "html" : thisButton.name }, guiders._buttonAttributes, thisButton.html || {})
+      );
 
       if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
         thisButtonElem.addClass(thisButton.classString);
       }
   
       guiderButtonsContainer.append(thisButtonElem);
-  
+      
+      var thisButtonName = thisButton.name.toLowerCase();
       if (thisButton.onclick) {
         thisButtonElem.bind("click", thisButton.onclick);
-      } else if (!thisButton.onclick &&
-                 thisButton.name.toLowerCase() === guiders._closeButtonTitle.toLowerCase()) { 
-        thisButtonElem.bind("click", function() { guiders.hideAll(); });
-      } else if (!thisButton.onclick &&
-                 thisButton.name.toLowerCase() === guiders._nextButtonTitle.toLowerCase()) { 
-        thisButtonElem.bind("click", function() { !myGuider.elem.data('locked') && guiders.next(); });
+      } else {
+        switch (thisButtonName) {
+          case guiders._closeButtonTitle.toLowerCase():
+            thisButtonElem.bind("click", function () {
+              guiders.hideAll();
+              if (myGuider.onClose) {
+                myGuider.onClose(myGuider, false /* close by button */);
+              }
+            });
+            break;
+          case guiders._nextButtonTitle.toLowerCase():
+            thisButtonElem.bind("click", function () {
+              !myGuider.elem.data('locked') && guiders.next();
+            });
+            break;
+          case guiders._backButtonTitle.toLowerCase():
+            thisButtonElem.bind("click", function () {
+              !myGuider.elem.data('locked') && guiders.prev();
+            });
+            break;
+        }
       }
     }
   
@@ -126,14 +144,35 @@ var guiders = (function($) {
   };
 
   guiders._addXButton = function(myGuider) {
-      var xButtonContainer = myGuider.elem.find(".guider_close");
-      var xButton = $("<div></div>", {
-                      "class" : "x_button",
-                      "role" : "button" });
-      xButtonContainer.append(xButton);
-      xButton.click(function() { guiders.hideAll(); });
+    var xButtonContainer = myGuider.elem.find(".guider_close");
+    var xButton = $("<div></div>", {
+                    "class" : "x_button",
+                    "role" : "button" });
+    xButtonContainer.append(xButton);
+    xButton.click(function() {
+      guiders.hideAll();
+      if (myGuider.onClose) {
+        myGuider.onClose(myGuider, true);
+       }
+    });
   };
 
+  guiders._wireEscape = function (myGuider) {
+    $(document).keydown(function(event) {
+      if (event.keyCode == 27 || event.which == 27) {
+        guiders.hideAll();
+        if (myGuider.onClose) {
+          myGuider.onClose(myGuider, true /*close by X/Escape*/);
+        }
+        return false;
+      }
+    });      
+  };
+
+  guiders._unWireEscape = function (myGuider) {
+    $(document).unbind("keydown");
+  };
+  
   guiders._attach = function(myGuider) {
     if (typeof myGuider !== 'object') {
       return;
@@ -341,6 +380,33 @@ var guiders = (function($) {
     }
   };
 
+  guiders.prev = function () {
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    if (typeof currentGuider === "undefined") {
+      // not what we think it is
+      return;
+    }
+    if (currentGuider.prev === null) {
+      // no previous to look at
+      return;
+    }
+  
+    var prevGuider = guiders._guiders[currentGuider.prev];
+    prevGuider.elem.data('locked', true);
+    
+    // Note we use prevGuider.id as "prevGuider" is _already_ looking at the previous guider
+    var prevGuiderId = prevGuider.id || null;
+    if (prevGuiderId !== null && prevGuiderId !== "") {
+      var myGuider = guiders._guiderById(prevGuiderId);
+      var omitHidingOverlay = myGuider.overlay ? true : false;
+      guiders.hideAll(omitHidingOverlay, true);
+      if (prevGuider && prevGuider.highlight) {
+        guiders._dehighlightElement(prevGuider.highlight);
+      }
+      guiders.show(prevGuiderId);
+    }
+  };
+
   guiders.createGuider = function(passedSettings) {
     if (passedSettings === null || passedSettings === undefined) {
       passedSettings = {};
@@ -380,6 +446,9 @@ var guiders = (function($) {
     guiders._initializeOverlay();
     
     guiders._guiders[myGuider.id] = myGuider;
+    if (guiders._lastCreatedGuiderID != null) {
+      myGuider.prev = guiders._lastCreatedGuiderID;
+    }
     guiders._lastCreatedGuiderID = myGuider.id;
     
     /**
@@ -428,6 +497,12 @@ var guiders = (function($) {
       if (myGuider.highlight) {
         guiders._highlightElement(myGuider.highlight);
       }
+    }
+    
+    if (myGuider.closeOnEscape) {
+      guiders._wireEscape(myGuider);
+    } else {
+      guiders._unWireEscape(myGuider);
     }
   
     // You can use an onShow function to take some action before the guider is shown.
