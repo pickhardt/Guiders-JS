@@ -24,6 +24,7 @@
  * - initGuider(): Allows for initializing Guiders without actually creating them (useful when guider is not in the DOM yet. Avoids error: base is null [Break On This Error] var top = base.top;
 
  * - autoAdvance: property allows binding to an element (and event) to auto-advance the guider. This is a combination of onShow() binding plus removing of bind when next is done.
+ * - defaultButtonClass: property allows you to change the default button "classname" for all guider buttons (default: guider_button)
  * - shouldSkip: property defines a function handler forces a skip of this step if function returns true.
  * - overlay "error": If not set to true, this defines the class of the overlay. (This is useful for coloring the background of the overlay red on error.
  * - onShow: If this returns a guider object, then it can shunt (skip) the rest of show()
@@ -80,6 +81,7 @@ var guiders = (function($) {
 
   // Begin additional functionality
   guiders.cookie = ""; //set this if you want to write the step to a cookie each show()
+  guiders.defaultButtonClass = "guider_button"; //make this "button-secondary" for wordpress
   guiders.failStep = "";
   /**
    * Various common utility handlers you can bind as advance handlers to your
@@ -164,7 +166,7 @@ var guiders = (function($) {
       // Error in botton class name and href
       var thisButtonElem = $("<a></a>", {
                               "href" : "#",
-                              "class" : "guider_button",
+                              "class" : guiders.defaultButtonClass,
                               "text" : thisButton.name });
       if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
         thisButtonElem.addClass(thisButton.classString);
