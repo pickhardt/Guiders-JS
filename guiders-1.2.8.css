@@ -4,10 +4,9 @@
   font-family: arial;
   position: absolute;
   outline: none;
-  z-index: 100000005 !important;
   padding: 4px 12px;
   width: 500px;
-  z-index: 100;
+  z-index: 100000005 !important;
   
   /* Shadow */
   -moz-box-shadow: 0 0px 8px #111;
@@ -129,4 +128,9 @@
   display: block;
   background-position: 0px -84px;
   left: -42px;
+}
+
+.guider_highlight {
+  position: relative;
+  z-index: 101;
 }

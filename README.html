@@ -6,10 +6,17 @@
         padding: 0;
       }
 
+      .guider_description a, .guider_description a:visited {
+        color: #1054AA;
+      }
+
       #clock {
-        position: absolute;
-        top: 300px;
-        left: 250px;
+        border: 2px solid #333;
+        height: 200px;
+        margin-left: 100px;
+        position: relative;
+        text-align: center;
+        width: 300px;
       }
       
       .stopper {
@@ -20,14 +27,35 @@
     
     <!-- guiders.js requires jQuery as a prerequisite. Be sure to load guiders.js AFTER jQuery. -->
     <script type="text/javascript" src="jquery-1.5.1.min.js"></script>
-    <script type="text/javascript" src="guiders-1.2.0.js"></script>
-    <link rel="stylesheet" href="guiders-1.2.0.css" type="text/css" />
+    <script type="text/javascript" src="guiders-1.2.8.js"></script>
+    <link rel="stylesheet" href="guiders-1.2.8.css" type="text/css" />
   </head>
   <body>
-    <span id="clock" style="border: 2px solid #333; width: 300px; height: 200px; text-align: center;" onclick="guiders.next();">
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <div id="clock" onclick="guiders.next();">
       <br />
       <img src="clock.gif" width=150 height=150 />
-    </span>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
 
     <script type="text/javascript">
     /**
@@ -92,8 +120,9 @@
     guiders.createGuider({
       attachTo: "#clock",
       buttons: [{name: "Exit Guide", onclick: guiders.hideAll},
+                {name: "Back"},
                 {name: "Continue", onclick: guiders.next}],
-      buttonCustomHTML: "<input type=\"checkbox\" id=\"stop_showing\" /><label for=\"stop_showing\" class=\"stopper\">Stop showing these. (Not implemented)</label>",
+      buttonCustomHTML: "<input type=\"checkbox\" id=\"stop_showing\" /><label for=\"stop_showing\" class=\"stopper\">Optional checkbox. (You can add one.)</label>",
       description: "Other aspects of the guider can be customized as well, such as the button names, button onclick handlers, and dialog widths. You'd also want to modify the CSS to your own project's style.",
       id: "fourth",
       next: "fifth",
