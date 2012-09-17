@@ -67,7 +67,6 @@ The parameters for creating guiders are:
 - `buttonCustomHTML`: (optional) custom HTML that gets appended to the buttons div
 - `classString`: (optional) custom class name that the guider should additionally have to style different guiders differently based upon their classes
 - `closeOnEscape`: (optional) if true, the escape key will close the currently open guider
-- `defaultButtonClass`: (optional, default 'guider_button') property allows you to change the default button "classname" for all guider buttons. For instance, for WP-Guiders, set this to "button-secondary".
 - `description`: text description that shows up inside the guider
 - `highlight`: (optional) selector of the html element you want to highlight (will cause element to be above the overlay)
 - `isHashable`: (optional, default true) allows the use of hash in the query string to show the guider automatically when a page is loaded with a url hash parameter #gudier=guider_name (see below).
@@ -81,6 +80,7 @@ The parameters for creating guiders are:
 - `title`: title of the guider
 - `width`: (optional) custom width of the guider (it defaults to `400px`)
 - `xButton`: (optional) if true, a X will appear in the top right corner of the guider, as another way to close the guider
+- `_buttonClass`: (optional, default 'guider_button') property allows you to change the default button "classname" for all guider buttons. For instance, for WP-Guiders, set this to "button-secondary".
 
 Integration
 -----------
