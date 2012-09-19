@@ -188,7 +188,7 @@ var guiders = (function($) {
     for (var i = myGuider.buttons.length - 1; i >= 0; i--) {
       var thisButton = myGuider.buttons[i];
       var thisButtonElem = $(guiders._buttonElement,
-        $.extend({"class" : guider._buttonClass, "html" : thisButton.name }, guiders._buttonAttributes, thisButton.html || {})
+        $.extend({"class" : guiders._buttonClass, "html" : thisButton.name }, guiders._buttonAttributes, thisButton.html || {})
       );
 
       if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
