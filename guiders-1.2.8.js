@@ -21,8 +21,9 @@
  * 
  * - cookie: guiders property allows you to name a cookie that gets updated every time show() is called. Requires jQuery Cookies plugin (https://github.com/carhartl/jquery-cookie)
  * - failStep: guiders property allows you to name a step to show() if the show() case fails (attachTo element is missing). For obvious reasons, this should not have an attachTo
-
- * - resume(): start up tour from current place in cookie (if set). This is useful when your tour leaves the page you are on. Unlike show, it will skip steps that need to be skipped.
+ * - _buttonClass: property allows you to change the default button "classname" for all guider buttons (default: guider_button)
+ *
+ * - resume(): start up tour from current place in ookie (if set). This is useful when your tour leaves the page you are on. Unlike show, it will skip steps that need to be skipped.
  * - endTour(): Like hideAll() but it remembers to remove the cookie position.
  * - initGuider(): Allows for initializing Guiders without actually creating them (useful when guider is not in the DOM yet. Avoids error: base is null [Break On This Error] var top = base.top;
 
@@ -30,7 +31,6 @@
  * - shouldSkip: property defines a function handler forces a skip of this step if function returns true.
  * - overlay "error": If not set to true, this defines the class of the overlay. (This is useful for coloring the background of the overlay red on error.
  * - onShow: If this returns a guider object, then it can shunt (skip) the rest of show()
- * - _buttonClass: property allows you to change the default button "classname" for all guider buttons (default: guider_button)
  *
  * @author tychay@php.net Patches for WordPress.com Guided Tour
  * @todo Merge in this https://github.com/jeff-optimizely/Guiders-JS/pull/33 and modify so it so it checks either visibility or DOM

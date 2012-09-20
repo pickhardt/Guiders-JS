@@ -80,7 +80,6 @@ The parameters for creating guiders are:
 - `title`: title of the guider
 - `width`: (optional) custom width of the guider (it defaults to `400px`)
 - `xButton`: (optional) if true, a X will appear in the top right corner of the guider, as another way to close the guider
-- `_buttonClass`: (optional, default 'guider_button') property allows you to change the default button "classname" for all guider buttons. For instance, for WP-Guiders, set this to "button-secondary".
 
 Integration
 -----------
@@ -110,6 +109,8 @@ Here are some default values you can override:
 - `_defaultSettings`: This is the default values of all guiders created using `guiders.createGuider()` For instance, you change the `width` to something other than `400px` to match your application's branding. Please check the `_defaultSettings` object at the top of the `guiders.js`.
 - `cookie`: setting this allows you to name a cookie that gets updated every time `show()` is called. Note that doing this requires the [jQuery Cookies plugin](https://github.com/carhartl/jquery-cookie).
 - `failStep`: guiders property allows you to name a step to `show()` if the `show()` case fails (for instance, if the attchTo element is missing). For obvious reasons, this (error) step should not have an `attachTo`.
+
+- `_buttonClass`: (optional, default 'guider_button') property allows you to change the default button "classname" for all guider buttons. For instance, for WP-Guiders, set this to "button-secondary".
 
 In Closing
 ----------
