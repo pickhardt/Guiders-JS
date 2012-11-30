@@ -1,0 +1,232 @@
+/**
+ * WordPress Guided Tour, now with design inspiration from WP 3.3 pointers
+ */
+
+.guider {
+	padding: 0 0 10px;
+	position: relative;
+	font-size: 13px;
+	background: #fff;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #dfdfdf;
+	border-color: rgba(0,0,0,.125);
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: 0 2px 4px rgba(0,0,0,.19);
+	-moz-box-shadow: 0 2px 4px rgba(0,0,0,.19);
+	box-shadow: 0 2px 4px rgba(0,0,0,.19);
+	position: absolute;
+	outline: none;
+	z-index: 100000005 !important;
+	width: 500px;
+}
+
+.guider_buttons {
+	margin: 0;
+	padding: 5px 15px;
+	overflow: auto;
+}
+
+.guider_buttons a {
+	float: right;
+	display: inline-block;
+	text-decoration: none;
+	position: relative;
+	margin-left: 10px;
+}
+
+.button-secondary {
+	line-height: 1.2em !important;
+}
+
+.guider_buttons a.plain {
+	padding-left: 3px;
+	color: #21759b;
+	border: 0 !important;
+	background: 0 !important;
+	padding-right: 0 !important;
+	text-shadow: 0 !important;
+}
+
+.guider_buttons a.plain:hover {
+	color: #d65227;
+}
+
+.guider_buttons a.plain::before {
+	content: ' ';
+	width: 10px;
+	height: 100%;
+	position: absolute;
+	left: -10px;
+	background: url('../../../wp-includes/images/xit.gif') 0 15% no-repeat;
+}
+
+.guider_buttons a.plain:hover::before {
+	background-position-x: -10px;
+}
+
+.guider_content {
+	position: relative;
+	font-size: 13px;
+}
+
+.guider_content h1 {
+	position: relative;
+	margin: 0 0 5px;
+	padding: 15px 18px 14px 60px;
+	line-height: 1.4em;
+	font-size: 14px;
+	color: #fff;
+	border-radius: 3px 3px 0 0;
+	text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+	background-color: #8cc1e9;
+	background-image: -webkit-linear-gradient(bottom,#72a7cf 0,#8cc1e9 100%);
+	background-image: -moz-linear-gradient(bottom,#72a7cf 0,#8cc1e9 100%);
+	background-image: -ms-linear-gradient(bottom,#72a7cf 0,#8cc1e9 100%);
+	background-image: -o-linear-gradient(bottom,#72a7cf 0,#8cc1e9 100%);
+	background-image: linear-gradient(bottom,#72a7cf 0,#8cc1e9 100%);
+}
+.guider_content h1::before {
+	position: absolute;
+	top: 0;
+	left: 15px;
+	content: ' ';
+	width: 36px;
+	height: 100%;
+	background: url('../../../wp-includes/images/icon-pointer-flag.png') 0 50% no-repeat;
+}
+
+.guider_close {
+  float: right;
+  padding: 10px 0 0;
+}
+
+.x_button {
+  background-image: url('x_close_button.jpg');
+  cursor: pointer;
+  height: 13px;
+  width: 13px;
+}
+
+.guider_content p {
+	clear: both;
+	color: #333;
+	padding: 0 15px;
+}
+
+#guider_overlay {
+	background-color: #fff;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	opacity: 0.4;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
+	filter: alpha(opacity=40);
+	z-index: 50;
+}
+
+#guider_overlay[class=error] {
+	background-color: #000;
+}
+
+.guider_arrow {
+	top: 50%;
+	margin-top: -15px;
+	width: 14px;
+	height: 30px;
+	position: absolute;
+	display: none;
+	z-index: 10;
+	z-index: 100000006 !important;
+	background: url('../../../wp-includes/images/arrow-pointer-blue.png') 0 0 no-repeat;
+}
+
+.guider_arrow_left, .guider_arrow_right, .guider_arrow_up, .guider_arrow_down {
+	display: block;
+}
+
+.guider_arrow_left {
+	left: 0;
+	background-position: 0 -15px;
+	left: -14px;
+	margin-top: 7px;
+}
+
+.guider_arrow_up {
+	background-position: 0 0;
+	top: 1px;
+	width: 30px;
+	height: 14px;
+}
+
+/* possibly an ugly hack to push the arrow to the right side on the exit tour dialog */
+#gt-hide .guider_arrow_up {
+	left: 355px !important;
+}
+
+.guider_arrow_down {
+	background-position:0 -46px;
+	top: auto !important;
+	bottom: -30px !important;
+	width: 30px;
+}
+
+.guider_arrow_right {
+	background-position:-16px -15px;
+	right: -14px;
+	margin-top: 7px;
+}
+
+
+
+
+
+
+
+/*
+old guider arrows
+.guider_arrow {
+  width: 42px;
+  height: 42px;
+  position: absolute;
+  display: none;
+  background-repeat: no-repeat;
+  z-index: 100000006 !important;
+  
+  background-image: url(data:image/png;base64,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);
+  *background-image: url('guider_arrows.png');
+}
+
+.guider_arrow_right {
+  display: block;
+  background-position: 0px 0px;
+  right: -42px;
+}
+.guider_arrow_down {
+  display: block;
+  background-position: 0px -42px;
+  bottom: -42px;
+}
+.guider_arrow_up {
+  display: block;
+  background-position: 0px -126px;
+  top: -42px;
+}
+.guider_arrow_left {
+  display: block;
+  background-position: 0px -84px;
+  left: -42px;
+}
+
+*/
+
+
+
+
+
+
+
+
