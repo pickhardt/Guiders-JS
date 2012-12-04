@@ -1,4 +1,4 @@
-Guiders.js (version 1.2.8)
+Guiders.js (version 1.2.9)
 ==========================
 
 Guiders are a user experience design pattern for introducing users to a web application.  
@@ -65,6 +65,7 @@ onHide: (optional) additional function to call when the guider is hidden
 onShow: (optional) additional function to call before the guider is shown
 overlay: (optional) if true, an overlay will pop up between the guider and the rest of the page
 position: (optional / required if using attachTo) clock position at which the guider should be attached to the html element. Can also use a description keyword (such as "topLeft" for 11 or "bottom" for 6)
+shouldSkip: (optional) if this function evaluates to true, the guider will be skipped
 title: title of the guider
 width: (optional) custom width of the guider (it defaults to 400px)
 xButton: (optional) if true, a X will appear in the top right corner of the guider, as another way to close the guider
