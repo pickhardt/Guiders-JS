@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 1.2.9
+ * version 1.3.0
  *
  * Developed at Optimizely. (www.optimizely.com)
  * We make A/B testing you'll actually use.
@@ -21,7 +21,7 @@
 var guiders = (function($) {
   var guiders = {};
   
-  guiders.version = "1.2.9";
+  guiders.version = "1.3.0";
 
   guiders._defaultSettings = {
     attachTo: null, // Selector of the element to attach to.
@@ -50,14 +50,14 @@ var guiders = (function($) {
 
   guiders._htmlSkeleton = [
     "<div class='guider'>",
-    "  <div class='guider_content'>",
-    "    <h1 class='guider_title'></h1>",
-    "    <div class='guider_close'></div>",
-    "    <p class='guider_description'></p>",
-    "    <div class='guider_buttons'>",
+    "  <div class='guiders_content'>",
+    "    <h1 class='guiders_title'></h1>",
+    "    <div class='guiders_close'></div>",
+    "    <p class='guiders_description'></p>",
+    "    <div class='guiders_buttons_container'>",
     "    </div>",
     "  </div>",
-    "  <div class='guider_arrow'>",
+    "  <div class='guiders_arrow'>",
     "  </div>",
     "</div>"
   ].join("");
@@ -65,10 +65,12 @@ var guiders = (function($) {
   guiders._arrowSize = 42; // This is the arrow's width and height.
   guiders._backButtonTitle = "Back";
   guiders._buttonAttributes = {"href": "javascript:void(0);"};
-  guiders._buttonClassName = "guider_button"; // Override this if you use a different class name for your buttons.
+  guiders._buttonClassName = "guiders_button"; // Override this if you use a different class name for your buttons.
+  guiders._buttonClickEvent = "click touch"; // Using click touch allows this to trigger with iPad/iPhone taps, as well as browser clicks
   guiders._buttonElement = "<a></a>"; // Override this if you want to use a different element for your buttons, like spans.
   guiders._closeButtonTitle = "Close";
   guiders._currentGuiderID = null;
+  guiders._fixedOrAbsolute = "fixed";
   guiders._guiders = {};
   guiders._lastCreatedGuiderID = null;
   guiders._nextButtonTitle = "Next";
@@ -87,9 +89,14 @@ var guiders = (function($) {
     "leftTop": 10
   };
   guiders._windowHeight = 0;
-
+  
+  // Basic IE browser detection
+  var ieBrowserMatch = navigator.userAgent.match('MSIE (.)');
+  guiders._isIE = ieBrowserMatch && ieBrowserMatch.length > 1;
+  guiders._ieVersion = ieBrowserMatch && ieBrowserMatch.length > 1 ? Number(ieBrowserMatch[1]) : -1;
+  
   guiders._addButtons = function(myGuider) {
-    var guiderButtonsContainer = myGuider.elem.find(".guider_buttons");
+    var guiderButtonsContainer = myGuider.elem.find(".guiders_buttons_container");
   
     if (myGuider.buttons === null || myGuider.buttons.length === 0) {
       guiderButtonsContainer.remove();
@@ -110,11 +117,11 @@ var guiders = (function($) {
       
       var thisButtonName = thisButton.name.toLowerCase();
       if (thisButton.onclick) {
-        thisButtonElem.bind("click", thisButton.onclick);
+        thisButtonElem.bind(guiders._buttonClickEvent, thisButton.onclick);
       } else {
         switch (thisButtonName) {
           case guiders._closeButtonTitle.toLowerCase():
-            thisButtonElem.bind("click", function () {
+            thisButtonElem.bind(guiders._buttonClickEvent, function () {
               guiders.hideAll();
               if (myGuider.onClose) {
                 myGuider.onClose(myGuider, false /* close by button */);
@@ -122,12 +129,12 @@ var guiders = (function($) {
             });
             break;
           case guiders._nextButtonTitle.toLowerCase():
-            thisButtonElem.bind("click", function () {
+            thisButtonElem.bind(guiders._buttonClickEvent, function () {
               !myGuider.elem.data("locked") && guiders.next();
             });
             break;
           case guiders._backButtonTitle.toLowerCase():
-            thisButtonElem.bind("click", function () {
+            thisButtonElem.bind(guiders._buttonClickEvent, function () {
               !myGuider.elem.data("locked") && guiders.prev();
             });
             break;
@@ -137,7 +144,7 @@ var guiders = (function($) {
   
     if (myGuider.buttonCustomHTML !== "") {
       var myCustomHTML = $(myGuider.buttonCustomHTML);
-      myGuider.elem.find(".guider_buttons").append(myCustomHTML);
+      myGuider.elem.find(".guiders_buttons_container").append(myCustomHTML);
     }
   
     if (myGuider.buttons.length === 0) {
@@ -146,9 +153,9 @@ var guiders = (function($) {
   };
 
   guiders._addXButton = function(myGuider) {
-    var xButtonContainer = myGuider.elem.find(".guider_close");
+    var xButtonContainer = myGuider.elem.find(".guiders_close");
     var xButton = $("<div></div>", {
-      "class" : "x_button",
+      "class" : "guiders_x_button",
       "role" : "button"
     });
     xButtonContainer.append(xButton);
@@ -187,8 +194,11 @@ var guiders = (function($) {
     var myWidth = myGuider.elem.innerWidth();
 
     if (myGuider.position === 0 || attachTo.length === 0) {
-      // The guider is positioned in the center of the screen.
-      myGuider.elem.css("position", "fixed");
+      var fixedOrAbsolute = "fixed";
+      if (guiders._isIE && guiders._ieVersion < 9) {
+        fixedOrAbsolute = "absolute";
+      }
+      myGuider.elem.css("position", fixedOrAbsolute);
       myGuider.elem.css("top", ($(window).height() - myHeight) / 3 + "px");
       myGuider.elem.css("left", ($(window).width() - myWidth) / 2 + "px");
       return;
@@ -229,14 +239,15 @@ var guiders = (function($) {
       11: [-bufferOffset - myHeight, 0],
       12: [-bufferOffset - myHeight, attachToWidth/2 - myWidth/2]
     };
+    
     var offset = offsetMap[myGuider.position];
-    top   += offset[0];
-    left  += offset[1];
+    top += offset[0];
+    left += offset[1];
     
     var positionType = "absolute";
     // If the element you are attaching to is position: fixed, then we will make the guider
     // position: fixed as well.
-    if (attachTo.css("position") == "fixed") {
+    if (attachTo.css("position") === "fixed" && guiders._fixedOrAbsolute === "fixed") {
       positionType = "fixed";
       top -= $(window).scrollTop();
       left -= $(window).scrollLeft();
@@ -270,31 +281,34 @@ var guiders = (function($) {
   };
 
   guiders._showOverlay = function() {
-    $("#guider_overlay").fadeIn("fast", function(){
+    // This callback is needed to fix an IE opacity bug.
+    // See also:
+    // http://www.kevinleary.net/jquery-fadein-fadeout-problems-in-internet-explorer/
+    $("#guiders_overlay").fadeIn("fast", function(){
       if (this.style.removeAttribute) {
         this.style.removeAttribute("filter");
       }
     });
-    // This callback is needed to fix an IE opacity bug.
-    // See also:
-    // http://www.kevinleary.net/jquery-fadein-fadeout-problems-in-internet-explorer/
+    if (guiders._isIE) {
+      $("#guiders_overlay").css("position", "absolute");
+    }
   };
 
   guiders._highlightElement = function(selector) {
-    $(selector).addClass('guider_highlight');
+    $(selector).addClass('guiders_highlight');
   };
 
   guiders._dehighlightElement = function(selector) {
-    $(selector).removeClass('guider_highlight');
+    $(selector).removeClass('guiders_highlight');
   };
 
   guiders._hideOverlay = function() {
-    $("#guider_overlay").fadeOut("fast");
+    $("#guiders_overlay").fadeOut("fast");
   };
 
   guiders._initializeOverlay = function() {
-    if ($("#guider_overlay").length === 0) {
-      $("<div id=\"guider_overlay\"></div>").hide().appendTo("body");
+    if ($("#guiders_overlay").length === 0) {
+      $("<div id='guiders_overlay'></div>").hide().appendTo("body");
     }
   };
 
@@ -303,20 +317,20 @@ var guiders = (function($) {
     if (!position) {
       return;
     }
-    var myGuiderArrow = $(myGuider.elem.find(".guider_arrow"));
+    var myGuiderArrow = $(myGuider.elem.find(".guiders_arrow"));
     var newClass = {
-      1: "guider_arrow_down",
-      2: "guider_arrow_left",
-      3: "guider_arrow_left",
-      4: "guider_arrow_left",
-      5: "guider_arrow_up",
-      6: "guider_arrow_up",
-      7: "guider_arrow_up",
-      8: "guider_arrow_right",
-      9: "guider_arrow_right",
-      10: "guider_arrow_right",
-      11: "guider_arrow_down",
-      12: "guider_arrow_down"
+      1: "guiders_arrow_down",
+      2: "guiders_arrow_left",
+      3: "guiders_arrow_left",
+      4: "guiders_arrow_left",
+      5: "guiders_arrow_up",
+      6: "guiders_arrow_up",
+      7: "guiders_arrow_up",
+      8: "guiders_arrow_right",
+      9: "guiders_arrow_right",
+      10: "guiders_arrow_right",
+      11: "guiders_arrow_down",
+      12: "guiders_arrow_down"
     };
     myGuiderArrow.addClass(newClass[position]);
   
@@ -357,7 +371,6 @@ var guiders = (function($) {
     if (hashIndex !== -1) {
       var hashGuiderId = window.location.hash.substr(hashIndex + GUIDER_HASH_TAG.length);
       if (myGuider.id.toLowerCase() === hashGuiderId.toLowerCase()) {
-        // Success!
         guiders.show(myGuider.id);
       }
     }
@@ -437,10 +450,10 @@ var guiders = (function($) {
     }
     myGuider.elem.css("width", myGuider.width + "px");
     
-    var guiderTitleContainer = guiderElement.find(".guider_title");
+    var guiderTitleContainer = guiderElement.find(".guiders_title");
     guiderTitleContainer.html(myGuider.title);
     
-    guiderElement.find(".guider_description").html(myGuider.description);
+    guiderElement.find(".guiders_description").html(myGuider.description);
     
     guiders._addButtons(myGuider);
     
