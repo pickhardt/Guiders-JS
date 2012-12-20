@@ -18,8 +18,8 @@
  * Enjoy!
  */
 
-var guiders = (function($) {
-  var guiders = {};
+(function($) {
+  var guiders = this.guiders = {};
   
   guiders.version = "1.3.0";
 
