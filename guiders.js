@@ -1,27 +1,24 @@
 /**
  * guiders.js
  *
- * version 1.3.0
- *
- * Developed at Optimizely. (www.optimizely.com)
- * We make A/B testing you'll actually use.
+ * version 2.0.0
  *
  * Released under the Apache License 2.0.
  * www.apache.org/licenses/LICENSE-2.0.html
  *
  * Questions about Guiders?
- * You may email me (Jeff Pickhardt) at pickhardt+guiders@gmail.com
+ * Email me (Jeff Pickhardt) at pickhardt@gmail.com
  *
- * Questions about Optimizely should be sent to:
+ * Questions about Optimizely? Email one of the following:
  * sales@optimizely.com or support@optimizely.com
  *
  * Enjoy!
  */
 
 var guiders = (function($) {
-  var guiders = {};
+  var guiders = $.guiders = {};
   
-  guiders.version = "1.3.0";
+  guiders.version = "2.0.0";
 
   guiders._defaultSettings = {
     attachTo: null, // Selector of the element to attach to.
@@ -33,6 +30,7 @@ var guiders = (function($) {
     description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     highlight: null,
     isHashable: true,
+    maxWidth: null,
     offset: {
       top: null,
       left: null
@@ -126,6 +124,7 @@ var guiders = (function($) {
               if (myGuider.onClose) {
                 myGuider.onClose(myGuider, false /* close by button */);
               }
+              $("body").trigger("guidersClose");
             });
             break;
           case guiders._nextButtonTitle.toLowerCase():
@@ -164,23 +163,8 @@ var guiders = (function($) {
       if (myGuider.onClose) {
         myGuider.onClose(myGuider, true);
        }
+       $("body").trigger("guidersClose");
     });
-  };
-
-  guiders._wireEscape = function (myGuider) {
-    $(document).keydown(function(event) {
-      if (event.keyCode == 27 || event.which == 27) {
-        guiders.hideAll();
-        if (myGuider.onClose) {
-          myGuider.onClose(myGuider, true /*close by X/Escape*/);
-        }
-        return false;
-      }
-    });      
-  };
-
-  guiders._unWireEscape = function (myGuider) {
-    $(document).unbind("keydown");
   };
   
   guiders._attach = function(myGuider) {
@@ -273,11 +257,22 @@ var guiders = (function($) {
     return myGuider;
   };
 
-  guiders._guiderById = function(id) {
-    if (typeof guiders._guiders[id] === "undefined") {
-      throw "Cannot find guider with id " + id;
+  guiders._dehighlightElement = function(selector) {
+    $(selector).removeClass('guiders_highlight');
+  };
+  
+  guiders._hideOverlay = function() {
+    $("#guiders_overlay").fadeOut("fast");
+  };
+
+  guiders._highlightElement = function(selector) {
+    $(selector).addClass('guiders_highlight');
+  };
+
+  guiders._initializeOverlay = function() {
+    if ($("#guiders_overlay").length === 0) {
+      $("<div id='guiders_overlay'></div>").hide().appendTo("body");
     }
-    return guiders._guiders[id];
   };
 
   guiders._showOverlay = function() {
@@ -291,24 +286,6 @@ var guiders = (function($) {
     });
     if (guiders._isIE) {
       $("#guiders_overlay").css("position", "absolute");
-    }
-  };
-
-  guiders._highlightElement = function(selector) {
-    $(selector).addClass('guiders_highlight');
-  };
-
-  guiders._dehighlightElement = function(selector) {
-    $(selector).removeClass('guiders_highlight');
-  };
-
-  guiders._hideOverlay = function() {
-    $("#guiders_overlay").fadeOut("fast");
-  };
-
-  guiders._initializeOverlay = function() {
-    if ($("#guiders_overlay").length === 0) {
-      $("<div id='guiders_overlay'></div>").hide().appendTo("body");
     }
   };
 
@@ -375,63 +352,39 @@ var guiders = (function($) {
       }
     }
   };
-
-  guiders.reposition = function() {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    guiders._attach(currentGuider);
-  };
   
-  guiders.next = function() {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (typeof currentGuider === "undefined") {
-      return;
-    }
-    currentGuider.elem.data("locked", true);
+  guiders._updatePositionOnResize = function() {
+    // Change the bubble position after browser gets resized
+    var _resizing = undefined;
+    $(window).resize(function() {
+      if (typeof(_resizing) !== "undefined") {
+        clearTimeout(_resizing); // Prevents seizures
+      }
+      _resizing = setTimeout(function() {
+        _resizing = undefined;
+        if (typeof (guiders) !== "undefined") {
+          guiders.reposition();
+        }
+      }, 20);
+    });
+  };
+  guiders._updatePositionOnResize();
 
-    var nextGuiderId = currentGuider.next || null;
-    if (nextGuiderId !== null && nextGuiderId !== "") {
-      var nextGuider = guiders._guiderById(nextGuiderId);
-      var omitHidingOverlay = nextGuider.overlay ? true : false;
-      guiders.hideAll(omitHidingOverlay, true);
-      if (currentGuider && currentGuider.highlight) {
-        guiders._dehighlightElement(currentGuider.highlight);
-      }
-      if (nextGuider.shouldSkip && nextGuider.shouldSkip()) {
-        guiders._currentGuiderID = nextGuider.id;
-        guiders.next();
-        return;
-      }
-      else {
-        guiders.show(nextGuiderId);
-      }
-    }
+  guiders._unwireEscape = function (myGuider) {
+    $(document).unbind("keydown");
   };
 
-  guiders.prev = function () {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (typeof currentGuider === "undefined") {
-      // not what we think it is
-      return;
-    }
-    if (currentGuider.prev === null) {
-      // no previous to look at
-      return;
-    }
-  
-    var prevGuider = guiders._guiders[currentGuider.prev];
-    prevGuider.elem.data("locked", true);
-    
-    // Note we use prevGuider.id as "prevGuider" is _already_ looking at the previous guider
-    var prevGuiderId = prevGuider.id || null;
-    if (prevGuiderId !== null && prevGuiderId !== "") {
-      var myGuider = guiders._guiderById(prevGuiderId);
-      var omitHidingOverlay = myGuider.overlay ? true : false;
-      guiders.hideAll(omitHidingOverlay, true);
-      if (prevGuider && prevGuider.highlight) {
-        guiders._dehighlightElement(prevGuider.highlight);
+  guiders._wireEscape = function (myGuider) {
+    $(document).keydown(function(event) {
+      if (event.keyCode == 27 || event.which == 27) {
+        guiders.hideAll();
+        if (myGuider.onClose) {
+          myGuider.onClose(myGuider, true /*close by X/Escape*/);
+        }
+        $("body").trigger("guidersClose");
+        return false;
       }
-      guiders.show(prevGuiderId);
-    }
+    });      
   };
 
   guiders.createGuider = function(passedSettings) {
@@ -441,14 +394,31 @@ var guiders = (function($) {
     
     // Extend those settings with passedSettings
     myGuider = $.extend({}, guiders._defaultSettings, passedSettings);
-    myGuider.id = myGuider.id || String(Math.floor(Math.random() * 1000));
+    myGuider.id = myGuider.id || "guider_random_" + String(Math.floor(Math.random() * 1000));
     
-    var guiderElement = $(guiders._htmlSkeleton);
+    var guiderElement = $("#" + myGuider.id);
+    if (!guiderElement.length) {
+      // If the guider already exists in the DOM, use that, as an alternate guider instantiation method.
+      // See the docs and $.fn.guider for more details.
+      // Otherwise, use the html skeleton.
+      guiderElement = $(guiders._htmlSkeleton);
+    }
+    
     myGuider.elem = guiderElement;
     if (typeof myGuider.classString !== "undefined" && myGuider.classString !== null) {
       myGuider.elem.addClass(myGuider.classString);
     }
-    myGuider.elem.css("width", myGuider.width + "px");
+    
+    // You may pass a parameter to width/maxwidth as either a string or a number.
+    // If it's a number then it is assumed to be in px.
+    if (Number(myGuider.width) === myGuider.width) {
+      myGuider.width = String(myGuider.width) + "px";
+    }
+    if (Number(myGuider.maxWidth) === myGuider.maxWidth) {
+      myGuider.maxWidth = String(myGuider.maxWidth) + "px";
+    }
+    myGuider.elem.css("width", myGuider.width);
+    myGuider.elem.css("maxWidth", myGuider.maxWidth);
     
     var guiderTitleContainer = guiderElement.find(".guiders_title");
     guiderTitleContainer.html(myGuider.title);
@@ -488,13 +458,24 @@ var guiders = (function($) {
     }
     
     return guiders;
-  }; 
+  };
+  
+  guiders.get = function(id) {
+    if (typeof guiders._guiders[id] === "undefined") {
+      return null;
+    }
+    return guiders._guiders[id] || null;
+  };
+  
+  guiders.getCurrentGuider = function() {
+    return guiders._guiders[guiders._currentGuiderID] || null;
+  };
 
   guiders.hideAll = function(omitHidingOverlay, next) {
     next = next || false;
 
     $(".guider:visible").each(function(index, elem){
-      var myGuider = guiders._guiderById($(elem).attr('id'));
+      var myGuider = guiders.get($(elem).attr('id'));
       if (myGuider.onHide) {
         myGuider.onHide(myGuider, next);
       }
@@ -511,25 +492,102 @@ var guiders = (function($) {
     }
     return guiders;
   };
+  
+  guiders.next = function() {
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    if (typeof currentGuider === "undefined") {
+      return null;
+    }
+    currentGuider.elem.data("locked", true);
+
+    var nextGuiderId = currentGuider.next || null;
+    if (nextGuiderId !== null && nextGuiderId !== "") {
+      var nextGuider = guiders.get(nextGuiderId);
+      var omitHidingOverlay = nextGuider.overlay ? true : false;
+      guiders.hideAll(omitHidingOverlay, true);
+      if (currentGuider && currentGuider.highlight) {
+        guiders._dehighlightElement(currentGuider.highlight);
+      }
+
+      if (nextGuider.shouldSkip && nextGuider.shouldSkip()) {
+        guiders._currentGuiderID = nextGuider.id;
+        guiders.next();
+        return guiders.getCurrentGuider();
+      }
+      else {
+        guiders.show(nextGuiderId);
+        return guiders.getCurrentGuider();
+      }
+    }
+  };
+  
+  guiders.prev = function () {
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    if (typeof currentGuider === "undefined") {
+      // not what we think it is
+      return null;
+    }
+    if (currentGuider.prev === null) {
+      // no previous to look at
+      return null;
+    }
+  
+    var prevGuider = guiders._guiders[currentGuider.prev];
+    prevGuider.elem.data("locked", true);
+    
+    // Note we use prevGuider.id as "prevGuider" is _already_ looking at the previous guider
+    var prevGuiderId = prevGuider.id || null;
+    if (prevGuiderId !== null && prevGuiderId !== "") {
+      var myGuider = guiders.get(prevGuiderId);
+      var omitHidingOverlay = myGuider.overlay ? true : false;
+      guiders.hideAll(omitHidingOverlay, true);
+      if (prevGuider && prevGuider.highlight) {
+        guiders._dehighlightElement(prevGuider.highlight);
+      }
+      guiders.show(prevGuiderId);
+      return myGuider;
+    }
+  };
+  
+  guiders.reposition = function() {
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    guiders._attach(currentGuider);
+  };
+
+  guiders.scrollToCurrent = function() {
+    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    if (typeof currentGuider === "undefined") {
+      return;
+    }
+    
+    var windowHeight = guiders._windowHeight;
+    var scrollHeight = $(window).scrollTop();
+    var guiderOffset = currentGuider.elem.offset();
+    var guiderElemHeight = currentGuider.elem.height();
+    
+    // Scroll to the guider's position.
+    var scrollToHeight = Math.round(Math.max(guiderOffset.top + (guiderElemHeight / 2) - (windowHeight / 2), 0));
+    window.scrollTo(0, scrollToHeight);
+  };
 
   guiders.show = function(id) {
     if (!id && guiders._lastCreatedGuiderID) {
       id = guiders._lastCreatedGuiderID;
     }
   
-    var myGuider = guiders._guiderById(id);
+    var myGuider = guiders.get(id);
     if (myGuider.overlay) {
       guiders._showOverlay();
       // if guider is attached to an element, make sure it's visible
-      if (myGuider.highlight) {
-        guiders._highlightElement(myGuider.highlight);
+      if (myGuider.highlight && myGuider.attachTo) {
+        guiders._highlightElement(myGuider.attachTo);
       }
     }
     
     if (myGuider.closeOnEscape) {
       guiders._wireEscape(myGuider);
     } else {
-      guiders._unWireEscape(myGuider);
+      guiders._unwireEscape(myGuider);
     }
   
     // You can use an onShow function to take some action before the guider is shown.
@@ -560,35 +618,61 @@ var guiders = (function($) {
     return guiders;
   };
   
-  guiders.scrollToCurrent = function() {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (typeof currentGuider === "undefined") {
-      return;
-    }
-    
-    var windowHeight = guiders._windowHeight;
-    var scrollHeight = $(window).scrollTop();
-    var guiderOffset = currentGuider.elem.offset();
-    var guiderElemHeight = currentGuider.elem.height();
-    
-    // Scroll to the guider's position.
-    var scrollToHeight = Math.round(Math.max(guiderOffset.top + (guiderElemHeight / 2) - (windowHeight / 2), 0));
-    window.scrollTo(0, scrollToHeight);
-  };
-  
-  // Change the bubble position after browser gets resized
-  var _resizing = undefined;
-  $(window).resize(function() {
-    if (typeof(_resizing) !== "undefined") {
-      clearTimeout(_resizing); // Prevents seizures
-    }
-    _resizing = setTimeout(function() {
-      _resizing = undefined;
-      if (typeof (guiders) !== "undefined") {
-        guiders.reposition();
+  // Allow separate method of instantiating guiders, with $("#guider2").guider()
+  // You can pass parameters to the guiders with either data-attributes on the element,
+  // or as optional parameters in the options hash: $("#guider").guider(options)
+  $.fn.guider = function (passedOptions) {
+    passedOptions = passedOptions || {};
+    var options = $.extend({}, passedOptions);
+    options.id = $(this).attr("id");
+      
+    var buttons = [];
+    $(this).find(".guiders_buttons_container").children().each(function () {
+      var buttonOptions = {
+        name: $(this).html(),
+        classString: $(this).attr("class")
+      };
+      if ($(this).attr("data-onclick")) {
+        var functionName = $(this).attr("data-onclick");
+        buttonOptions.onclick = function () { window[functionName](); };
       }
-    }, 20);
-  });
-  
+      $(this).remove();
+      buttons.push(buttonOptions);
+    });
+    options.buttons = buttons;
+    
+    title = $(this).find(".guiders_title").html()
+    if (title) {
+      options.title = title;
+    }
+
+    description = $(this).find(".guiders_description").html()
+    if (description) {
+      options.description = description;
+    }
+    
+    for (var optionName in guiders._defaultSettings) {
+      if (!guiders._defaultSettings.hasOwnProperty(optionName)) {
+        continue;
+      }
+    
+      var optionValue = $(this).attr("data-" + optionName);
+      if (optionValue === undefined || optionValue === null) {
+        continue;
+      }
+    
+      if (optionValue == "true") {
+        optionValue = true;
+      } else if (optionValue == "false") {
+        optionValue = false;
+      }
+    
+      options[optionName] = optionValue;
+    }
+    
+    guiders.createGuider(options);
+    return this;
+	};
+	  
   return guiders;
 }).call(this, jQuery);
