@@ -193,7 +193,7 @@ var guiders = (function($) {
     var myHeight = myGuider.elem.innerHeight();
     var myWidth = myGuider.elem.innerWidth();
 
-    if (myGuider.position === 0 || attachTo.length === 0) {
+    if (myGuider.position === 0 && attachTo.length === 0) {
       var fixedOrAbsolute = "fixed";
       if (guiders._isIE && guiders._ieVersion < 9) {
         fixedOrAbsolute = "absolute";
@@ -226,6 +226,7 @@ var guiders = (function($) {
     
     // offsetMap follows the form: [height, width]
     var offsetMap = {
+      0: [attachToHeight/2 - myHeight/2, attachToWidth/2 - myWidth/2],
       1: [-bufferOffset - myHeight, attachToWidth - myWidth],
       2: [0, bufferOffset + attachToWidth],
       3: [attachToHeight/2 - myHeight/2, bufferOffset + attachToWidth],
