@@ -168,7 +168,7 @@ var guiders = (function($) {
   };
 
   guiders._wireEscape = function (myGuider) {
-    $(document).keydown(function(event) {
+    $(document).on('keydown.guiders', function(event) {
       if (event.keyCode == 27 || event.which == 27) {
         guiders.hideAll();
         if (myGuider.onClose) {
@@ -176,11 +176,11 @@ var guiders = (function($) {
         }
         return false;
       }
-    });      
+    });
   };
 
   guiders._unWireEscape = function (myGuider) {
-    $(document).unbind("keydown");
+    $(document).unbind("keydown.guiders");
   };
   
   guiders._attach = function(myGuider) {
