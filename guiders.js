@@ -89,7 +89,7 @@ var guiders = (function($) {
   guiders._windowHeight = 0;
   
   // Basic IE browser detection
-  var ieBrowserMatch = navigator.userAgent.match('MSIE (.)');
+  var ieBrowserMatch = navigator.userAgent.match(/MSIE\s([\d.]+)/);
   guiders._isIE = ieBrowserMatch && ieBrowserMatch.length > 1;
   guiders._ieVersion = ieBrowserMatch && ieBrowserMatch.length > 1 ? Number(ieBrowserMatch[1]) : -1;
   
