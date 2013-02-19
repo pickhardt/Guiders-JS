@@ -452,6 +452,10 @@ var guiders = (function($) {
     
     var guiderTitleContainer = guiderElement.find(".guiders_title");
     guiderTitleContainer.html(myGuider.title);
+    // only show title if it has content
+    if (myGuider.title == "") {
+      guiderTitleContainer.remove();
+    }
     
     guiderElement.find(".guiders_description").html(myGuider.description);
     
