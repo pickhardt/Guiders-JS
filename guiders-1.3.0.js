@@ -122,10 +122,7 @@ var guiders = (function($) {
         switch (thisButtonName) {
           case guiders._closeButtonTitle.toLowerCase():
             thisButtonElem.bind(guiders._buttonClickEvent, function () {
-              guiders.hideAll();
-              if (myGuider.onClose) {
-                myGuider.onClose(myGuider, false /* close by button */);
-              }
+              guiders._close(myGuider, false /* close by button */);
             });
             break;
           case guiders._nextButtonTitle.toLowerCase():
@@ -160,20 +157,14 @@ var guiders = (function($) {
     });
     xButtonContainer.append(xButton);
     xButton.click(function() {
-      guiders.hideAll();
-      if (myGuider.onClose) {
-        myGuider.onClose(myGuider, true);
-       }
+      guiders._close(myGuider, true /*close by X/Escape*/);
     });
   };
 
   guiders._wireEscape = function (myGuider) {
     $(document).on('keydown.guiders', function(event) {
       if (event.keyCode == 27 || event.which == 27) {
-        guiders.hideAll();
-        if (myGuider.onClose) {
-          myGuider.onClose(myGuider, true /*close by X/Escape*/);
-        }
+        guiders._close(myGuider, true /*close by X/Escape*/);
         return false;
       }
     });
@@ -182,7 +173,14 @@ var guiders = (function($) {
   guiders._unWireEscape = function (myGuider) {
     $(document).unbind("keydown.guiders");
   };
-  
+
+  guiders._close = function(myGuider, closeMethod) {
+    guiders.hideAll();
+    if (myGuider.onClose) {
+      myGuider.onClose(myGuider, closeMethod);
+    }
+  };
+
   guiders._attach = function(myGuider) {
     if (typeof myGuider !== 'object') {
       return;
@@ -388,14 +386,16 @@ var guiders = (function($) {
     }
     currentGuider.elem.data("locked", true);
 
+    if (currentGuider && currentGuider.highlight) {
+      guiders._dehighlightElement(currentGuider.highlight);
+    }
+
     var nextGuiderId = currentGuider.next || null;
     if (nextGuiderId !== null && nextGuiderId !== "") {
       var nextGuider = guiders._guiderById(nextGuiderId);
       var omitHidingOverlay = nextGuider.overlay ? true : false;
       guiders.hideAll(omitHidingOverlay, true);
-      if (currentGuider && currentGuider.highlight) {
-        guiders._dehighlightElement(currentGuider.highlight);
-      }
+
       if (nextGuider.shouldSkip && nextGuider.shouldSkip()) {
         guiders._currentGuiderID = nextGuider.id;
         guiders.next();
@@ -404,6 +404,8 @@ var guiders = (function($) {
       else {
         guiders.show(nextGuiderId);
       }
+    } else {
+      guiders._close(currentGuider, false /* close by reaching the end */);
     }
   };
 
