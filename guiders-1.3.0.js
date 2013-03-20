@@ -18,7 +18,9 @@
  * Enjoy!
  */
 
-var guiders = (function($) {
+(function () {
+
+function init($) {
   var guiders = {};
 
   guiders.version = "1.3.0";
@@ -591,4 +593,12 @@ var guiders = (function($) {
   });
 
   return guiders;
-}).call(this, jQuery);
+}
+
+if (typeof define == "undefined") {
+  window.guiders = init(jQuery);
+} else {
+  define(["jquery"], init);
+}
+
+})();
