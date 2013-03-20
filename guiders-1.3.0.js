@@ -20,7 +20,7 @@
 
 var guiders = (function($) {
   var guiders = {};
-  
+
   guiders.version = "1.3.0";
 
   guiders._defaultSettings = {
@@ -37,7 +37,7 @@ var guiders = (function($) {
       top: null,
       left: null
     },
-    onClose: null, 
+    onClose: null,
     onHide: null,
     onShow: null,
     overlay: false,
@@ -89,20 +89,20 @@ var guiders = (function($) {
     "leftTop": 10
   };
   guiders._windowHeight = 0;
-  
+
   // Basic IE browser detection
   var ieBrowserMatch = navigator.userAgent.match('MSIE (.)');
   guiders._isIE = ieBrowserMatch && ieBrowserMatch.length > 1;
   guiders._ieVersion = ieBrowserMatch && ieBrowserMatch.length > 1 ? Number(ieBrowserMatch[1]) : -1;
-  
+
   guiders._addButtons = function(myGuider) {
     var guiderButtonsContainer = myGuider.elem.find(".guiders_buttons_container");
-  
+
     if (myGuider.buttons === null || myGuider.buttons.length === 0) {
       guiderButtonsContainer.remove();
       return;
     }
-  
+
     for (var i = myGuider.buttons.length - 1; i >= 0; i--) {
       var thisButton = myGuider.buttons[i];
       var thisButtonElem = $(guiders._buttonElement,
@@ -112,9 +112,9 @@ var guiders = (function($) {
       if (typeof thisButton.classString !== "undefined" && thisButton.classString !== null) {
         thisButtonElem.addClass(thisButton.classString);
       }
-  
+
       guiderButtonsContainer.append(thisButtonElem);
-      
+
       var thisButtonName = thisButton.name.toLowerCase();
       if (thisButton.onclick) {
         thisButtonElem.bind(guiders._buttonClickEvent, thisButton.onclick);
@@ -141,12 +141,12 @@ var guiders = (function($) {
         }
       }
     }
-  
+
     if (myGuider.buttonCustomHTML !== "") {
       var myCustomHTML = $(myGuider.buttonCustomHTML);
       myGuider.elem.find(".guiders_buttons_container").append(myCustomHTML);
     }
-  
+
     if (myGuider.buttons.length === 0) {
       guiderButtonsContainer.remove();
     }
@@ -176,18 +176,18 @@ var guiders = (function($) {
         }
         return false;
       }
-    });      
+    });
   };
 
   guiders._unWireEscape = function (myGuider) {
     $(document).unbind("keydown");
   };
-  
+
   guiders._attach = function(myGuider) {
     if (typeof myGuider !== 'object') {
       return;
     }
-        
+
     var attachTo = $(myGuider.attachTo);
 
     var myHeight = myGuider.elem.innerHeight();
@@ -203,12 +203,12 @@ var guiders = (function($) {
       myGuider.elem.css("left", ($(window).width() - myWidth) / 2 + "px");
       return;
     }
-    
+
     // Otherwise, the guider is positioned relative to the attachTo element.
     var base = attachTo.offset();
     var top = base.top;
     var left = base.left;
-    
+
     // topMarginOfBody corrects positioning if body has a top margin set on it.
     var topMarginOfBody = $("body").outerHeight(true) - $("body").outerHeight(false);
     top -= topMarginOfBody;
@@ -219,11 +219,11 @@ var guiders = (function($) {
       // As an alternative to the clock model, you can also use keywords to position the guider.
       myGuider.position = guiders._offsetNameMapping[myGuider.position];
     }
-    
+
     var attachToHeight = attachTo.innerHeight();
-    var attachToWidth = attachTo.innerWidth();  
+    var attachToWidth = attachTo.innerWidth();
     var bufferOffset = 0.9 * guiders._arrowSize;
-    
+
     // offsetMap follows the form: [height, width]
     var offsetMap = {
       1: [-bufferOffset - myHeight, attachToWidth - myWidth],
@@ -239,11 +239,11 @@ var guiders = (function($) {
       11: [-bufferOffset - myHeight, 0],
       12: [-bufferOffset - myHeight, attachToWidth/2 - myWidth/2]
     };
-    
+
     var offset = offsetMap[myGuider.position];
     top += offset[0];
     left += offset[1];
-    
+
     var positionType = "absolute";
     // If the element you are attaching to is position: fixed, then we will make the guider
     // position: fixed as well.
@@ -252,7 +252,7 @@ var guiders = (function($) {
       top -= $(window).scrollTop();
       left -= $(window).scrollLeft();
     }
-    
+
     // If you specify an additional offset parameter when you create the guider, it gets added here.
     if (myGuider.offset.top !== null) {
       top += myGuider.offset.top;
@@ -260,16 +260,16 @@ var guiders = (function($) {
     if (myGuider.offset.left !== null) {
       left += myGuider.offset.left;
     }
-    
+
     guiders._styleArrow(myGuider);
-    
+
     // Finally, set the style of the guider and return it!
     myGuider.elem.css({
       "position": positionType,
       "top": top,
       "left": left
     });
-    
+
     return myGuider;
   };
 
@@ -333,7 +333,7 @@ var guiders = (function($) {
       12: "guiders_arrow_down"
     };
     myGuiderArrow.addClass(newClass[position]);
-  
+
     var myHeight = myGuider.elem.innerHeight();
     var myWidth = myGuider.elem.innerWidth();
     var arrowOffset = guiders._arrowSize / 2;
@@ -351,7 +351,7 @@ var guiders = (function($) {
       11: ["left", arrowOffset],
       12: ["left", myWidth/2 - arrowOffset]
     };
-    var position = positionMap[myGuider.position];
+    position = positionMap[myGuider.position];
     myGuiderArrow.css(position[0], position[1] + "px");
   };
 
@@ -380,7 +380,7 @@ var guiders = (function($) {
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
     guiders._attach(currentGuider);
   };
-  
+
   guiders.next = function() {
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
     if (typeof currentGuider === "undefined") {
@@ -417,10 +417,10 @@ var guiders = (function($) {
       // no previous to look at
       return;
     }
-  
+
     var prevGuider = guiders._guiders[currentGuider.prev];
     prevGuider.elem.data("locked", true);
-    
+
     // Note we use prevGuider.id as "prevGuider" is _already_ looking at the previous guider
     var prevGuiderId = prevGuider.id || null;
     if (prevGuiderId !== null && prevGuiderId !== "") {
@@ -438,46 +438,46 @@ var guiders = (function($) {
     if (passedSettings === null || passedSettings === undefined) {
       passedSettings = {};
     }
-    
+
     // Extend those settings with passedSettings
-    myGuider = $.extend({}, guiders._defaultSettings, passedSettings);
+    var myGuider = $.extend({}, guiders._defaultSettings, passedSettings);
     myGuider.id = myGuider.id || String(Math.floor(Math.random() * 1000));
-    
+
     var guiderElement = $(guiders._htmlSkeleton);
     myGuider.elem = guiderElement;
     if (typeof myGuider.classString !== "undefined" && myGuider.classString !== null) {
       myGuider.elem.addClass(myGuider.classString);
     }
     myGuider.elem.css("width", myGuider.width + "px");
-    
+
     var guiderTitleContainer = guiderElement.find(".guiders_title");
     guiderTitleContainer.html(myGuider.title);
-    
+
     guiderElement.find(".guiders_description").html(myGuider.description);
-    
+
     guiders._addButtons(myGuider);
-    
+
     if (myGuider.xButton) {
         guiders._addXButton(myGuider);
     }
-    
+
     guiderElement.hide();
     guiderElement.appendTo("body");
     guiderElement.attr("id", myGuider.id);
-    
+
     // Ensure myGuider.attachTo is a jQuery element.
     if (typeof myGuider.attachTo !== "undefined" && myGuider !== null) {
       guiders._attach(myGuider);
     }
-    
+
     guiders._initializeOverlay();
-    
+
     guiders._guiders[myGuider.id] = myGuider;
-    if (guiders._lastCreatedGuiderID != null) {
+    if (guiders._lastCreatedGuiderID !== null) {
       myGuider.prev = guiders._lastCreatedGuiderID;
     }
     guiders._lastCreatedGuiderID = myGuider.id;
-    
+
     /**
      * If the URL of the current window is of the form
      * http://www.myurl.com/mypage.html#guider=id
@@ -486,9 +486,9 @@ var guiders = (function($) {
     if (myGuider.isHashable) {
       guiders._showIfHashed(myGuider);
     }
-    
+
     return guiders;
-  }; 
+  };
 
   guiders.hideAll = function(omitHidingOverlay, next) {
     next = next || false;
@@ -502,7 +502,7 @@ var guiders = (function($) {
     $(".guider").fadeOut("fast");
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
     if (currentGuider && currentGuider.highlight) {
-    	guiders._dehighlightElement(currentGuider.highlight);
+        guiders._dehighlightElement(currentGuider.highlight);
     }
     if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
       // do nothing for now
@@ -516,7 +516,7 @@ var guiders = (function($) {
     if (!id && guiders._lastCreatedGuiderID) {
       id = guiders._lastCreatedGuiderID;
     }
-  
+
     var myGuider = guiders._guiderById(id);
     if (myGuider.overlay) {
       guiders._showOverlay();
@@ -525,57 +525,57 @@ var guiders = (function($) {
         guiders._highlightElement(myGuider.highlight);
       }
     }
-    
+
     if (myGuider.closeOnEscape) {
       guiders._wireEscape(myGuider);
     } else {
       guiders._unWireEscape(myGuider);
     }
-  
+
     // You can use an onShow function to take some action before the guider is shown.
     if (myGuider.onShow) {
       myGuider.onShow(myGuider);
     }
     guiders._attach(myGuider);
     myGuider.elem.fadeIn("fast").data("locked", false);
-      
+
     guiders._currentGuiderID = id;
-    
+
     var windowHeight = guiders._windowHeight = $(window).height();
     var scrollHeight = $(window).scrollTop();
     var guiderOffset = myGuider.elem.offset();
     var guiderElemHeight = myGuider.elem.height();
-    
+
     var isGuiderBelow = (scrollHeight + windowHeight < guiderOffset.top + guiderElemHeight); /* we will need to scroll down */
     var isGuiderAbove = (guiderOffset.top < scrollHeight); /* we will need to scroll up */
-    
+
     if (myGuider.autoFocus && (isGuiderBelow || isGuiderAbove)) {
       // Sometimes the browser won't scroll if the person just clicked,
       // so let's do this in a setTimeout.
       setTimeout(guiders.scrollToCurrent, 10);
     }
-    
+
     $(myGuider.elem).trigger("guiders.show");
 
     return guiders;
   };
-  
+
   guiders.scrollToCurrent = function() {
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
     if (typeof currentGuider === "undefined") {
       return;
     }
-    
+
     var windowHeight = guiders._windowHeight;
     var scrollHeight = $(window).scrollTop();
     var guiderOffset = currentGuider.elem.offset();
     var guiderElemHeight = currentGuider.elem.height();
-    
+
     // Scroll to the guider's position.
     var scrollToHeight = Math.round(Math.max(guiderOffset.top + (guiderElemHeight / 2) - (windowHeight / 2), 0));
     window.scrollTo(0, scrollToHeight);
   };
-  
+
   // Change the bubble position after browser gets resized
   var _resizing = undefined;
   $(window).resize(function() {
@@ -589,6 +589,6 @@ var guiders = (function($) {
       }
     }, 20);
   });
-  
+
   return guiders;
 }).call(this, jQuery);
