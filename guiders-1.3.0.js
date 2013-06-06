@@ -47,6 +47,7 @@ var guiders = (function($) {
     width: 400,
     xButton: false, // This places a closer "x" button in the top right of the guider.	
 	customHTML: null,
+	closeOnClickOutside: false
   };
 
   guiders._htmlSkeleton = [
@@ -573,7 +574,28 @@ var guiders = (function($) {
       // so let's do this in a setTimeout.
       setTimeout(guiders.scrollToCurrent, 10);
     }
-    
+   
+	if(myGuider.closeOnClickOutside) {
+		
+		var d = document.createElement("div");
+			d.id = myGuider.id + "overlay";	
+			d.style.position = "absolute";
+			d.style.width = "100%";
+			d.style.height = "100%";
+			d.style.top = 0;
+			d.style.left = 0;
+		//	d.style.backgroundColor = "rgba(255,255,255,0.5)";
+
+			document.getElementsByTagName('body')[0].appendChild(d);
+
+		d.addEventListener('click',function(){ 
+			document.getElementById(myGuider.id+'overlay').style.display = 'none'; 
+			document.getElementById(myGuider.id).style.display = 'none'; 
+			document.getElementsByTagName('body')[0].removeChild(d);
+		}, false);
+		
+	}
+
     $(myGuider.elem).trigger("guiders.show");
 
     return guiders;
