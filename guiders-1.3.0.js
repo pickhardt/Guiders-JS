@@ -45,7 +45,9 @@ var guiders = (function($) {
     shouldSkip: function() {}, // Optional handler allows you to skip a guider if returns true.
     title: "Sample title goes here",
     width: 400,
-    xButton: false // This places a closer "x" button in the top right of the guider.
+    xButton: false, // This places a closer "x" button in the top right of the guider.	
+	customHTML: null,
+	closeOnClickOutside: false
   };
 
   guiders._htmlSkeleton = [
@@ -442,27 +444,45 @@ var guiders = (function($) {
     // Extend those settings with passedSettings
     myGuider = $.extend({}, guiders._defaultSettings, passedSettings);
     myGuider.id = myGuider.id || String(Math.floor(Math.random() * 1000));
-    
-    var guiderElement = $(guiders._htmlSkeleton);
+   
+	if(myGuider.customHTML != null) {
+		var customHTML = [
+    		"<div class='guider'>",
+    		"  <div class='guiders_content'>",
+					myGuider.customHTML,
+			"	</div>",
+    		"  <div class='guiders_arrow'></div>",
+			"</div>"
+		].join("");
+
+	    var guiderElement = $(customHTML);		
+	}else {
+	    var guiderElement = $(guiders._htmlSkeleton);
+	}
+	
     myGuider.elem = guiderElement;
     if (typeof myGuider.classString !== "undefined" && myGuider.classString !== null) {
       myGuider.elem.addClass(myGuider.classString);
     }
-    myGuider.elem.css("width", myGuider.width + "px");
+       
+	if(myGuider.customHTML != null) {
+	    
+		myGuider.elem.css("width", myGuider.width + "px");
+
+		var guiderTitleContainer = guiderElement.find(".guiders_title");
+    	guiderTitleContainer.html(myGuider.title);
     
-    var guiderTitleContainer = guiderElement.find(".guiders_title");
-    guiderTitleContainer.html(myGuider.title);
+	    guiderElement.find(".guiders_description").html(myGuider.description);
+    	
+	    guiders._addButtons(myGuider);
     
-    guiderElement.find(".guiders_description").html(myGuider.description);
-    
-    guiders._addButtons(myGuider);
-    
-    if (myGuider.xButton) {
-        guiders._addXButton(myGuider);
-    }
-    
-    guiderElement.hide();
-    guiderElement.appendTo("body");
+    	if (myGuider.xButton) {
+        	guiders._addXButton(myGuider);
+	    }
+	}
+    	
+	guiderElement.hide();
+	guiderElement.appendTo("body");
     guiderElement.attr("id", myGuider.id);
     
     // Ensure myGuider.attachTo is a jQuery element.
@@ -554,7 +574,28 @@ var guiders = (function($) {
       // so let's do this in a setTimeout.
       setTimeout(guiders.scrollToCurrent, 10);
     }
-    
+   
+	if(myGuider.closeOnClickOutside) {
+		
+		var d = document.createElement("div");
+			d.id = myGuider.id + "overlay";	
+			d.style.position = "absolute";
+			d.style.width = "100%";
+			d.style.height = "100%";
+			d.style.top = 0;
+			d.style.left = 0;
+		//	d.style.backgroundColor = "rgba(255,255,255,0.5)";
+
+			document.getElementsByTagName('body')[0].appendChild(d);
+
+		d.addEventListener('click',function(){ 
+			document.getElementById(myGuider.id+'overlay').style.display = 'none'; 
+			document.getElementById(myGuider.id).style.display = 'none'; 
+			document.getElementsByTagName('body')[0].removeChild(d);
+		}, false);
+		
+	}
+
     $(myGuider.elem).trigger("guiders.show");
 
     return guiders;
