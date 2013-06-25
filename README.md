@@ -51,7 +51,7 @@ buttons: array of button objects
     name: "Close",
     classString: "primary-button",
     onclick: callback function for when the button is clicked
-      (if name is "close", "next", or "prev", onclick defaults to guiders.hideAll, guiders.next, or guiders.prev respectively)
+      (if name is "close", "next", or "back", onclick defaults to guiders.hideAll, guiders.next, or guiders.prev respectively)
    }
 buttonCustomHTML: (optional) custom HTML that gets appended to the buttons div
 classString: (optional) custom class name that the guider should additionally have
