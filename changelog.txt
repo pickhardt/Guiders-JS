@@ -1,0 +1,26 @@
+CHANGELOG
+
+2.0.0
+-----
+
+- Started keeping a changelog in changelog.txt. (You're reading it!)
+
+- Since this is a major change, I am incrementing the version number to 2.0.0. (Following Semantic Versioning, http://semver.org/)
+
+- Created a dev branch on GitHub. (https://github.com/jeff-optimizely/Guiders-JS/tree/dev) Contributors, issue pull requests to the dev branch so I can safely pull them without worrying about screwing up master code.
+
+- Changed the file names from guiders-(version).js and guiders-(version).css to simply guiders.js and guiders.css, so that it's easier to track changes in GitHub. If you want to know what version you have, just open the file or check guiders.version.
+
+- Upgraded jQuery from 1.51 to 1.90. It should still work with older versions of jQuery.
+
+- Use var guiders = this.guiders = {}; instead of var guiders = (function() { ... }) in order for guiders to attach to the window object more reliably. (Thanks @spmason https://github.com/spmason/Guiders-JS/commit/7229f66870701b980e98d80d1ac79cbb0016b92d#commitcomment-2506855)
+
+- Added bower support in component.json (Thanks rajkissu https://github.com/jeff-optimizely/Guiders-JS/pull/78)
+
+- Added a method: guiders.getCurrentGuider, to get the current guider. This can be useful for analytics tracking, for example.
+
+- guiders.next and guiders.prev return the value of guiders.getCurrent()
+
+- Allow creating guiders in the HTML, then creating guiders via $("#guider2").guider(options).  The options can be passed in through options or set as data-attrs on the object in the HTML. (Thanks @tarr11 https://github.com/jeff-optimizely/Guiders-JS/issues/85)
+
+- jQuery Mask support! If you include the jQuery Mask library in your site, Guiders.js will use jQuery Mask instead of the default overlay.
