@@ -13,8 +13,8 @@ Here are a couple examples hosted online.  You can also check out `README.html` 
 [https://optimizely.appspot.com/edit#url=www.google.com](https://optimizely.appspot.com/edit#url=www.google.com)
 
 
-Setup
------
+Set Up
+------
 
 Here is sample code for initializing a couple of guiders.  Guiders are hidden when created, unless `.show()` is method chained immediately after `.createGuider`.
 
@@ -51,7 +51,7 @@ buttons: array of button objects
     name: "Close",
     classString: "primary-button",
     onclick: callback function for when the button is clicked
-      (if name is "close", "next", or "prev", onclick defaults to guiders.hideAll, guiders.next, or guiders.prev respectively)
+      (if name is "close", "next", or "back", onclick defaults to guiders.hideAll, guiders.next, or guiders.prev respectively)
    }
 buttonCustomHTML: (optional) custom HTML that gets appended to the buttons div
 classString: (optional) custom class name that the guider should additionally have
@@ -79,14 +79,44 @@ Besides creating guiders, here is sample code you can use in your application to
 
 ~~~ javascript
 guiders.hideAll(); // hides all guiders
-guiders.next(); // hides the last shown guider, if shown, and advances to the next guider
-guiders.show(id); // shows the guider, given the id used at creation
-guiders.prev(); // shows the previous guider
+guiders.next();    // hides the last shown guider, if shown, and advances to the next guider
+guiders.show(id);  // shows the guider, given the id used at creation
+guiders.prev();    // shows the previous guider
 ~~~
 
 You'll likely want to change the default values, such as the width (set to 400px).  These can be found at the top of `guiders.js` in the `_defaultSettings` object.  You'll also want to modify the css file to match your application's branding.
 
 Creating a multi-page tour?  If the URL of the current window is of the form `http://www.myurl.com/mypage.html#guider=foo`, then the guider with id equal to `foo` will be shown automatically.  To use this, you can set the onHide of the last guider to an anonymous function: function() { window.location.href=`http://www.myurl.com/mypage.html#guider=foo`; }
+
+
+What is jQuery Mask?
+--------------------
+jQuery Mask is an optional add-on for Guiders.js.  If your site contains jQuery Mask, jQuery Mask will be used for the overlay instead of the guiders overlay.
+
+For more information, see:
+https://github.com/dbellizzi/jquery-mask
+
+
+Contributing
+------------
+Contributions are welcome! If you would like to contribute, please issue a pull request against the dev branch, not the master branch.
+
+
+Versioning
+----------
+As of version 2.0.0, Guiders.js will follow the Semantic Versioning guidelines as much as possible.
+
+Releases will follow the following format:
+
+`<major>.<minor>.<patch>`
+
+Updates will occur according to the following guidelines:
+
+* Breaking backward compatibility bumps the major (and resets the minor and patch)
+* New additions without breaking backward compatibility bumps the minor (and resets the patch)
+* Bug fixes and misc changes bumps the patch
+
+For more information on SemVer, visit [http://semver.org/](http://semver.org/).
 
 
 In Closing
