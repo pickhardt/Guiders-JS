@@ -89,14 +89,6 @@ You'll likely want to change the default values, such as the width (set to 400px
 Creating a multi-page tour?  If the URL of the current window is of the form `http://www.myurl.com/mypage.html#guider=foo`, then the guider with id equal to `foo` will be shown automatically.  To use this, you can set the onHide of the last guider to an anonymous function: function() { window.location.href=`http://www.myurl.com/mypage.html#guider=foo`; }
 
 
-What is jQuery Mask?
---------------------
-jQuery Mask is an optional add-on for Guiders.js.  If your site contains jQuery Mask, jQuery Mask will be used for the overlay instead of the guiders overlay.
-
-For more information, see:
-https://github.com/dbellizzi/jquery-mask
-
-
 Contributing
 ------------
 Contributions are welcome! If you would like to contribute, please issue a pull request against the dev branch, not the master branch.
