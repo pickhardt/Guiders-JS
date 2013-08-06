@@ -262,6 +262,9 @@ var guiders = (function($) {
   };
   
   guiders._hideOverlay = function() {
+    if ($.mask) { // jQuery Mask is an optional library to improve overlays
+      $("body").mask(false);
+    }
     $("#guiders_overlay").fadeOut("fast");
   };
 
@@ -275,17 +278,21 @@ var guiders = (function($) {
     }
   };
 
-  guiders._showOverlay = function() {
-    // This callback is needed to fix an IE opacity bug.
-    // See also:
-    // http://www.kevinleary.net/jquery-fadein-fadeout-problems-in-internet-explorer/
-    $("#guiders_overlay").fadeIn("fast", function(){
-      if (this.style.removeAttribute) {
-        this.style.removeAttribute("filter");
+  guiders._showOverlay = function(myGuider) {
+    if ($.mask) {
+      $("body").mask(myGuider);
+    } else {
+      // This callback is needed to fix an IE opacity bug.
+      // See also:
+      // http://www.kevinleary.net/jquery-fadein-fadeout-problems-in-internet-explorer/
+      $("#guiders_overlay").fadeIn("fast", function(){
+        if (this.style.removeAttribute) {
+          this.style.removeAttribute("filter");
+        }
+      });
+      if (guiders._isIE) {
+        $("#guiders_overlay").css("position", "absolute");
       }
-    });
-    if (guiders._isIE) {
-      $("#guiders_overlay").css("position", "absolute");
     }
   };
 
@@ -577,7 +584,7 @@ var guiders = (function($) {
   
     var myGuider = guiders.get(id);
     if (myGuider.overlay) {
-      guiders._showOverlay();
+      guiders._showOverlay(myGuider);
       // if guider is attached to an element, make sure it's visible
       if (myGuider.highlight && myGuider.attachTo) {
         guiders._highlightElement(myGuider.attachTo);
