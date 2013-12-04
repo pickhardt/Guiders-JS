@@ -384,7 +384,16 @@ var guiders = (function($) {
         $("body").trigger("guidersClose");
         return false;
       }
-    });      
+    });
+  };
+
+  guiders.cleanup = function(){
+    var guiderIds = Object.keys(guiders._guiders);
+
+    for(var i = 0; i < guiderIds.length; i++){
+      guiders._guiders[guiderIds[i]].elem.remove();
+      delete guiders._guiders[guiderIds[i]];
+    }
   };
 
   guiders.createGuider = function(passedSettings) {
