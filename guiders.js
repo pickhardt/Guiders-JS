@@ -258,16 +258,17 @@ var guiders = (function($) {
     return myGuider;
   };
 
-  guiders._dehighlightElement = function(selector) {
-    $(selector).removeClass('guiders_highlight');
-  };
-  
   guiders._hideOverlay = function() {
     $("#guiders_overlay").fadeOut("fast");
   };
 
   guiders._highlightElement = function(selector) {
+    guiders._removeHighlight();
     $(selector).addClass('guiders_highlight');
+  };
+
+  guiders._removeHighlight = function () {
+    $(".guiders_highlight").removeClass('guiders_highlight');
   };
 
   guiders._initializeOverlay = function() {
@@ -482,6 +483,7 @@ var guiders = (function($) {
 
   guiders.hideAll = function(omitHidingOverlay, next) {
     next = next || false;
+    guiders._removeHighlight();
 
     $(".guider:visible").each(function(index, elem){
       var myGuider = guiders.get($(elem).attr('id'));
@@ -490,10 +492,6 @@ var guiders = (function($) {
       }
     });
     $(".guider").fadeOut("fast");
-    var currentGuider = guiders.getCurrentGuider();
-    if (currentGuider && currentGuider.highlight) {
-    	guiders._dehighlightElement(currentGuider.highlight);
-    }
     if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
       // do nothing for now
     } else {
@@ -516,9 +514,6 @@ var guiders = (function($) {
       var nextGuider = guiders.get(nextGuiderId);
       var omitHidingOverlay = nextGuider.overlay ? true : false;
       guiders.hideAll(omitHidingOverlay, true);
-      if (currentGuider && currentGuider.highlight) {
-        guiders._dehighlightElement(currentGuider.highlight);
-      }
 
       if (nextGuider.shouldSkip && nextGuider.shouldSkip()) {
         guiders._currentGuiderID = nextGuider.id;
@@ -554,9 +549,6 @@ var guiders = (function($) {
       var myGuider = guiders.get(prevGuiderId);
       var omitHidingOverlay = myGuider.overlay ? true : false;
       guiders.hideAll(omitHidingOverlay, true);
-      if (prevGuider && prevGuider.highlight) {
-        guiders._dehighlightElement(prevGuider.highlight);
-      }
 
       // Trigger before show to allow observers to change the
       // DOM before the new guider calculates its position
@@ -594,6 +586,8 @@ var guiders = (function($) {
     }
   
     var myGuider = guiders.get(id);
+    guiders._removeHighlight();
+
     if (myGuider.overlay) {
       guiders._showOverlay(myGuider);
       // if guider is attached to an element, make sure it's visible
