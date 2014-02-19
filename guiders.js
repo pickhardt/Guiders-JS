@@ -499,6 +499,8 @@ var guiders = (function($) {
     } else {
       guiders._hideOverlay();
     }
+
+    guiders._currentGuiderID = null; // Set back to initial state
     return guiders;
   };
   
