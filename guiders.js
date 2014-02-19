@@ -169,7 +169,7 @@ var guiders = (function($) {
   };
   
   guiders._attach = function(myGuider) {
-    if (typeof myGuider !== 'object') {
+    if (myGuider === null || typeof myGuider !== 'object') {
       return;
     }
         
