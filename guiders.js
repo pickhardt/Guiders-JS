@@ -468,7 +468,7 @@ var guiders = (function($) {
   };
   
   guiders.getCurrentGuider = function() {
-    return guiders._guiders[guiders._currentGuiderID] || null;
+    return guiders.get(guiders._currentGuiderID);
   };
 
   guiders.hideAll = function(omitHidingOverlay, next) {
@@ -481,7 +481,7 @@ var guiders = (function($) {
       }
     });
     $(".guider").fadeOut("fast");
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    var currentGuider = guiders.getCurrentGuider();
     if (currentGuider && currentGuider.highlight) {
     	guiders._dehighlightElement(currentGuider.highlight);
     }
@@ -494,8 +494,8 @@ var guiders = (function($) {
   };
   
   guiders.next = function() {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (typeof currentGuider === "undefined") {
+    var currentGuider = guiders.getCurrentGuider();
+    if (!currentGuider) {
       return null;
     }
     currentGuider.elem.data("locked", true);
@@ -522,8 +522,8 @@ var guiders = (function($) {
   };
   
   guiders.prev = function () {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (typeof currentGuider === "undefined") {
+    var currentGuider = guiders.getCurrentGuider();
+    if (!currentGuider) {
       // not what we think it is
       return null;
     }
@@ -532,7 +532,7 @@ var guiders = (function($) {
       return null;
     }
   
-    var prevGuider = guiders._guiders[currentGuider.prev];
+    var prevGuider = guiders.get(currentGuider.prev);
     prevGuider.elem.data("locked", true);
     
     // Note we use prevGuider.id as "prevGuider" is _already_ looking at the previous guider
@@ -550,13 +550,13 @@ var guiders = (function($) {
   };
   
   guiders.reposition = function() {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    var currentGuider = guiders.getCurrentGuider();
     guiders._attach(currentGuider);
   };
 
   guiders.scrollToCurrent = function() {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (typeof currentGuider === "undefined") {
+    var currentGuider = guiders.getCurrentGuider();
+    if (!currentGuider) {
       return;
     }
     
