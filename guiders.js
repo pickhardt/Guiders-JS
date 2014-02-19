@@ -444,9 +444,17 @@ var guiders = (function($) {
     guiders._initializeOverlay();
     
     guiders._guiders[myGuider.id] = myGuider;
+
     if (guiders._lastCreatedGuiderID != null) {
       myGuider.prev = guiders._lastCreatedGuiderID;
+
+      var prevGuider = guiders.get(guiders._lastCreatedGuiderID);
+
+      if(prevGuider && !prevGuider.next) {
+        prevGuider.next = myGuider.id;
+      }
     }
+    
     guiders._lastCreatedGuiderID = myGuider.id;
     
     /**
