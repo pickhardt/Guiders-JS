@@ -70,6 +70,7 @@ var guiders = (function($) {
   guiders._currentGuiderID = null;
   guiders._fixedOrAbsolute = "fixed";
   guiders._guiders = {};
+  guiders._autoNumber = 1;
   guiders._lastCreatedGuiderID = null;
   guiders._nextButtonTitle = "Next";
   guiders._offsetNameMapping = {
@@ -394,7 +395,7 @@ var guiders = (function($) {
     
     // Extend those settings with passedSettings
     myGuider = $.extend({}, guiders._defaultSettings, passedSettings);
-    myGuider.id = myGuider.id || "guider_random_" + String(Math.floor(Math.random() * 1000));
+    myGuider.id = myGuider.id || "guider_auto_" + String(guiders._autoNumber++);
     
     var guiderElement = $("#" + myGuider.id);
     if (!guiderElement.length) {
