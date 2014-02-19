@@ -596,7 +596,7 @@ var guiders = (function($) {
       guiders._showOverlay(myGuider);
       // if guider is attached to an element, make sure it's visible
       if (myGuider.highlight && myGuider.attachTo) {
-        guiders._highlightElement(myGuider.attachTo);
+        guiders._highlightElement(myGuider.highlight);
       }
     }
     
