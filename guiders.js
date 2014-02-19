@@ -523,6 +523,9 @@ var guiders = (function($) {
         return guiders.next();
       }
       else {
+        // Trigger before show to allow observers to change the
+        // DOM before the new guider calculates its position
+        $("body").trigger("guidersNext");
         guiders.show(nextGuiderId);
         return guiders.getCurrentGuider();
       }
@@ -552,6 +555,11 @@ var guiders = (function($) {
       if (prevGuider && prevGuider.highlight) {
         guiders._dehighlightElement(prevGuider.highlight);
       }
+
+      // Trigger before show to allow observers to change the
+      // DOM before the new guider calculates its position
+      $("body").trigger("guidersPrev");
+
       guiders.show(prevGuiderId);
       return myGuider;
     }
