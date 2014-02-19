@@ -511,8 +511,7 @@ var guiders = (function($) {
 
       if (nextGuider.shouldSkip && nextGuider.shouldSkip()) {
         guiders._currentGuiderID = nextGuider.id;
-        guiders.next();
-        return guiders.getCurrentGuider();
+        return guiders.next();
       }
       else {
         guiders.show(nextGuiderId);
