@@ -544,8 +544,14 @@ var guiders = (function($) {
       if (prevGuider && prevGuider.highlight) {
         guiders._dehighlightElement(prevGuider.highlight);
       }
-      guiders.show(prevGuiderId);
-      return myGuider;
+      if (prevGuider.shouldSkip && prevGuider.shouldSkip()) {
+        guiders._currentGuiderID = prevGuider.id;
+        guiders.prev();
+        return guiders.getCurrentGuider();
+      } else {
+        guiders.show(prevGuiderId);
+        return myGuider;
+      }
     }
   };
   
