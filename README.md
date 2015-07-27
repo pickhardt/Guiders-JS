@@ -120,7 +120,7 @@ In Closing
 
 Guiders are a great way to improve the user experience of your web application.  If you're interested in optimizing user experience through A/B testing, check out [Optimizely](http://www.optimizely.com).  We're the people who built Guiders in the first place.
 
-If you have questions about Guiders, you can email me (Jeff Pickhardt) at `jeff+pickhardt@optimizely.com`.  Optimizely inquiries should be directed to `support@optimizely.com` or `sales@optimizely.com`.
+If you need more help with Guiders, visit [Supported Source](http://supportedsource.org/consulting-services-and-support/Guiders)
 
 
 License
