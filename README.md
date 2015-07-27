@@ -1,6 +1,8 @@
 Guiders.js (version 2.0.0)
 ==========================
 
+[![Support and Consulting Services](https://s3-us-west-2.amazonaws.com/supportedsourceassets/buttons/supportandservices1.png)](http://supportedsource.org/consulting-services-and-support/Guiders)
+
 Guiders are a user experience design pattern for introducing users to a web application.  
 
 Live Examples
