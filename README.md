@@ -1,8 +1,6 @@
 Guiders.js (version 2.0.0)
 ==========================
 
-[![Support and Consulting Services](https://s3-us-west-2.amazonaws.com/supportedsourceassets/buttons/supportandservices1.png)](http://supportedsource.org/consulting-services-and-support/Guiders)
-
 Guiders are a user experience design pattern for introducing users to a web application.  
 
 Live Examples
@@ -17,6 +15,10 @@ Here are a couple examples hosted online.  You can also check out `README.html` 
 
 Set Up
 ------
+
+If you're looking for professional help with Guiders.js, click here:
+
+[![Support and Consulting Services](https://s3-us-west-2.amazonaws.com/supportedsourceassets/buttons/supportandservices1.png)](http://supportedsource.org/consulting-services-and-support/Guiders)
 
 Here is sample code for initializing a couple of guiders.  Guiders are hidden when created, unless `.show()` is method chained immediately after `.createGuider`.
 
