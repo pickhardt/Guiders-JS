@@ -8,17 +8,13 @@ Live Examples
 
 Here are a couple examples hosted online.  You can also check out `README.html` for guiders in action!
 
-[http://jeffpickhardt.com/guiders/](http://jeffpickhardt.com/guiders/)
+[http://jrpickhardt.com/guiders/](http://jrpickhardt.com/guiders/)
 
 [https://optimizely.appspot.com/edit#url=www.google.com](https://optimizely.appspot.com/edit#url=www.google.com)
 
 
 Set Up
 ------
-
-If you're looking for professional help with Guiders.js, click here:
-
-[![Support and Consulting Services](https://s3-us-west-2.amazonaws.com/supportedsourceassets/buttons/supportandservices1.png)](http://supportedsource.org/consulting-services-and-support/Guiders)
 
 Here is sample code for initializing a couple of guiders.  Guiders are hidden when created, unless `.show()` is method chained immediately after `.createGuider`.
 
@@ -118,9 +114,9 @@ For more information on SemVer, visit [http://semver.org/](http://semver.org/).
 In Closing
 ----------
 
-Guiders are a great way to improve the user experience of your web application.  If you're interested in optimizing user experience through A/B testing, check out [Optimizely](http://www.optimizely.com).  We're the people who built Guiders in the first place.
+Guiders are a great way to improve the user experience of your web application.
 
-If you need more help with Guiders, visit [Supported Source](http://supportedsource.org/consulting-services-and-support/Guiders)
+If you're interested in optimizing your user experience through A/B testing, check out [Optimizely](http://www.optimizely.com).
 
 
 License
