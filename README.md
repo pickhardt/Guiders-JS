@@ -44,6 +44,9 @@ guiders.createGuider({
 The parameters for creating guiders are:
 
 ~~~
+id: (optional) id string used as a key for the guider. If blank, an automatic id is assigned.
+prev: (optional) id the previous guider. If left blank, this will point to the previously created guider.
+next: (optional) id the next guider. If left blank, this will point to the next guider that is created.
 attachTo: (optional) selector of the html element you want to attach the guider to
 autoFocus: (optional) if you want the browser to scroll to the position of the guider, set this to true
 buttons: array of button objects
@@ -59,6 +62,7 @@ closeOnEscape: (optional) if true, the escape key will close the currently open 
 description: text description that shows up inside the guider
 highlight: (optional) selector of the html element you want to highlight (will cause element to be above the overlay)
 isHashable: (defaults to true) the guider will be shown auto-shown when a page is loaded with a url hash parameter #guider=guider_name
+maxWidth: (optional) maximum width of the guider (can be a string ending with 'px' or a number of pixels)
 offset: fine tune the position of the guider, e.g. { left:0, top: -10 }
 onClose: (optional) additional function to call if a guider is closed by the x button, close button, or escape key
 onHide: (optional) additional function to call when the guider is hidden

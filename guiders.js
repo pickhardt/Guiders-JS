@@ -70,6 +70,7 @@ var guiders = (function($) {
   guiders._currentGuiderID = null;
   guiders._fixedOrAbsolute = "fixed";
   guiders._guiders = {};
+  guiders._autoNumber = 1;
   guiders._lastCreatedGuiderID = null;
   guiders._nextButtonTitle = "Next";
   guiders._offsetNameMapping = {
@@ -168,7 +169,7 @@ var guiders = (function($) {
   };
   
   guiders._attach = function(myGuider) {
-    if (typeof myGuider !== 'object') {
+    if (myGuider === null || typeof myGuider !== 'object') {
       return;
     }
         
@@ -257,16 +258,17 @@ var guiders = (function($) {
     return myGuider;
   };
 
-  guiders._dehighlightElement = function(selector) {
-    $(selector).removeClass('guiders_highlight');
-  };
-  
   guiders._hideOverlay = function() {
     $("#guiders_overlay").fadeOut("fast");
   };
 
   guiders._highlightElement = function(selector) {
+    guiders._removeHighlight();
     $(selector).addClass('guiders_highlight');
+  };
+
+  guiders._removeHighlight = function () {
+    $(".guiders_highlight").removeClass('guiders_highlight');
   };
 
   guiders._initializeOverlay = function() {
@@ -394,7 +396,7 @@ var guiders = (function($) {
     
     // Extend those settings with passedSettings
     myGuider = $.extend({}, guiders._defaultSettings, passedSettings);
-    myGuider.id = myGuider.id || "guider_random_" + String(Math.floor(Math.random() * 1000));
+    myGuider.id = myGuider.id || "guider_auto_" + String(guiders._autoNumber++);
     
     var guiderElement = $("#" + myGuider.id);
     if (!guiderElement.length) {
@@ -443,9 +445,17 @@ var guiders = (function($) {
     guiders._initializeOverlay();
     
     guiders._guiders[myGuider.id] = myGuider;
+
     if (guiders._lastCreatedGuiderID != null) {
       myGuider.prev = guiders._lastCreatedGuiderID;
+
+      var prevGuider = guiders.get(guiders._lastCreatedGuiderID);
+
+      if(prevGuider && !prevGuider.next) {
+        prevGuider.next = myGuider.id;
+      }
     }
+    
     guiders._lastCreatedGuiderID = myGuider.id;
     
     /**
@@ -468,11 +478,12 @@ var guiders = (function($) {
   };
   
   guiders.getCurrentGuider = function() {
-    return guiders._guiders[guiders._currentGuiderID] || null;
+    return guiders.get(guiders._currentGuiderID);
   };
 
   guiders.hideAll = function(omitHidingOverlay, next) {
     next = next || false;
+    guiders._removeHighlight();
 
     $(".guider:visible").each(function(index, elem){
       var myGuider = guiders.get($(elem).attr('id'));
@@ -481,21 +492,19 @@ var guiders = (function($) {
       }
     });
     $(".guider").fadeOut("fast");
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (currentGuider && currentGuider.highlight) {
-    	guiders._dehighlightElement(currentGuider.highlight);
-    }
     if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
       // do nothing for now
     } else {
       guiders._hideOverlay();
     }
+
+    guiders._currentGuiderID = null; // Set back to initial state
     return guiders;
   };
   
   guiders.next = function() {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (typeof currentGuider === "undefined") {
+    var currentGuider = guiders.getCurrentGuider();
+    if (!currentGuider) {
       return null;
     }
     currentGuider.elem.data("locked", true);
@@ -505,16 +514,15 @@ var guiders = (function($) {
       var nextGuider = guiders.get(nextGuiderId);
       var omitHidingOverlay = nextGuider.overlay ? true : false;
       guiders.hideAll(omitHidingOverlay, true);
-      if (currentGuider && currentGuider.highlight) {
-        guiders._dehighlightElement(currentGuider.highlight);
-      }
 
       if (nextGuider.shouldSkip && nextGuider.shouldSkip()) {
         guiders._currentGuiderID = nextGuider.id;
-        guiders.next();
-        return guiders.getCurrentGuider();
+        return guiders.next();
       }
       else {
+        // Trigger before show to allow observers to change the
+        // DOM before the new guider calculates its position
+        $("body").trigger("guidersNext");
         guiders.show(nextGuiderId);
         return guiders.getCurrentGuider();
       }
@@ -522,8 +530,8 @@ var guiders = (function($) {
   };
   
   guiders.prev = function () {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (typeof currentGuider === "undefined") {
+    var currentGuider = guiders.getCurrentGuider();
+    if (!currentGuider) {
       // not what we think it is
       return null;
     }
@@ -532,7 +540,7 @@ var guiders = (function($) {
       return null;
     }
   
-    var prevGuider = guiders._guiders[currentGuider.prev];
+    var prevGuider = guiders.get(currentGuider.prev);
     prevGuider.elem.data("locked", true);
     
     // Note we use prevGuider.id as "prevGuider" is _already_ looking at the previous guider
@@ -541,22 +549,24 @@ var guiders = (function($) {
       var myGuider = guiders.get(prevGuiderId);
       var omitHidingOverlay = myGuider.overlay ? true : false;
       guiders.hideAll(omitHidingOverlay, true);
-      if (prevGuider && prevGuider.highlight) {
-        guiders._dehighlightElement(prevGuider.highlight);
-      }
+
+      // Trigger before show to allow observers to change the
+      // DOM before the new guider calculates its position
+      $("body").trigger("guidersPrev");
+
       guiders.show(prevGuiderId);
       return myGuider;
     }
   };
   
   guiders.reposition = function() {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
+    var currentGuider = guiders.getCurrentGuider();
     guiders._attach(currentGuider);
   };
 
   guiders.scrollToCurrent = function() {
-    var currentGuider = guiders._guiders[guiders._currentGuiderID];
-    if (typeof currentGuider === "undefined") {
+    var currentGuider = guiders.getCurrentGuider();
+    if (!currentGuider) {
       return;
     }
     
@@ -576,11 +586,13 @@ var guiders = (function($) {
     }
   
     var myGuider = guiders.get(id);
+    guiders._removeHighlight();
+
     if (myGuider.overlay) {
       guiders._showOverlay(myGuider);
       // if guider is attached to an element, make sure it's visible
       if (myGuider.highlight && myGuider.attachTo) {
-        guiders._highlightElement(myGuider.attachTo);
+        guiders._highlightElement(myGuider.highlight);
       }
     }
     
