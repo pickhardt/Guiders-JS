@@ -18,13 +18,13 @@
         text-align: center;
         width: 300px;
       }
-      
+
       .stopper {
         color: #777;
         font-size: 77%;
       }
     </style>
-    
+
     <!-- guiders.js requires jQuery as a prerequisite. Be sure to load guiders.js AFTER jQuery. -->
     <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="guiders.js"></script>
@@ -56,26 +56,26 @@
     <br />
     <br />
     <br />
-    
+
     <!-- The following is an alternate way to create your guiders in the HTML itself -->
     <!-- (This is new with version 2.0.0) -->
     <div id="guider2" class="guider" data-attachTo="#clock" data-position="12">
       <div class="guiders_content">
         <h1 class="guiders_title">Guiders are typically attached to an element on the page.</h1>
-        
+
         <p class="guiders_description">
           For example, this guider is attached to the 12 o'clock direction relative to the attached element. The Guiders.js API uses a clock model to determine where the guider should be placed.<br/><br/>Attaching a guider to an element focuses user on the area of interest.
         </p>
-        
+
         <div class="guiders_buttons_container">
           <div>Close</div>
           <div>Next</div>
         </div>
       </div>
-      
+
       <div class="guiders_arrow"></div>
     </div>
-    
+
 
     <script type="text/javascript">
     /**
@@ -92,10 +92,10 @@
      * its onclick handler set to guiders.hideAll.  onclick handlers
      * can be customized too.
      *
-     * An alternate method for creating guiders is to create them in the 
+     * An alternate method for creating guiders is to create them in the
      * HTML, then call $("#guider3").guider(options);
      */
-     
+
     guiders.createGuider({
       buttons: [{name: "Next"}],
       description: "Guiders are a user interface design pattern for introducing features of software. This dialog box, for example, is the first in a series of guiders that together make up a guide.",
@@ -108,7 +108,7 @@
      * .show() means that this guider will get shown immediately after creation.
      *
      * Using .show() is one way of starting your guiders.
-     * 
+     *
      * Another way is by directing the user to a special URL with the guider id in
      * its hash tag, such as:
      *
@@ -117,12 +117,12 @@
      * This makes it easy to only show guiders for new users.  It can also be used
      * to route people among multiple web pages and still keep showing the guiders.
      */
-    
+
    // Alternate method of creating guiders allows you to keep the buttons and description in the HTML:
    $("#guider2").guider({
       next: "guider3"
     });
-   
+
    guiders.createGuider({
       attachTo: "#clock",
       buttons: [{name: "Close, then click on the clock.", onclick: guiders.hideAll}],
@@ -133,7 +133,7 @@
       title: "You can advance guiders from custom event handlers.",
       width: 500
     });
-    
+
     guiders.createGuider({
       attachTo: "#clock",
       buttons: [{name: "Exit Guide", onclick: guiders.hideAll},
@@ -147,7 +147,7 @@
       title: "Guiders can be customized.",
       width: 600
     });
-    
+
     guiders.createGuider({
       buttons: [{name: "Next"}],
       description: "Guiders can also be used to introduce of brand new features to existing users. Here is an example of a guider in Gmail. Google's CSS calls this a promo, likely short for promotional box. <br/><br/> <img src=\"promo_gmail.png\" style=\"border: 1px solid #333;\" />",
