@@ -576,6 +576,13 @@ var guiders = (function($) {
     }
   
     var myGuider = guiders.get(id);
+
+    if (myGuider.shouldSkip && myGuider.shouldSkip()) {
+      guiders._currentGuiderID = id;
+      guiders.next();
+      return guiders;
+    }
+    
     if (myGuider.overlay) {
       guiders._showOverlay(myGuider);
       // if guider is attached to an element, make sure it's visible
