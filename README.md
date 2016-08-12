@@ -1,17 +1,14 @@
-Guiders.js (version 2.0.0)
+Guiders.js (version 2.0.1)
 ==========================
 
-Guiders are a user experience design pattern for introducing users to a web application.  
+Guiders are a user experience design pattern for introducing users to a web application.
 
-Live Examples
--------------
+As seen on Wikipedia: [https://blog.wikimedia.org/2013/02/01/guided-tour-launch/](https://blog.wikimedia.org/2013/02/01/guided-tour-launch/)
 
-Here are a couple examples hosted online.  You can also check out `README.html` for guiders in action!
+View an Example
+---------------
 
-[http://jrpickhardt.com/guiders/](http://jrpickhardt.com/guiders/)
-
-[https://optimizely.appspot.com/edit#url=www.google.com](https://optimizely.appspot.com/edit#url=www.google.com)
-
+Clone the repo, then check out `README.html` for guiders in action!
 
 Set Up
 ------
@@ -96,7 +93,7 @@ Contributions are welcome! If you would like to contribute, please issue a pull 
 
 Versioning
 ----------
-As of version 2.0.0, Guiders.js will follow the Semantic Versioning guidelines as much as possible.
+As of version 2, Guiders.js will follow the Semantic Versioning guidelines as much as possible.
 
 Releases will follow the following format:
 
@@ -116,7 +113,7 @@ In Closing
 
 Guiders are a great way to improve the user experience of your web application.
 
-If you're interested in optimizing your user experience through A/B testing, check out [Optimizely](http://www.optimizely.com).
+If you're interested in optimizing your user experience through A/B testing or personalization, check out [Optimizely](http://www.optimizely.com).
 
 
 License

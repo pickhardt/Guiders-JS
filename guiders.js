@@ -1,7 +1,7 @@
 /**
  * guiders.js
  *
- * version 2.0.0
+ * version 2.0.1
  *
  * Released under the Apache License 2.0.
  * www.apache.org/licenses/LICENSE-2.0.html
@@ -18,7 +18,7 @@
 var guiders = (function($) {
   var guiders = $.guiders = {};
   
-  guiders.version = "2.0.0";
+  guiders.version = "2.0.1";
 
   guiders._defaultSettings = {
     attachTo: null, // Selector of the element to attach to.
@@ -581,6 +581,7 @@ var guiders = (function($) {
       // if guider is attached to an element, make sure it's visible
       if (myGuider.highlight && myGuider.attachTo) {
         guiders._highlightElement(myGuider.attachTo);
+        guiders._highlightElement(myGuider.highlight);
       }
     }
     

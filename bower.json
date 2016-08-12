@@ -1,6 +1,6 @@
 {
     "name"         : "Guiders-JS",
-    "version"      : "2.0.0",
+    "version"      : "2.0.1",
     "description"  : "Guiders.js",
     "main"         : [ "./guiders.js", "./guiders.css", "./guiders_arrows.png", "./guiders_x_button.jpg" ],
     "homepage"     : "https://github.com/jeff-optimizely/Guiders-JS",
