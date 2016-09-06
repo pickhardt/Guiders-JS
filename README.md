@@ -1,6 +1,3 @@
-Guiders.js (version 2.0.1)
-==========================
-
 ![Guiders.js](static/logo.png "Guiders.js")
 
 Guiders are a user experience design pattern for introducing users to a web application.
