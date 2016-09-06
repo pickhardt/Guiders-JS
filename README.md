@@ -5,6 +5,8 @@ Guiders are a user experience design pattern for introducing users to a web appl
 
 As seen on Wikipedia: [https://blog.wikimedia.org/2013/02/01/guided-tour-launch/](https://blog.wikimedia.org/2013/02/01/guided-tour-launch/)
 
+![Guiders.js](static/logo.png "Guiders.js")
+
 View an Example
 ---------------
 
