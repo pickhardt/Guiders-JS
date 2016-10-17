@@ -1,13 +1,15 @@
 ![Guiders.js](static/logo.png "Guiders.js")
 
-Guiders are a user experience design pattern for introducing users to a web application.
+Guiders are a user experience design pattern for introducing users to a web application. It's a great way to improve the first time user experience.
 
-As seen on Wikipedia: [https://blog.wikimedia.org/2013/02/01/guided-tour-launch/](https://blog.wikimedia.org/2013/02/01/guided-tour-launch/)
 
 View an Example
 ---------------
 
 Clone the repo, then check out `README.html` for guiders in action!
+
+As seen on Wikipedia: [https://blog.wikimedia.org/2013/02/01/guided-tour-launch/](https://blog.wikimedia.org/2013/02/01/guided-tour-launch/)
+
 
 Set Up
 ------
@@ -83,36 +85,6 @@ guiders.prev();    // shows the previous guider
 You'll likely want to change the default values, such as the width (set to 400px).  These can be found at the top of `guiders.js` in the `_defaultSettings` object.  You'll also want to modify the css file to match your application's branding.
 
 Creating a multi-page tour?  If the URL of the current window is of the form `http://www.myurl.com/mypage.html#guider=foo`, then the guider with id equal to `foo` will be shown automatically.  To use this, you can set the onHide of the last guider to an anonymous function: function() { window.location.href=`http://www.myurl.com/mypage.html#guider=foo`; }
-
-
-Contributing
-------------
-Contributions are welcome! If you would like to contribute, please issue a pull request against the dev branch, not the master branch.
-
-
-Versioning
-----------
-As of version 2, Guiders.js will follow the Semantic Versioning guidelines as much as possible.
-
-Releases will follow the following format:
-
-`<major>.<minor>.<patch>`
-
-Updates will occur according to the following guidelines:
-
-* Breaking backward compatibility bumps the major (and resets the minor and patch)
-* New additions without breaking backward compatibility bumps the minor (and resets the patch)
-* Bug fixes and misc changes bumps the patch
-
-For more information on SemVer, visit [http://semver.org/](http://semver.org/).
-
-
-In Closing
-----------
-
-Guiders are a great way to improve the user experience of your web application.
-
-If you're interested in optimizing your user experience through A/B testing or personalization, check out [Optimizely](http://www.optimizely.com).
 
 
 License
