@@ -118,4 +118,4 @@ If you're interested in optimizing your user experience through A/B testing or p
 License
 -------
 
-Released under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0.html).
+Visit [Supported Source - Guiders.js](https://supportedsource.org/projects/guiders-js) to get a license. The exact price will depend on your organization's size. It is free for individual use.
