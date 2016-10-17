@@ -6,7 +6,7 @@
         "guiders",
         "tours"
     ],
-    "version": "2.0.1",
+    "version": "2.1.0",
     "author": {
         "name": "Jeff Pickhardt",
         "url": "https://github.com/pickhardt"
@@ -17,16 +17,10 @@
             "url": "https://github.com/pickhardt"
         }
     ],
-    "licenses": [
-        {
-            "type": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        }
-    ],
-    "bugs": "https://github.com/jeff-optimizely/Guiders-JS/issues",
-    "homepage": "https://github.com/jeff-optimizely/Guiders-JS",
-    "docs": "https://github.com/jeff-optimizely/Guiders-JS",
-    "download": "https://github.com/jeff-optimizely/Guiders-JS",
+    "bugs": "https://github.com/pickhardt/Guiders-JS/issues",
+    "homepage": "https://github.com/pickhardt/Guiders-JS",
+    "docs": "https://github.com/pickhardt/Guiders-JS",
+    "download": "https://github.com/pickhardt/Guiders-JS",
     "dependencies": {
         "jquery": ">=1.3"
     }

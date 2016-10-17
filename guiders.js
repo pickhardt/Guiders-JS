@@ -1,16 +1,10 @@
 /**
  * guiders.js
  *
- * version 2.0.1
- *
- * Released under the Apache License 2.0.
- * www.apache.org/licenses/LICENSE-2.0.html
+ * version 2.1.0
  *
  * Questions about Guiders?
  * Email me (Jeff Pickhardt) at pickhardt@gmail.com
- *
- * Questions about Optimizely? Email one of the following:
- * sales@optimizely.com or support@optimizely.com
  *
  * Enjoy!
  */
@@ -18,7 +12,7 @@
 var guiders = (function($) {
   var guiders = $.guiders = {};
   
-  guiders.version = "2.0.1";
+  guiders.version = "2.1.0";
 
   guiders._defaultSettings = {
     attachTo: null, // Selector of the element to attach to.

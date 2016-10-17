@@ -1,9 +1,9 @@
 {
     "name"         : "Guiders-JS",
-    "version"      : "2.0.1",
+    "version"      : "2.1.0",
     "description"  : "Guiders.js",
     "main"         : [ "./guiders.js", "./guiders.css", "./guiders_arrows.png", "./guiders_x_button.jpg" ],
-    "homepage"     : "https://github.com/jeff-optimizely/Guiders-JS",
+    "homepage"     : "https://github.com/pickhardt/Guiders-JS",
     "dependencies" : {
         "jquery" : ">= 1.5.x"
     },
@@ -18,5 +18,5 @@
         "name" : "Jeff Pickhardt",
         "web"  : "http://jeffpickhardt.com"
     },
-    "license": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    "license": "https://supportedsource.org/projects/guiders-js"
 }
