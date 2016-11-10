@@ -265,7 +265,7 @@ var guiders = (function($) {
 
   guiders._initializeOverlay = function() {
     if ($("#guiders_overlay").length === 0) {
-      $("<div id='guiders_overlay'></div>").hide().appendTo("body");
+      $("<div id='guiders_overlay' onclick='return false;'></div>").hide().appendTo("body");
     }
   };
 
