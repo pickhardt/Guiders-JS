@@ -21,6 +21,7 @@ var guiders = (function($) {
     buttonCustomHTML: "",
     classString: null,
     closeOnEscape: false,
+    closeOnClickOutside: false,
     description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     highlight: null,
     isHashable: true,
@@ -87,6 +88,16 @@ var guiders = (function($) {
   guiders._isIE = ieBrowserMatch && ieBrowserMatch.length > 1;
   guiders._ieVersion = ieBrowserMatch && ieBrowserMatch.length > 1 ? Number(ieBrowserMatch[1]) : -1;
   
+  // Handles a user-initiated close action (e.g. clicking close or hitting ESC)
+  // isAlternativeClose is false for the text Close button, and true for everything else.
+  guiders._handleOnClose = function(myGuider, isAlternativeClose) {
+    guiders.hideAll();
+    if (myGuider.onClose) {
+      myGuider.onClose(myGuider, isAlternativeClose);
+    }
+    $("body").trigger("guidersClose");
+  };
+
   guiders._addButtons = function(myGuider) {
     var guiderButtonsContainer = myGuider.elem.find(".guiders_buttons_container");
   
@@ -114,11 +125,7 @@ var guiders = (function($) {
         switch (thisButtonName) {
           case guiders._closeButtonTitle.toLowerCase():
             thisButtonElem.bind(guiders._buttonClickEvent, function () {
-              guiders.hideAll();
-              if (myGuider.onClose) {
-                myGuider.onClose(myGuider, false /* close by button */);
-              }
-              $("body").trigger("guidersClose");
+              guiders._handleOnClose(myGuider, false /* close by button */);
             });
             break;
           case guiders._nextButtonTitle.toLowerCase():
@@ -153,11 +160,7 @@ var guiders = (function($) {
     });
     xButtonContainer.append(xButton);
     xButton.click(function() {
-      guiders.hideAll();
-      if (myGuider.onClose) {
-        myGuider.onClose(myGuider, true);
-       }
-       $("body").trigger("guidersClose");
+      guiders._handleOnClose(myGuider, true);
     });
   };
   
@@ -371,14 +374,26 @@ var guiders = (function($) {
   guiders._wireEscape = function (myGuider) {
     $(document).keydown(function(event) {
       if (event.keyCode == 27 || event.which == 27) {
-        guiders.hideAll();
-        if (myGuider.onClose) {
-          myGuider.onClose(myGuider, true /*close by X/Escape*/);
-        }
-        $("body").trigger("guidersClose");
+        guiders._handleOnClose(myGuider, true /*close by X/Escape*/);
         return false;
       }
-    });      
+    });
+  };
+
+  guiders._wireClickOutside = function (myGuider) {
+    $(document).bind("click.guiders", function (event) {
+      if ($(event.target).closest(".guider").length === 0) {
+        guiders._handleOnClose(myGuider, true /* close by clicking outside */);
+        if (event.target.id === "guiders_overlay") {
+          // Prevent default and stop propagation only if they clicked on the overlay
+          return false;
+        }
+      }
+    });
+  };
+
+  guiders._unWireClickOutside = function () {
+    $(document).unbind("click.guiders");
   };
 
   guiders.createGuider = function(passedSettings) {
@@ -474,6 +489,7 @@ var guiders = (function($) {
         myGuider.onHide(myGuider, next);
       }
     });
+    guiders._unWireClickOutside();
     $(".guider").fadeOut("fast");
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
     if (currentGuider && currentGuider.highlight) {
@@ -585,6 +601,10 @@ var guiders = (function($) {
       guiders._unwireEscape(myGuider);
     }
   
+    if (myGuider.closeOnClickOutside) {
+      guiders._wireClickOutside(myGuider);
+    }
+
     // You can use an onShow function to take some action before the guider is shown.
     if (myGuider.onShow) {
       myGuider.onShow(myGuider);
