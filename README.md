@@ -90,4 +90,4 @@ Creating a multi-page tour?  If the URL of the current window is of the form `ht
 License
 -------
 
-Visit [Supported Source - Guiders.js](https://supportedsource.org/projects/guiders-js) to get a license. The exact price will depend on your organization's size. It is free for individual use.
+Visit [Super Source - Guiders.js](https://supso.org/projects/guiders-js) to get a license. The exact price will depend on your organization's size. It is free for individual use.
